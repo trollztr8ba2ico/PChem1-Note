@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 7A — 양자역학 입문 전 정리</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0f0f10;
+    --bg2: #17171a;
+    --bg3: #1e1e23;
+    --border: rgba(255,255,255,0.07);
+    --text: #e2e0d8;
+    --muted: #7a7870;
+    --blue: #4a9eff;
+    --blue-dim: rgba(74,158,255,0.12);
+    --amber: #f0a545;
+    --amber-dim: rgba(240,165,69,0.12);
+    --teal: #3ecfaa;
+    --teal-dim: rgba(62,207,170,0.12);
+    --purple: #a78bfa;
+    --purple-dim: rgba(167,139,250,0.12);
+    --red: #f87171;
+    --red-dim: rgba(248,113,113,0.1);
+    --green: #86efac;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    line-height: 1.75;
+    padding: 48px 24px;
+  }
+
+  .container { max-width: 860px; margin: 0 auto; }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 32px;
+    margin-bottom: 40px;
+  }
+
+  .course-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle { color: var(--muted); font-size: 13px; }
+
+  /* 섹션 */
+  .section { margin-bottom: 36px; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    min-width: 28px;
+  }
+
+  h2 {
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+
+  .tag {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .tag-blue   { background: var(--blue-dim);   color: var(--blue);   border: 1px solid rgba(74,158,255,0.25); }
+  .tag-amber  { background: var(--amber-dim);  color: var(--amber);  border: 1px solid rgba(240,165,69,0.25); }
+  .tag-teal   { background: var(--teal-dim);   color: var(--teal);   border: 1px solid rgba(62,207,170,0.25); }
+  .tag-purple { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(167,139,250,0.25); }
+  .tag-red    { background: var(--red-dim);    color: var(--red);    border: 1px solid rgba(248,113,113,0.2); }
+
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 10px;
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .card p { color: var(--muted); font-size: 13px; line-height: 1.7; }
+  .card p + p { margin-top: 6px; }
+
+  .card p strong { color: var(--text); font-weight: 500; }
+
+  .formula {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 10px 0;
+    color: var(--amber);
+  }
+
+  /* 2컬럼 */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* 흐름 화살표 */
+  .flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 12px 0;
+  }
+  .flow-item {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 11px;
+    font-size: 12px;
+    color: var(--text);
+  }
+  .flow-arrow { color: var(--muted); font-size: 13px; }
+
+  /* 테이블 */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: left;
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 9px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text);
+  }
+  td:first-child { color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  tr:last-child td { border-bottom: none; }
+
+  /* 구분선 */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  /* 수정사항 박스 */
+  .correction {
+    background: var(--red-dim);
+    border: 1px solid rgba(248,113,113,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .correction .label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--red);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  /* 출제 예상 */
+  .exam-box {
+    background: var(--amber-dim);
+    border: 1px solid rgba(240,165,69,0.2);
+    border-radius: 8px;
+    padding: 14px 18px;
+  }
+  .exam-box .exam-title {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--amber);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .exam-item {
+    display: flex;
+    gap: 10px;
+    margin: 6px 0;
+    font-size: 13px;
+  }
+  .exam-type {
+    min-width: 60px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--amber);
+    padding-top: 2px;
+  }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="course-tag">Physical Chemistry · Chapter 7A · Pre-quantum review</div>
+    <h1>빛과 양자역학 입문 — 완전 정리</h1>
+    <p class="subtitle">슬라이드 1~9 · 흑체복사 파트 진입 전</p>
+  </header>
+
+  <!-- 1. 파동 기초 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>파동함수와 핵심 파라미터</h2>
+      <span class="tag tag-blue">슬라이드 3–5</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">일반 파동함수</div>
+      <div class="formula">ψ(x, t) = A cos(kx − ωt + φ)</div>
+      <p>파동을 수학으로 완전히 기술하는 함수. x와 t를 넣으면 그 시점·위치의 파동 크기가 나온다.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">각 파라미터 의미</div>
+      <table>
+        <tr><th>기호</th><th>이름</th><th>의미</th></tr>
+        <tr><td>A</td><td>진폭</td><td>최대 변위. 세기 ∝ A²</td></tr>
+        <tr><td>k = 2π/λ</td><td>파동수</td><td>1m당 몇 라디안 진행 — 거리를 파동 주기 기준 라디안으로 환산</td></tr>
+        <tr><td>ω = 2πν</td><td>각진동수</td><td>1초당 몇 라디안 진행 — 시간을 파동 주기 기준 라디안으로 환산</td></tr>
+        <tr><td>φ</td><td>위상</td><td>출발 각도. 0~2π. 두 파동 비교 시 핵심</td></tr>
+      </table>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">왜 kx − ωt?</div>
+        <p><strong>−부호</strong> → +x 방향 진행. 시간 증가할수록 같은 위상을 유지하려면 x도 커져야 하기 때문.</p>
+        <p><strong>+부호</strong>면 −x 방향 진행.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">핵심 관계식</div>
+        <div class="formula">c = λν</div>
+        <div class="formula">ν̃ = 1/λ (cm⁻¹)</div>
+        <div class="formula">v = ω/k = λν</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2. MO이론 & 색깔 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>MO이론 · HOMO-LUMO · 분자 색깔</h2>
+      <span class="tag tag-teal">연결개념</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">HOMO-LUMO gap → 흡수 파장 → 색깔</div>
+      <div class="flow">
+        <span class="flow-item">분자 크기 ↑</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-item">π delocalization ↑</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-item">L 증가 (Particle in a box)</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-item">Eₙ = n²h²/8mL² 간격 ↓</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-item">HOMO-LUMO gap ↓</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-item">긴 파장 흡수</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-item">색깔 출현</span>
+      </div>
+      <p>벤젠(무색) → 나프탈렌(청색 형광) → 안트라센 → 펜타센(파란색) / Cy3 → Cy5 → Cy7 모두 같은 원리.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">벤젠 sp2 혼성화</div>
+      <p>각 C: 2s + 2px + 2py → sp2 3개 (σ결합 담당, 120°) + 2pz 1개 남음 (π계 담당)</p>
+      <p>6개 C × pz 전자 1개 = <strong>π전자 6개 delocalized</strong> → 고리 전체를 자유롭게 돌아다님</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3. 형광·인광·백화 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>형광 · 인광 · 백화현상</h2>
+      <span class="tag tag-purple">양자 현상</span>
+    </div>
+
+    <div class="card">
+      <table>
+        <tr><th>현상</th><th>전이</th><th>스핀</th><th>속도</th><th>특징</th></tr>
+        <tr><td>형광</td><td>S₁ → S₀</td><td>허용 (↑↓ → ↑↓)</td><td>빠름 ns</td><td>빛 끄면 즉시 꺼짐</td></tr>
+        <tr><td>인광</td><td>T₁ → S₀</td><td>금지 → perturbation으로 약간 허용</td><td>느림 ms~s</td><td>빛 끄고도 지속</td></tr>
+        <tr><td>백화</td><td>—</td><td>—</td><td>비가역</td><td>크로모포어 산화 파괴 → 무색</td></tr>
+      </table>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">S, T 표기법</div>
+        <p>S = Singlet (스핀 ↑↓ 반대)</p>
+        <p>T = Triplet (스핀 ↑↑ 같은 방향)</p>
+        <p>숫자 = 에너지 순서. 0=바닥, 1=첫 들뜬 상태</p>
+        <p>에너지: S₀ &lt; T₁ &lt; S₁</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Intersystem Crossing</div>
+        <p>S₁에서 전자 스핀이 뒤집혀 T₁이 되는 과정.</p>
+        <p>T₁ 수명이 길어서 O₂와 반응 확률 높음 → 백화의 원인.</p>
+        <p>T₁→S₀ 금지 전이를 spin-orbit coupling (perturbation)이 약간 허용.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4. 레이저 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>레이저 원리</h2>
+      <span class="tag tag-blue">응용</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">핵심 키워드: 광자 방출 → 유도방출 → 증폭</div>
+      <div class="flow">
+        <span class="flow-item">전자 들뜬 상태</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-item">광자 1개 방출</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-item">옆 들뜬 전자 유도</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-item">동일 광자 추가 방출</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-item">연쇄 증폭</span>
+      </div>
+      <p>방출 광자는 방향·파장·<strong>위상(phase)</strong>이 모두 동일 — 일반 빛과의 핵심 차이.</p>
+      <p>ΔE 클수록 → population inversion 유지 쉬움 → 증폭에 유리.</p>
+      <p>레이저 경로가 보이는 이유: 공기 중 먼지가 빛을 산란 → 일부가 눈 방향으로 도달. 진공에서는 경로 안 보임.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5. 편광 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>편광 · CD분광법 · Polarimetry</h2>
+      <span class="tag tag-teal">실험 연결</span>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">선형편광 (Linear)</div>
+        <p>E장이 한 방향으로만 진동.</p>
+        <p>응용: 선글라스(수평 반사광 차단 → 수직만 통과), 편광현미경(박편 복굴절 관찰)</p>
+      </div>
+      <div class="card">
+        <div class="card-title">원형편광 (Circular)</div>
+        <p>E장이 진행하면서 회전. Ex, Ey 진폭 같고 위상차 90°.</p>
+        <p>위상차 90° → 반시계(Left-handed)</p>
+        <p>위상차 270° → 시계(Right-handed)</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">선형 → 원형 편광 변환: λ/4 판</div>
+      <p>fast axis(x)와 slow axis(y)로 빛을 다른 속도로 통과 → 경로 차이 λ/4 → 위상차 90° 발생 → 원형편광 완성.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Polarimetry — 선광도 측정</div>
+      <p>선형편광을 카이랄 샘플에 통과 → 편광면 회전각 α 측정.</p>
+      <p>원리: 카이랄 분자가 좌/우 원형편광을 <strong>다른 속도</strong>로 통과시킴 → 위상차 → 편광면 회전 (원형 복굴절).</p>
+      <div class="formula">[α] = α / (c × l)</div>
+      <p>[α]: 비선광도 (분자 고유값). α: 측정 회전각. c: 농도(g/mL). l: 셀 길이(dm)</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">CD 분광법 — 흡수 차이 측정</div>
+      <p>좌/우 원형편광 흡수량 차이 ΔA = A_L − A_R 측정.</p>
+      <p>카이랄 분자: ΔA ≠ 0 / Racemic mixture: ΔA = 0 (상쇄)</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Enantiomeric Excess (ee) 계산</div>
+      <div class="formula">ee = |[α]mixture / [α]pure| × 100%</div>
+      <div class="formula">R% = (100 + ee) / 2 &nbsp;&nbsp; S% = (100 − ee) / 2</div>
+      <p>예) [α]pure = +30, [α]mixture = +18 → ee = 60% → R = 80%, S = 20%</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 수정사항 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>필기 수정사항</h2>
+      <span class="tag tag-red">정정</span>
+    </div>
+
+    <div class="correction">
+      <div class="label">수정 1</div>
+      백화현상: "다른 색을 나타낸다" ❌ → <strong>무색이 된다</strong> ✓. 크로모포어 파괴 = 흡수 자체 불가 = 색 사라짐.
+    </div>
+    <div class="correction">
+      <div class="label">수정 2</div>
+      레이저: "전자 방출" ❌ → <strong>광자 방출</strong> ✓. 전자가 에너지 준위 내려오면서 광자를 방출.
+    </div>
+    <div class="correction">
+      <div class="label">수정 3</div>
+      가시광선 범위: 300nm ❌ → <strong>420nm</strong>~700nm ✓. 300nm는 UV 영역.
+    </div>
+    <div class="correction">
+      <div class="label">수정 4</div>
+      편광: "보색 흡수 안 한다" ❌ → <strong>원래 흡수하던 파장을 흡수하지 않게 된다</strong> ✓.
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 출제 예상 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>출제 예상 문제</h2>
+      <span class="tag tag-amber">시험 대비</span>
+    </div>
+
+    <div class="exam-box">
+      <div class="exam-title">예상 출제 유형</div>
+
+      <div class="exam-item">
+        <span class="exam-type">계산형</span>
+        <span>λ = 500nm일 때 ν, ν̃, k, ω 구하기 / [α]와 ee로 R%, S% 계산</span>
+      </div>
+      <div class="exam-item">
+        <span class="exam-type">계산형</span>
+        <span>c = λν 이용한 진동수/파장 변환, 파수 단위 nm→cm⁻¹ 변환</span>
+      </div>
+      <div class="exam-item">
+        <span class="exam-type">원리형</span>
+        <span>형광 vs 인광: 전이 경로, 스핀 상태, 속도 차이 이유 설명</span>
+      </div>
+      <div class="exam-item">
+        <span class="exam-type">원리형</span>
+        <span>레이저가 일반 빛과 다른 이유 (유도방출, 위상 일치)</span>
+      </div>
+      <div class="exam-item">
+        <span class="exam-type">원리형</span>
+        <span>CD 분광법으로 racemic 판단하는 원리, polarimetry와의 차이</span>
+      </div>
+      <div class="exam-item">
+        <span class="exam-type">원리형</span>
+        <span>X선을 구조 분석에 쓰는 이유 (파장과 원자 간 거리 관계)</span>
+      </div>
+      <div class="exam-item">
+        <span class="exam-type">연결형</span>
+        <span>분자 크기 → delocalization → L → HOMO-LUMO gap → 색깔 흐름 서술</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>Physical Chemistry · Chapter 7A</span>
+    <span>다음: 흑체복사 · Planck 양자화 →</span>
+  </footer>
+
+</div>
+</body>
+</html>

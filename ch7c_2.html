@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7C: Hermitian → Commutator 완전 정리</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf8f4;
+    --surface: #ffffff;
+    --surface2: #f5f2ec;
+    --border: #e8e2d8;
+    --border2: #d4ccbc;
+    --accent: #2d5a8e;
+    --accent2: #c0392b;
+    --accent3: #1a7a4a;
+    --accent4: #8e5a2d;
+    --text: #1a1a1a;
+    --text-dim: #555555;
+    --text-muted: #999999;
+    --ink: #2c2c2c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Serif KR', serif;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: var(--ink);
+    padding: 2.5rem 3rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3), var(--accent4));
+  }
+
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+  }
+
+  .header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.01em;
+  }
+
+  .header-sub {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.45);
+    font-style: italic;
+  }
+
+  .header-eq {
+    position: absolute;
+    right: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.08);
+    white-space: nowrap;
+    font-size: 3rem;
+  }
+
+  /* Tab nav */
+  .tab-nav {
+    display: flex;
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0 1.5rem;
+    gap: 0;
+  }
+  .tab-nav::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    padding: 0.9rem 1.3rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    color: var(--text-muted);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .tab-btn:hover { color: var(--text-dim); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tab-btn .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+  .tab-btn.active .num { color: var(--accent); opacity: 0.7; }
+
+  /* Content */
+  .content {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeUp 0.25s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Section */
+  .sec-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.01em;
+  }
+
+  .sec-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    font-style: italic;
+  }
+
+  h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 2rem 0 0.8rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.3rem 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    line-height: 1.85;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  .card p:last-child { margin-bottom: 0; }
+
+  /* Colored boxes */
+  .box {
+    border-radius: 5px;
+    padding: 1rem 1.3rem;
+    margin-bottom: 1rem;
+    font-size: 0.87rem;
+    line-height: 1.8;
+  }
+
+  .box .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+  }
+
+  .box-blue {
+    background: rgba(45,90,142,0.06);
+    border: 1px solid rgba(45,90,142,0.2);
+    border-left: 3px solid var(--accent);
+  }
+  .box-blue .label { color: var(--accent); }
+
+  .box-red {
+    background: rgba(192,57,43,0.05);
+    border: 1px solid rgba(192,57,43,0.18);
+    border-left: 3px solid var(--accent2);
+  }
+  .box-red .label { color: var(--accent2); }
+
+  .box-green {
+    background: rgba(26,122,74,0.05);
+    border: 1px solid rgba(26,122,74,0.18);
+    border-left: 3px solid var(--accent3);
+  }
+  .box-green .label { color: var(--accent3); }
+
+  .box-amber {
+    background: rgba(142,90,45,0.05);
+    border: 1px solid rgba(142,90,45,0.18);
+    border-left: 3px solid var(--accent4);
+  }
+  .box-amber .label { color: var(--accent4); }
+
+  /* Math */
+  .math {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 5px;
+    padding: 1rem 1.5rem;
+    margin: 0.8rem 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem;
+    color: var(--accent3);
+    text-align: center;
+    line-height: 2;
+  }
+
+  .math.derivation {
+    text-align: left;
+    color: var(--ink);
+    font-size: 0.82rem;
+  }
+
+  .math .step {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .math .step:last-child { border-bottom: none; }
+
+  .math .step-label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    min-width: 4rem;
+    flex-shrink: 0;
+  }
+
+  .math .step-eq {
+    color: var(--accent3);
+    font-size: 0.85rem;
+  }
+
+  .math .step-why {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-left: auto;
+    font-style: italic;
+    font-family: 'Noto Serif KR', serif;
+  }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8rem 0;
+    font-size: 0.84rem;
+  }
+
+  th {
+    background: var(--surface2);
+    color: var(--text-dim);
+    padding: 0.65rem 0.9rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border2);
+    font-weight: 600;
+    font-size: 0.76rem;
+    letter-spacing: 0.03em;
+  }
+
+  td {
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink);
+    line-height: 1.5;
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+
+  td code { font-family: 'JetBrains Mono', monospace; font-size: 0.82em; color: var(--accent3); }
+
+  /* Flow */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0.8rem 0;
+  }
+
+  .flow-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.65rem 1.1rem;
+    font-size: 0.84rem;
+    line-height: 1.6;
+    display: flex;
+    gap: 0.7rem;
+    align-items: baseline;
+  }
+
+  .flow-n {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    min-width: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .flow-arrow {
+    text-align: center;
+    padding: 0.15rem 0;
+    color: var(--border2);
+    font-size: 0.75rem;
+  }
+
+  /* Compare */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin: 0.8rem 0;
+  }
+
+  .compare-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 1rem 1.2rem;
+  }
+
+  .compare-box h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    margin-bottom: 0.6rem;
+    letter-spacing: 0.05em;
+  }
+
+  .compare-box p { font-size: 0.83rem; line-height: 1.7; color: var(--text-dim); }
+
+  /* Rules box */
+  .rules {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 1.2rem 1.5rem;
+    margin: 0.8rem 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+  }
+
+  .rules-title {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+  }
+
+  .rule-item {
+    display: flex;
+    gap: 0.8rem;
+    padding: 0.3rem 0;
+    border-bottom: 1px dashed var(--border);
+    align-items: center;
+  }
+  .rule-item:last-child { border-bottom: none; }
+
+  .rule-eq { color: var(--accent3); flex: 1; }
+  .rule-desc { font-size: 0.72rem; color: var(--text-muted); font-family: 'Noto Serif KR', serif; }
+
+  /* Exam */
+  .exam-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 1.2rem;
+    overflow: hidden;
+  }
+
+  .exam-header {
+    padding: 0.75rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+
+  .exam-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 3px;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+
+  .tag-d { background: rgba(45,90,142,0.1); color: var(--accent); }
+  .tag-c { background: rgba(26,122,74,0.1); color: var(--accent3); }
+  .tag-n { background: rgba(142,90,45,0.1); color: var(--accent4); }
+
+  .exam-q {
+    padding: 1rem 1.2rem;
+    font-size: 0.87rem;
+    line-height: 1.8;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .exam-hint {
+    padding: 0.75rem 1.2rem;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+
+  .exam-hint strong {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  strong { color: var(--accent4); font-weight: 600; }
+  em { color: var(--accent3); font-style: normal; }
+
+  @media (max-width: 600px) {
+    .compare { grid-template-columns: 1fr; }
+    .header { padding: 1.5rem; }
+    .content { padding: 1.5rem 1rem; }
+    .header-eq { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eq">∫ψᵢ*Ω̂ψⱼdτ = {∫ψⱼ*Ω̂ψᵢdτ}*</div>
+  <div class="header-tag">Atkins Physical Chemistry 12e · Chapter 7C · Part 2</div>
+  <h1>Hermitian → Commutator</h1>
+  <div class="header-sub">Expectation value의 실수 보장부터 불확정성의 수학적 완성까지</div>
+</div>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('t1')">
+    <span class="num">01</span>논리 설계
+  </button>
+  <button class="tab-btn" onclick="showTab('t2')">
+    <span class="num">02</span>Expectation Value
+  </button>
+  <button class="tab-btn" onclick="showTab('t3')">
+    <span class="num">03</span>Hermiticity
+  </button>
+  <button class="tab-btn" onclick="showTab('t4')">
+    <span class="num">04</span>Hermitian 증명
+  </button>
+  <button class="tab-btn" onclick="showTab('t5')">
+    <span class="num">05</span>Orthogonality
+  </button>
+  <button class="tab-btn" onclick="showTab('t6')">
+    <span class="num">06</span>Superposition
+  </button>
+  <button class="tab-btn" onclick="showTab('t7')">
+    <span class="num">07</span>Uncertainty
+  </button>
+  <button class="tab-btn" onclick="showTab('t8')">
+    <span class="num">08</span>Commutator
+  </button>
+  <button class="tab-btn" onclick="showTab('t9')">
+    <span class="num">09</span>출제 예상 문제
+  </button>
+</div>
+
+<div class="content">
+
+<!-- TAB 1: 논리 설계 -->
+<div id="t1" class="tab-content active">
+  <div class="sec-title">전체 논리 설계</div>
+  <div class="sec-sub">순환논리 없이 공리 → 정의 → 정리 순으로</div>
+
+  <div class="box box-red">
+    <div class="label">⚠️ 핵심 원칙</div>
+    동기(왜 필요한가) / 정의(수학적 조건) / 정리(증명된 결과) — 세 가지를 절대 혼용하지 말 것. 섞으면 순환논리.
+  </div>
+
+  <h3>Step별 논리 흐름</h3>
+
+  <div class="flow">
+    <div class="flow-item"><span class="flow-n">공리</span>측정값은 실수여야 함 / Born 해석: |ψ|²=확률밀도 / 정규화: ∫ψ*ψ dτ=1</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="flow-n">정의</span>Expectation value: ⟨Ω⟩ = ∫ψ*Ω̂ψ dτ (Born 해석 + 평균값 공식)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="flow-n">요구</span>⟨Ω⟩가 실수이려면? → ⟨Ω⟩ = ⟨Ω⟩* 조건 도출 (복소수 규칙 적용)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="flow-n">정의</span>Hermiticity: ∫ψᵢ*Ω̂ψⱼ dτ = {∫ψⱼ*Ω̂ψᵢ dτ}* (동기에서 강제된 수학적 조건)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="flow-n">정의</span>Hermitian operator: Hermiticity를 만족하는 Ω̂ (이름 붙이기)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="flow-n">확인</span>x̂, p̂ₓ가 실제로 Hermitian인지 검증</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="flow-n">정리 1</span>Hermitian → Eigenvalue 실수 (정의로부터 증명)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="flow-n">정리 2</span>Hermitian → Eigenfunction 직교 (정의로부터 증명)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="flow-n">결과</span>직교 Eigenfunction = Basis → Superposition → Expectation value → 불확정성</div>
+  </div>
+
+  <div class="box box-blue">
+    <div class="label">💡 순환논리가 아닌 이유</div>
+    Hermiticity 정의식 자체에 "실수"라는 말이 없어. 순수하게 i↔j 바꾸고 켤레 취해도 같다는 수학적 조건일 뿐.<br>
+    "실수 원함"은 <strong>동기</strong>, Hermiticity는 <strong>정의</strong>, 실수 증명은 <strong>결과</strong>.
+  </div>
+</div>
+
+<!-- TAB 2: Expectation Value -->
+<div id="t2" class="tab-content">
+  <div class="sec-title">Expectation Value</div>
+  <div class="sec-sub">Eigenvalue의 일반화 형태 — 왜 저 꼴로 정의되는가</div>
+
+  <h3>왜 ∫ψ*Ω̂ψ dτ 꼴인가</h3>
+
+  <div class="flow">
+    <div class="flow-item"><span class="flow-n">①</span>Born 해석: 확률밀도 = |ψ|² = ψ*ψ (공리)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="flow-n">②</span>평균값 = Σ(값)×(확률) → 연속형: ⟨Ω⟩ = ∫ (물리량) × |ψ|² dτ</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="flow-n">③</span>|ψ|² = ψ*ψ 풀어씀 → ∫ψ* × (물리량) × ψ dτ</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="flow-n">④</span>물리량 추출은 ψ에만 연산자 작용해야 함 (미분연산자라서 순서 중요)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="flow-n">⑤</span>ψ*를 앞에 고정 → ⟨Ω⟩ = ∫ψ* Ω̂ψ dτ</div>
+  </div>
+
+  <div class="box box-red">
+    <div class="label">⚠️ 왜 ψ*ψ에 연산자 작용하면 안 되나?</div>
+    Ω̂ = d/dx 일 때:<br>
+    d/dx(ψ*ψ) = <strong>(dψ*/dx)ψ + ψ*(dψ/dx)</strong><br>
+    곱의 미분 때문에 ψ*까지 미분돼버림. ψ*는 <em>가중치 역할</em>만 해야 하는데 물리량 추출에 간섭함.
+  </div>
+
+  <h3>Eigenvalue vs Expectation Value</h3>
+
+  <div class="compare">
+    <div class="compare-box">
+      <h4 style="color: var(--accent);">Eigenfunction일 때 (특수)</h4>
+      <p>Ω̂ψ = ωψ 대입 → ω∫ψ*ψ dτ = ω<br>
+      매번 측정해도 ω 하나만 나옴.<br>
+      여러 번 측정 불필요. 확정값.</p>
+    </div>
+    <div class="compare-box">
+      <h4 style="color: var(--accent4);">Superposition일 때 (일반)</h4>
+      <p>ψ = Σcₖψₖ → 측정마다 다른 값.<br>
+      ⟨Ω⟩ = Σ|cₖ|²ωₖ (확률 가중평균)<br>
+      수없이 많은 측정의 평균값.</p>
+    </div>
+  </div>
+
+  <div class="math">⟨Ω⟩ = ∫ψ* Ω̂ψ dτ &nbsp;&nbsp;&nbsp; (일반)<br>= ω &nbsp;&nbsp;&nbsp; (ψ가 eigenfunction인 특수한 경우)</div>
+
+  <div class="box box-blue">
+    <div class="label">💡 핵심</div>
+    <strong>Eigenvalue = Expectation value의 특수한 경우.</strong><br>
+    ψ가 eigenfunction이면 적분이 ω로 특수화됨. Expectation value는 Eigenvalue를 포함하는 더 일반적인 개념.
+  </div>
+</div>
+
+<!-- TAB 3: Hermiticity -->
+<div id="t3" class="tab-content">
+  <div class="sec-title">Hermiticity 정의</div>
+  <div class="sec-sub">실수 조건 → 수식화 → 정의 이름 붙이기</div>
+
+  <h3>복소수 기본 규칙 (전체에서 사용)</h3>
+
+  <div class="rules">
+    <div class="rules-title">복소수 연산 공리</div>
+    <div class="rule-item"><span class="rule-eq">(z*)* = z</span><span class="rule-desc">켤레의 켤레 = 자기자신</span></div>
+    <div class="rule-item"><span class="rule-eq">(z₁z₂)* = z₁*z₂*</span><span class="rule-desc">곱의 켤레 = 각각 켤레</span></div>
+    <div class="rule-item"><span class="rule-eq">(z₁+z₂)* = z₁*+z₂*</span><span class="rule-desc">합의 켤레 = 각각 켤레</span></div>
+    <div class="rule-item"><span class="rule-eq">(∫f dτ)* = ∫f* dτ</span><span class="rule-desc">켤레를 적분 안으로</span></div>
+    <div class="rule-item"><span class="rule-eq">z = z* ⟺ z는 실수</span><span class="rule-desc">허수부가 없다는 것과 동치</span></div>
+    <div class="rule-item"><span class="rule-eq">z·z* = |z|² ≥ 0</span><span class="rule-desc">항상 양수 실수</span></div>
+  </div>
+
+  <h3>Hermiticity 도출 과정</h3>
+
+  <div class="box box-amber">
+    <div class="label">목표</div>
+    ⟨Ω⟩ = ⟨Ω⟩* (측정값 실수 조건)
+  </div>
+
+  <div class="math derivation">
+    <div class="step">
+      <span class="step-label">⟨Ω⟩ =</span>
+      <span class="step-eq">∫ψ* Ω̂ψ dτ</span>
+      <span class="step-why">Expectation value 정의 (A)</span>
+    </div>
+    <div class="step">
+      <span class="step-label">⟨Ω⟩* =</span>
+      <span class="step-eq">(∫ψ* Ω̂ψ dτ)*</span>
+      <span class="step-why">켤레 취하기</span>
+    </div>
+    <div class="step">
+      <span class="step-label">=</span>
+      <span class="step-eq">∫(ψ* Ω̂ψ)* dτ</span>
+      <span class="step-why">켤레 → 적분 안으로</span>
+    </div>
+    <div class="step">
+      <span class="step-label">=</span>
+      <span class="step-eq">∫(ψ*)*(Ω̂ψ)* dτ</span>
+      <span class="step-why">(z₁z₂)* = z₁*z₂*</span>
+    </div>
+    <div class="step">
+      <span class="step-label">=</span>
+      <span class="step-eq">∫ψ(Ω̂ψ)* dτ</span>
+      <span class="step-why">(z*)* = z</span>
+    </div>
+  </div>
+
+  <div class="box box-green">
+    <div class="label">⟨Ω⟩ = ⟨Ω⟩* 이 되려면</div>
+    ∫ψ*(Ω̂ψ) dτ = ∫ψ(Ω̂ψ)* dτ 이어야 함.<br>
+    임의의 두 상태로 일반화 (단일 ψ면 조건이 너무 약함):
+    <div style="margin-top:0.5rem; text-align:center; font-family:'JetBrains Mono',monospace; font-size:0.88rem; color: var(--accent3);">
+      ∫ψᵢ*Ω̂ψⱼ dτ = {∫ψⱼ*Ω̂ψᵢ dτ}*
+    </div>
+    <div style="margin-top:0.4rem; font-size:0.8rem; color:var(--accent3); text-align:center;">→ 이게 <strong>Hermiticity 정의</strong></div>
+  </div>
+
+  <h3>왜 두 개의 다른 ψ가 나오나</h3>
+
+  <div class="card">
+    <p>단일 ψ로만 정의하면 조건이 너무 약해서 Hermitian이라 불려도 모든 상황에서 eigenvalue 실수를 보장하지 못함.</p>
+    <p>임의의 두 ψᵢ, ψⱼ에 대해 성립해야 <em>진짜로 강력한 조건</em>이 됨.</p>
+    <p>또한 i≠j인 경우가 나중에 Orthogonality 증명에서 바로 쓰임.</p>
+  </div>
+
+  <div class="box box-blue">
+    <div class="label">💡 Hermitian operator 정의</div>
+    Hermiticity를 만족하는 Ω̂ → <strong>Hermitian operator</strong><br>
+    동치 표현: Ω̂† = Ω̂ (self-adjoint, † = 켤레+전치)<br><br>
+    단, Ω̂* = Ω̂ 는 단순화. p̂ₓ처럼 복소 연산자는 켤레만으로 부족해서 † 필요.
+  </div>
+</div>
+
+<!-- TAB 4: Hermitian 증명 -->
+<div id="t4" class="tab-content">
+  <div class="sec-title">x̂, p̂ₓ Hermitian 검증</div>
+  <div class="sec-sub">실제로 Hermiticity 정의식을 만족하는지 확인</div>
+
+  <h3>① x̂ Hermitian 증명</h3>
+
+  <div class="math derivation">
+    <div class="step">
+      <span class="step-label">목표</span>
+      <span class="step-eq">∫ψᵢ* xψⱼ dτ = {∫ψⱼ* xψᵢ dτ}*</span>
+      <span class="step-why">x̂ψ = xψ (정의)</span>
+    </div>
+    <div class="step">
+      <span class="step-label">오른쪽</span>
+      <span class="step-eq">{∫ψⱼ* xψᵢ dτ}*</span>
+      <span class="step-why"></span>
+    </div>
+    <div class="step">
+      <span class="step-label">=</span>
+      <span class="step-eq">∫(ψⱼ* xψᵢ)* dτ</span>
+      <span class="step-why">켤레 → 적분 안으로</span>
+    </div>
+    <div class="step">
+      <span class="step-label">=</span>
+      <span class="step-eq">∫(ψⱼ*)* x* ψᵢ* dτ</span>
+      <span class="step-why">(z₁z₂)* = z₁*z₂*</span>
+    </div>
+    <div class="step">
+      <span class="step-label">=</span>
+      <span class="step-eq">∫ψⱼ xψᵢ* dτ</span>
+      <span class="step-why">(z*)* = z, x는 실수 → x* = x</span>
+    </div>
+    <div class="step">
+      <span class="step-label">=</span>
+      <span class="step-eq">∫ψᵢ* xψⱼ dτ ✅</span>
+      <span class="step-why">순서 바꾸기 (스칼라 곱)</span>
+    </div>
+  </div>
+
+  <div class="box box-amber">
+    <div class="label">핵심 이유</div>
+    x는 위치 좌표 = 물리적으로 항상 실수 → x* = x. 미분 없으니 순서 바꾸기만으로 충분.
+  </div>
+
+  <h3>② p̂ₓ Hermitian 증명</h3>
+
+  <div class="math derivation">
+    <div class="step">
+      <span class="step-label">목표</span>
+      <span class="step-eq">∫ψᵢ*(ℏ/i)(dψⱼ/dx)dx = {∫ψⱼ*(ℏ/i)(dψᵢ/dx)dx}*</span>
+      <span class="step-why"></span>
+    </div>
+    <div class="step">
+      <span class="step-label">왼쪽</span>
+      <span class="step-eq">(ℏ/i)∫ψᵢ*(dψⱼ/dx)dx</span>
+      <span class="step-why"></span>
+    </div>
+    <div class="step">
+      <span class="step-label">부분적분</span>
+      <span class="step-eq">f=ψᵢ*, g'=dψⱼ/dx → fg|±∞ - ∫f'g</span>
+      <span class="step-why">∫fg' = fg| - ∫f'g</span>
+    </div>
+    <div class="step">
+      <span class="step-label">=</span>
+      <span class="step-eq">(ℏ/i)[ψᵢ*ψⱼ]₋∞^∞ - (ℏ/i)∫(dψᵢ*/dx)ψⱼ dx</span>
+      <span class="step-why"></span>
+    </div>
+    <div class="step">
+      <span class="step-label">=</span>
+      <span class="step-eq">0 - (ℏ/i)∫(dψᵢ*/dx)ψⱼ dx</span>
+      <span class="step-why">경계항=0 (ψ→0 at ±∞)</span>
+    </div>
+    <div class="step">
+      <span class="step-label">=</span>
+      <span class="step-eq">{∫ψⱼ*(ℏ/i)(dψᵢ/dx)dx}* ✅</span>
+      <span class="step-why">켤레 전개 후 확인</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <p><strong>왜 경계항이 0인가?</strong></p>
+    <p>정규화 조건: ∫|ψ|²dx = 1 이 되려면 ψ는 ±∞에서 반드시 0으로 수렴해야 함. 발산하면 적분이 1이 될 수 없음. 그러므로 [ψᵢ*ψⱼ]₋∞^∞ = 0×0 - 0×0 = 0.</p>
+  </div>
+
+  <div class="box box-green">
+    <div class="label">핵심 이유</div>
+    미분연산자라서 x̂처럼 단순히 순서 바꾸기로 안 됨. <strong>부분적분으로 미분 대상을 ψⱼ에서 ψᵢ*로 옮겨야</strong> Hermiticity 꼴이 완성됨.
+  </div>
+
+  <table>
+    <thead><tr><th></th><th>x̂</th><th>p̂ₓ</th></tr></thead>
+    <tbody>
+      <tr><td>연산자 형태</td><td>x× (곱하기)</td><td>(ℏ/i)(d/dx) (미분)</td></tr>
+      <tr><td>증명 핵심</td><td>x* = x (실수)</td><td>부분적분 + 경계항=0</td></tr>
+      <tr><td>복잡도</td><td>간단</td><td>복잡</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- TAB 5: Orthogonality -->
+<div id="t5" class="tab-content">
+  <div class="sec-title">Orthogonality</div>
+  <div class="sec-sub">Hermitian의 두 번째 결과 — Eigenfunction들이 직교한다</div>
+
+  <h3>함수의 내적이란?</h3>
+
+  <div class="card">
+    <p>벡터 내적: (a,b) = Σaᵢbᵢ → 각 성분끼리 곱해서 더한 것</p>
+    <p>함수 = 각 x값에서의 함숫값을 성분으로 가진 <strong>무한차원 벡터</strong></p>
+    <p>함수 내적: (f,g) = ∫f*(x)g(x)dx → 연속이라 합이 적분이 됨</p>
+  </div>
+
+  <div class="box box-red">
+    <div class="label">왜 f*를 곱하냐?</div>
+    복소수 벡터에서 자기내적 양수 보장 조건: (a,a) ≥ 0<br>
+    * 없으면: z·z = z² → 음수 가능 ❌<br>
+    * 붙이면: z*·z = |z|² ≥ 0 ✅<br><br>
+    켤레 대칭성 (a,b)* = (b,a)도 여기서 자동으로 따라옴 (공리가 아니라 결과).
+  </div>
+
+  <h3>Orthogonality 정의 & 증명</h3>
+
+  <div class="math">∫ψᵢ*ψⱼ dτ = 0 &nbsp; (i≠j) &nbsp;&nbsp; ← 직교 정의</div>
+
+  <div class="box box-amber">
+    <div class="label">가정</div>
+    Ω̂가 Hermitian, Ω̂ψᵢ = ωᵢψᵢ, Ω̂ψⱼ = ωⱼψⱼ, ωᵢ ≠ ωⱼ
+  </div>
+
+  <div class="math derivation">
+    <div class="step">
+      <span class="step-label">식 1</span>
+      <span class="step-eq">∫ψⱼ*Ω̂ψᵢ dτ = ωᵢ∫ψⱼ*ψᵢ dτ</span>
+      <span class="step-why">ψⱼ* 곱하고 적분</span>
+    </div>
+    <div class="step">
+      <span class="step-label">식 2</span>
+      <span class="step-eq">∫ψᵢ*Ω̂ψⱼ dτ = ωⱼ∫ψᵢ*ψⱼ dτ</span>
+      <span class="step-why">ψᵢ* 곱하고 적분</span>
+    </div>
+    <div class="step">
+      <span class="step-label">Hermiticity</span>
+      <span class="step-eq">식2 왼쪽 = {식1}*</span>
+      <span class="step-why">Hermiticity 정의 적용</span>
+    </div>
+    <div class="step">
+      <span class="step-label">=</span>
+      <span class="step-eq">ωⱼ∫ψᵢ*ψⱼ dτ = ωᵢ*{∫ψⱼ*ψᵢ dτ}*</span>
+      <span class="step-why">(z₁z₂)* = z₁*z₂*</span>
+    </div>
+    <div class="step">
+      <span class="step-label">=</span>
+      <span class="step-eq">= ωᵢ∫ψᵢ*ψⱼ dτ</span>
+      <span class="step-why">ωᵢ 실수→ωᵢ*=ωᵢ, (∫f)* = ∫f*, (z*)* = z</span>
+    </div>
+    <div class="step">
+      <span class="step-label">정리</span>
+      <span class="step-eq">(ωᵢ−ωⱼ)∫ψᵢ*ψⱼ dτ = 0</span>
+      <span class="step-why"></span>
+    </div>
+    <div class="step">
+      <span class="step-label">결론</span>
+      <span class="step-eq">ωᵢ≠ωⱼ → ∫ψᵢ*ψⱼ dτ = 0 ✅</span>
+      <span class="step-why">직교 증명 완료</span>
+    </div>
+  </div>
+
+  <h3>왜 직교가 중요한가?</h3>
+
+  <div class="card">
+    <p><strong>직교 안 하면?</strong></p>
+    <p>ψ = Σcₖψₖ에서 cₖ가 유일하게 결정 안 됨 → 확률 예측 불가 → 양자역학이 작동 안 함.</p>
+    <p><strong>직교하면?</strong></p>
+    <p>Basis 형성 → cₖ 유일하게 결정 → |cₖ|² = 확률 확정 → Superposition 가능.</p>
+  </div>
+
+  <div class="box box-blue">
+    <div class="label">💡 오비탈과 연결</div>
+    수소원자 Ĥ도 Hermitian → 오비탈(eigenfunction)들이 서로 직교.<br>
+    1s, 2s, 2p 모양이 다른 이유: <strong>서로 내적했을 때 0이 나와야 하니까</strong> 각자 다른 모양이어야 함.<br>
+    normalized + orthogonal = <em>orthonormal</em> → δₘₙ으로 표현
+  </div>
+</div>
+
+<!-- TAB 6: Superposition -->
+<div id="t6" class="tab-content">
+  <div class="sec-title">Superposition of Quantum States</div>
+  <div class="sec-sub">직교 Eigenfunction = Basis → 임의의 ψ 분해</div>
+
+  <h3>왜 Superposition이 가능한가?</h3>
+
+  <div class="flow">
+    <div class="flow-item"><span class="flow-n">①</span>Hermitian operator의 eigenfunction들은 서로 직교 (Tab 5)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="flow-n">②</span>직교 → Basis 형성 (3D의 x̂,ŷ,ẑ처럼 함수공간의 basis)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="flow-n">③</span>임의의 ψ = c₁ψ₁ + c₂ψ₂ + ... = Σcₖψₖ</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="flow-n">④</span>직교성 덕분에 cₖ 유일하게 결정 가능</div>
+  </div>
+
+  <h3>cₖ를 어떻게 구하나?</h3>
+
+  <div class="math derivation">
+    <div class="step">
+      <span class="step-label">출발</span>
+      <span class="step-eq">ψ = Σₖ cₖψₖ</span>
+      <span class="step-why"></span>
+    </div>
+    <div class="step">
+      <span class="step-label">ψₘ* 곱하고 적분</span>
+      <span class="step-eq">∫ψₘ*ψ dx = Σₖ cₖ∫ψₘ*ψₖ dx</span>
+      <span class="step-why"></span>
+    </div>
+    <div class="step">
+      <span class="step-label">δₘₖ 적용</span>
+      <span class="step-eq">= Σₖ cₖδₘₖ = cₘ</span>
+      <span class="step-why">m≠k 항 전부 0으로 소멸</span>
+    </div>
+    <div class="step">
+      <span class="step-label">결론</span>
+      <span class="step-eq">cₘ = ∫ψₘ*ψ dx</span>
+      <span class="step-why">직교성이 없으면 불가능</span>
+    </div>
+  </div>
+
+  <h3>cos kx 예시</h3>
+
+  <div class="card">
+    <p>ψ = 2Acoskx 에 p̂ₓ 작용 → −2A(ℏk/i)sinkx</p>
+    <p>결과가 sinkx → 원래 coskx와 다른 함수 → <strong>eigenvalue equation 불성립 → eigenfunction 아님</strong></p>
+  </div>
+
+  <div class="math derivation">
+    <div class="step">
+      <span class="step-label">분해</span>
+      <span class="step-eq">2Acoskx = Ae^(ikx) + Ae^(-ikx)</span>
+      <span class="step-why">오일러 공식</span>
+    </div>
+    <div class="step">
+      <span class="step-label">각각 작용</span>
+      <span class="step-eq">p̂ₓ(Ae^(ikx)) = +ℏk · Ae^(ikx)</span>
+      <span class="step-why">eigenvalue +ℏk</span>
+    </div>
+    <div class="step">
+      <span class="step-label"></span>
+      <span class="step-eq">p̂ₓ(Ae^(-ikx)) = −ℏk · Ae^(-ikx)</span>
+      <span class="step-why">eigenvalue −ℏk</span>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th>eigenfunction</th><th>eigenvalue</th><th>cₖ</th><th>|cₖ|² (확률)</th></tr></thead>
+    <tbody>
+      <tr><td>e^(ikx)</td><td>+ℏk (→ 방향)</td><td>A</td><td>|A|² = 1/2</td></tr>
+      <tr><td>e^(-ikx)</td><td>-ℏk (← 방향)</td><td>A</td><td>|A|² = 1/2</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box box-blue">
+    <div class="label">💡 cₖ vs |cₖ|²</div>
+    cₖ = <strong>확률진폭</strong> (복소수 가능) — 상태가 얼마나 섞여있나<br>
+    |cₖ|² = <strong>확률</strong> (항상 양수 실수) — 그 eigenvalue가 나올 확률<br>
+    Σ|cₖ|² = 1 (정규화)
+  </div>
+
+  <div class="box box-green">
+    <div class="label">💡 측정하면?</div>
+    측정 전: ψ = Σcₖψₖ (superposition)<br>
+    측정 순간: 하나의 eigenvalue ωₖ만 나옴 (확률 |cₖ|²)<br>
+    측정 후: ψ → ψₖ 로 collapse (다른 성분 소멸)<br><br>
+    <strong>확률 |cₖ|²는 측정 전부터 확정. 어떤 값이 나올지는 비확정.</strong>
+  </div>
+</div>
+
+<!-- TAB 7: Uncertainty -->
+<div id="t7" class="tab-content">
+  <div class="sec-title">Uncertainty Principle</div>
+  <div class="sec-sub">Wave packet → 수식화 → Heisenberg</div>
+
+  <h3>Wave packet — 직관</h3>
+
+  <div class="card">
+    <p>$$f(x) = \sum_{k=-N}^{N} e^{ikx}$$</p>
+    <p><strong>x=0에서:</strong> e^(ik·0) = 1이라 전부 더해짐 → 보강간섭 → 진폭 큼</p>
+    <p><strong>x≠0에서:</strong> k가 다양할수록 위상이 사방으로 퍼짐 → 상쇄간섭 → 0</p>
+  </div>
+
+  <table>
+    <thead><tr><th>N (파동 수)</th><th>위치 Δq</th><th>운동량 Δp</th></tr></thead>
+    <tbody>
+      <tr><td>±1</td><td>넓게 퍼짐</td><td>거의 확정</td></tr>
+      <tr><td>±3</td><td>좁아짐</td><td>불확정 증가</td></tr>
+      <tr><td>±10</td><td>매우 뾰족</td><td>거의 완전 불확정</td></tr>
+      <tr><td>±∞</td><td>δ(x) — 완전 확정</td><td>Δp = ∞</td></tr>
+    </tbody>
+  </table>
+
+  <h3>δ(x) = N→∞인 이유</h3>
+
+  <div class="card">
+    <p><strong>수학적:</strong> x≠0에서 양의 k와 음의 k가 대칭으로 cos(kx) 전부를 더하면 완전 상쇄. x=0에서만 발산. 이게 δ(x)의 정의.</p>
+    <p><strong>물리적:</strong> 모든 운동량 성분이 동등하게 섞임 → x=0에서만 보강간섭 → 위치 완전 확정 + 운동량 완전 불확정.</p>
+  </div>
+
+  <h3>Heisenberg 불확정성 원리</h3>
+
+  <div class="math">Δp · Δq ≥ ½ℏ</div>
+
+  <div class="card">
+    <p>Δp, Δq는 <strong>RMSD (root mean square deviation)</strong> = 통계학 표준편차</p>
+    <p>Δp = {⟨p²⟩ − ⟨p⟩²}^(1/2) &nbsp;&nbsp; Δq = {⟨q²⟩ − ⟨q⟩²}^(1/2)</p>
+    <p>둘 다 <em>expectation value</em>로 표현됨 — Tab 2에서 배운 개념이 여기서 쓰임.</p>
+  </div>
+
+  <div class="box box-amber">
+    <div class="label">Expectation value of kinetic energy</div>
+    ⟨Eₖ⟩ = −(ℏ²/2m)∫ψ*(d²ψ/dx²)dx<br><br>
+    <strong>Ek가 크게 기여하는 조건 두 가지:</strong><br>
+    1. ψ 자체가 큰 영역 (가중치 역할 — 진폭 큰 곳이 더 반영됨)<br>
+    2. ψ 곡률이 큰 영역 (d²ψ/dx²가 큼)
+  </div>
+</div>
+
+<!-- TAB 8: Commutator -->
+<div id="t8" class="tab-content">
+  <div class="sec-title">Commutator</div>
+  <div class="sec-sub">불확정성 원리의 수학적 완성 — [x̂, p̂] = iℏ</div>
+
+  <h3>왜 Commutator가 나오나?</h3>
+
+  <div class="card">
+    <p>두 Hermitian operator Ω̂₁, Ω̂₂가 <strong>공통 eigenfunction basis</strong>를 가진다 ⟺ Ω̂₁Ω̂₂ = Ω̂₂Ω̂₁</p>
+    <p>공통 basis가 있다 = 두 물리량을 <strong>동시에 확정값으로 측정 가능</strong>.</p>
+    <p>교환법칙이 성립하지 않으면? → 공통 basis 없음 → 동시 확정 불가 → 불확정성 원리.</p>
+  </div>
+
+  <div class="math">
+    [Ω̂₁, Ω̂₂] = Ω̂₁Ω̂₂ − Ω̂₂Ω̂₁ &nbsp;&nbsp; (Commutator 정의)<br>
+    = 0 이면 "commute" → 동시 측정 가능
+  </div>
+
+  <h3>[x̂, p̂ₓ] 계산</h3>
+
+  <div class="math derivation">
+    <div class="step">
+      <span class="step-label">x̂p̂ψ</span>
+      <span class="step-eq">= x × (ℏ/i)(dψ/dx)</span>
+      <span class="step-why"></span>
+    </div>
+    <div class="step">
+      <span class="step-label">p̂x̂ψ</span>
+      <span class="step-eq">= (ℏ/i)d(xψ)/dx = (ℏ/i)(ψ + x dψ/dx)</span>
+      <span class="step-why">곱의 미분</span>
+    </div>
+    <div class="step">
+      <span class="step-label">① − ②</span>
+      <span class="step-eq">= −(ℏ/i)ψ = iℏψ</span>
+      <span class="step-why">−1/i = i</span>
+    </div>
+    <div class="step">
+      <span class="step-label">결론</span>
+      <span class="step-eq">[x̂, p̂ₓ] = iℏ ≠ 0</span>
+      <span class="step-why">commute 안 함 → 불확정성 필연</span>
+    </div>
+  </div>
+
+  <div class="box box-red">
+    <div class="label">⚠️ 불확정성 원리의 수학적 완성</div>
+    <strong>일반화된 불확정성 원리:</strong><br>
+    ΔΩ₁ · ΔΩ₂ ≥ ½|⟨[Ω̂₁, Ω̂₂]⟩|<br><br>
+    x̂, p̂ₓ에 적용: Δp · Δq ≥ ½|⟨iℏ⟩| = ½ℏ ✅<br><br>
+    7B에서 "경계조건으로 느꼈던" 불확정성 → 7C에서 <em>commutator로 수학적 필연임을 증명</em>.
+  </div>
+
+  <h3>Complementary Observables</h3>
+
+  <table>
+    <thead><tr><th>쌍</th><th>Commutator</th><th>불확정성</th></tr></thead>
+    <tbody>
+      <tr><td>위치 x, 운동량 p</td><td>[x̂, p̂] = iℏ</td><td>ΔxΔp ≥ ℏ/2</td></tr>
+      <tr><td>에너지 E, 시간 t</td><td>[Ê, t̂] = iℏ</td><td>ΔEΔt ≥ ℏ/2</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box box-blue">
+    <div class="label">💡 7B → 7C 연결 완성</div>
+    7B: "위치랑 운동량이 동시에 확정이 안 되네?" (경계조건 예시로 직관적으로 발견)<br>
+    7C: "[x̂, p̂] = iℏ ≠ 0 이기 때문에 수학적으로 필연" (완전한 증명)<br><br>
+    <strong>불확정성은 자연의 우연이 아니라 연산자 구조에서 강제되는 것.</strong>
+  </div>
+</div>
+
+<!-- TAB 9: 출제 예상 문제 -->
+<div id="t9" class="tab-content">
+  <div class="sec-title">출제 예상 문제</div>
+  <div class="sec-sub">유도형 40% / 원리·설명형 30% / 계산형 30%</div>
+
+  <h3>유도형 40%</h3>
+
+  <div class="exam-block">
+    <div class="exam-header">
+      <span class="exam-tag tag-d">유도형</span>
+      <span style="font-size:0.85rem;">Hermiticity 도출</span>
+    </div>
+    <div class="exam-q">
+      Expectation value ⟨Ω⟩가 실수이기 위한 조건을 복소수 규칙을 이용하여 수식으로 유도하고, 그 조건에 Hermiticity라는 이름이 붙는 이유를 설명하시오.
+    </div>
+    <div class="exam-hint">
+      <strong>HINT →</strong> ⟨Ω⟩ = ∫ψ*Ω̂ψ dτ 출발 → ⟨Ω⟩* 계산 (켤레→적분 안으로, 곱의 켤레, 켤레의 켤레 순서) → ⟨Ω⟩ = ⟨Ω⟩* 조건 → 일반화 → Hermiticity 정의. "실수 원함"은 동기, 정의 자체에 실수 없음 강조.
+    </div>
+  </div>
+
+  <div class="exam-block">
+    <div class="exam-header">
+      <span class="exam-tag tag-d">유도형</span>
+      <span style="font-size:0.85rem;">p̂ₓ Hermitian 증명</span>
+    </div>
+    <div class="exam-q">
+      운동량 연산자 p̂ₓ = (ℏ/i)(d/dx)가 Hermitian임을 부분적분을 이용하여 증명하시오.
+    </div>
+    <div class="exam-hint">
+      <strong>HINT →</strong> ∫ψᵢ*(ℏ/i)(dψⱼ/dx)dx → 부분적분 f=ψᵢ*, g'=dψⱼ/dx → 경계항=0 (ψ→0 at ±∞) → −(ℏ/i)∫(dψᵢ*/dx)ψⱼ dx → 켤레 형태로 정리 → Hermiticity 만족.
+    </div>
+  </div>
+
+  <div class="exam-block">
+    <div class="exam-header">
+      <span class="exam-tag tag-d">유도형</span>
+      <span style="font-size:0.85rem;">Eigenfunction 직교 증명</span>
+    </div>
+    <div class="exam-q">
+      Hermitian operator의 서로 다른 eigenvalue에 해당하는 두 eigenfunction이 직교함을 증명하시오.
+    </div>
+    <div class="exam-hint">
+      <strong>HINT →</strong> 두 eigenvalue eq 설정 → 각각 상대방 ψ* 곱하고 적분 → Hermiticity 적용 → 복소수 규칙으로 전개 (ωᵢ 실수이므로 ωᵢ* = ωᵢ) → (ωᵢ−ωⱼ)∫ψᵢ*ψⱼ = 0 → ωᵢ≠ωⱼ이면 적분=0.
+    </div>
+  </div>
+
+  <div class="exam-block">
+    <div class="exam-header">
+      <span class="exam-tag tag-d">유도형</span>
+      <span style="font-size:0.85rem;">[x̂, p̂ₓ] 계산</span>
+    </div>
+    <div class="exam-q">
+      [x̂, p̂ₓ] = iℏ 임을 임의의 파동함수 ψ에 작용시켜 증명하고, 이로부터 Heisenberg 불확정성 원리가 도출되는 이유를 설명하시오.
+    </div>
+    <div class="exam-hint">
+      <strong>HINT →</strong> x̂p̂ψ − p̂x̂ψ 각각 전개 → p̂x̂ψ에서 곱의 미분 주의 → 빼면 −(ℏ/i)ψ = iℏψ → [x̂,p̂]=iℏ≠0 → 공통 eigenfunction basis 없음 → 동시 확정 불가 → 일반화 불확정성 원리.
+    </div>
+  </div>
+
+  <h3>원리·설명형 30%</h3>
+
+  <div class="exam-block">
+    <div class="exam-header">
+      <span class="exam-tag tag-c">원리형</span>
+      <span style="font-size:0.85rem;">Hermiticity 정의의 논리적 필연성</span>
+    </div>
+    <div class="exam-q">
+      Hermiticity가 "임의로 만든 정의"가 아니라 "측정값 실수 조건에서 강제된 조건"임을 설명하고, 이것이 순환논리가 아닌 이유를 동기·정의·정리의 구분을 이용해 설명하시오.
+    </div>
+    <div class="exam-hint">
+      <strong>HINT →</strong> 동기: "실수 원함" / 정의: Hermiticity 수식 (실수라는 말 없음, 순수 수학 조건) / 정리: 그 정의로부터 eigenvalue 실수 증명. 정의 자체에 결론이 없으므로 순환 아님.
+    </div>
+  </div>
+
+  <div class="exam-block">
+    <div class="exam-header">
+      <span class="exam-tag tag-c">원리형</span>
+      <span style="font-size:0.85rem;">직교성이 양자역학에서 필수인 이유</span>
+    </div>
+    <div class="exam-q">
+      Hermitian operator의 eigenfunction들이 직교하지 않으면 양자역학의 확률 해석이 불가능해지는 이유를 Superposition과 cₖ의 유일성을 이용해 설명하시오.
+    </div>
+    <div class="exam-hint">
+      <strong>HINT →</strong> ψ = Σcₖψₖ에서 cₖ = ∫ψₘ*ψ dx 유도할 때 δₘₖ 필요 → 직교해야 m≠k 항이 사라져 cₖ 유일 결정 → |cₖ|² = 확률 확정. 직교 안 하면 cₖ 무한히 많음 → 확률 예측 불가.
+    </div>
+  </div>
+
+  <div class="exam-block">
+    <div class="exam-header">
+      <span class="exam-tag tag-c">원리형</span>
+      <span style="font-size:0.85rem;">Expectation value vs Eigenvalue</span>
+    </div>
+    <div class="exam-q">
+      Expectation value와 Eigenvalue의 관계를 설명하고, 파동함수가 Superposition 상태일 때와 eigenfunction일 때 측정값이 어떻게 달라지는지 비교하시오.
+    </div>
+    <div class="exam-hint">
+      <strong>HINT →</strong> Eigenvalue = Expectation value의 특수한 경우 (ψ가 eigenfunction이면 ω로 특수화) / Superposition: 매번 다른 값, 평균 = Σ|cₖ|²ωₖ / Eigenfunction: 항상 같은 값 ω / 확률은 확정, 결과는 비확정.
+    </div>
+  </div>
+
+  <h3>계산형 30%</h3>
+
+  <div class="exam-block">
+    <div class="exam-header">
+      <span class="exam-tag tag-n">계산형</span>
+      <span style="font-size:0.85rem;">Superposition 분해 + 확률</span>
+    </div>
+    <div class="exam-q">
+      ψ(x) = (1/√2)e^(ikx) + (i/√2)e^(-ikx) 일 때, (a) 각 운동량 eigenvalue, (b) 각 eigenvalue가 나올 확률, (c) 평균 운동량 ⟨p⟩를 구하시오.
+    </div>
+    <div class="exam-hint">
+      <strong>HINT →</strong> c₁ = 1/√2, c₂ = i/√2 / |c₁|² = 1/2, |c₂|² = |i|²/2 = 1/2 / ⟨p⟩ = (1/2)(+ℏk) + (1/2)(−ℏk) = 0. 정규화 확인: |c₁|²+|c₂|² = 1.
+    </div>
+  </div>
+
+  <div class="exam-block">
+    <div class="exam-header">
+      <span class="exam-tag tag-n">계산형</span>
+      <span style="font-size:0.85rem;">Eigenfunction 판별 + Eigenvalue</span>
+    </div>
+    <div class="exam-q">
+      다음 중 운동량 연산자 p̂ₓ의 eigenfunction인 것을 판별하고, eigenfunction이면 eigenvalue를 구하시오.<br>
+      (a) ψ = Ae^(3ikx) &nbsp;&nbsp; (b) ψ = Acos(kx) &nbsp;&nbsp; (c) ψ = Ae^(-2kx)
+    </div>
+    <div class="exam-hint">
+      <strong>HINT →</strong> p̂ₓψ = (ℏ/i)(dψ/dx) 적용 후 (상수)×ψ 꼴 나오면 eigenfunction / (a) 3ℏk ✅ / (b) sin 나옴 ❌ / (c) −2ℏki → eigenvalue 복소수 → Hermitian operator에서 불가 ❌.
+    </div>
+  </div>
+
+  <div class="exam-block">
+    <div class="exam-header">
+      <span class="exam-tag tag-n">계산형</span>
+      <span style="font-size:0.85rem;">Commutator 계산</span>
+    </div>
+    <div class="exam-q">
+      다음 commutator를 계산하시오.<br>
+      (a) [x̂², p̂ₓ] &nbsp;&nbsp; (b) [x̂, p̂ₓ²]
+    </div>
+    <div class="exam-hint">
+      <strong>HINT →</strong> (a) [x̂², p̂ₓ]ψ = x²(p̂ψ) − p̂(x²ψ) → p̂(x²ψ) = (ℏ/i)(2xψ + x²dψ/dx) → 결과: 2iℏx̂ / (b) [x̂, p̂ₓ²] = p̂ₓ[x̂,p̂ₓ] + [x̂,p̂ₓ]p̂ₓ = 2iℏp̂ₓ.
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const ids = ['t1','t2','t3','t4','t5','t6','t7','t8','t9'];
+  document.querySelectorAll('.tab-btn')[ids.indexOf(id)].classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+</body>
+</html>

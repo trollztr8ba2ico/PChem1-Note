@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>물리화학 Ch7B — 슈뢰딩거 방정식과 파동함수</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e1117;
+    --surface: #161b27;
+    --surface2: #1e2535;
+    --border: #2a3148;
+    --text: #d8e0f0;
+    --muted: #6b7799;
+    --blue: #5b9bd5;
+    --blue-dim: #1e3150;
+    --amber: #e8a84c;
+    --amber-dim: #2e1f05;
+    --green: #6abf8a;
+    --green-dim: #0d2318;
+    --red: #e05c6a;
+    --red-dim: #2a0d12;
+    --purple: #a78bdc;
+    --purple-dim: #1e1535;
+    --teal: #4ec9b0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14.5px;
+    line-height: 1.8;
+    padding: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0e1117 0%, #1a2238 60%, #0e1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: 'ψ';
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 160px;
+    color: rgba(91,155,213,0.06);
+    font-family: 'Playfair Display', serif;
+    pointer-events: none;
+  }
+  header .badge {
+    display: inline-block;
+    background: var(--blue-dim);
+    color: var(--blue);
+    border: 1px solid rgba(91,155,213,0.3);
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1.5px;
+    padding: 3px 12px;
+    border-radius: 2px;
+    margin-bottom: 14px;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    color: #fff;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  nav button {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 12.5px;
+    padding: 14px 18px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .2s;
+  }
+  nav button:hover { color: var(--text); }
+  nav button.active {
+    color: var(--blue);
+    border-bottom-color: var(--blue);
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 40px 80px;
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── FLOW BAR ── */
+  .flow-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .flow-item {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--surface2);
+  }
+  .flow-item.highlight {
+    color: var(--amber);
+    background: var(--amber-dim);
+    font-weight: 500;
+  }
+  .flow-arrow {
+    color: var(--border);
+    font-size: 14px;
+    padding: 0 2px;
+  }
+
+  /* ── SECTION TITLE ── */
+  .sec-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .sec-subtitle {
+    color: var(--muted);
+    font-size: 12.5px;
+    margin-bottom: 28px;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card.blue { border-left: 3px solid var(--blue); }
+  .card.blue .card-title { color: var(--blue); }
+  .card.amber { border-left: 3px solid var(--amber); }
+  .card.amber .card-title { color: var(--amber); }
+  .card.green { border-left: 3px solid var(--green); }
+  .card.green .card-title { color: var(--green); }
+  .card.red { border-left: 3px solid var(--red); }
+  .card.red .card-title { color: var(--red); }
+  .card.purple { border-left: 3px solid var(--purple); }
+  .card.purple .card-title { color: var(--purple); }
+  .card.teal { border-left: 3px solid var(--teal); }
+  .card.teal .card-title { color: var(--teal); }
+
+  /* ── MATH BOX ── */
+  .math-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    margin: 12px 0;
+    text-align: center;
+    color: #e8f0ff;
+    line-height: 1.6;
+  }
+  .math-box.highlight {
+    border-color: var(--amber);
+    background: var(--amber-dim);
+    color: var(--amber);
+  }
+  .math-box.blue {
+    border-color: var(--blue);
+    background: var(--blue-dim);
+    color: #a8ccf0;
+  }
+
+  /* ── Q&A (바보 질문 파트) ── */
+  .qa-block {
+    margin-bottom: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .qa-q {
+    background: var(--purple-dim);
+    border-left: 3px solid var(--purple);
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--purple);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .qa-q:hover { opacity: 0.9; }
+  .qa-q .arrow { transition: transform .2s; font-size: 11px; }
+  .qa-q.open .arrow { transform: rotate(90deg); }
+  .qa-a {
+    background: var(--surface);
+    padding: 0 16px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .3s ease, padding .3s;
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.8;
+  }
+  .qa-a.open {
+    max-height: 600px;
+    padding: 14px 16px;
+  }
+
+  /* ── TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13.5px;
+  }
+  th {
+    background: var(--surface2);
+    color: var(--muted);
+    font-weight: 500;
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+  td {
+    padding: 9px 12px;
+    border-bottom: 1px solid rgba(42,49,72,0.5);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+
+  /* ── EMPHASIS ── */
+  .em-blue { color: var(--blue); font-weight: 500; }
+  .em-amber { color: var(--amber); font-weight: 500; }
+  .em-green { color: var(--green); font-weight: 500; }
+  .em-red { color: var(--red); font-weight: 500; }
+  .em-purple { color: var(--purple); font-weight: 500; }
+  .em-teal { color: var(--teal); font-weight: 500; }
+
+  /* ── KEY POINT ── */
+  .key-point {
+    background: var(--amber-dim);
+    border: 1px solid rgba(232,168,76,0.3);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 13.5px;
+    color: var(--amber);
+  }
+  .key-point::before { content: '💡 '; }
+
+  .note {
+    color: var(--muted);
+    font-size: 12.5px;
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* ── STEP LIST ── */
+  .steps { list-style: none; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .steps li::before {
+    content: counter(step);
+    min-width: 24px;
+    height: 24px;
+    background: var(--blue-dim);
+    color: var(--blue);
+    border: 1px solid rgba(91,155,213,0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 24px 0;
+  }
+
+  /* ── GRID ── */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 12px 0;
+  }
+  @media (max-width: 600px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    main { padding: 24px 20px 60px; }
+    nav { padding: 0 16px; }
+    header { padding: 32px 20px 24px; }
+    header::before { display: none; }
+  }
+
+  /* ── CASE BLOCK ── */
+  .case-block {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 14px 0;
+  }
+  .case-header {
+    padding: 10px 16px;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+  .case-header.blue { background: var(--blue-dim); color: var(--blue); }
+  .case-header.green { background: var(--green-dim); color: var(--green); }
+  .case-body {
+    padding: 14px 16px;
+    background: var(--surface);
+    font-size: 13.5px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">ATKINS 12E · CHAPTER 7B</div>
+  <h1>슈뢰딩거 방정식과 파동함수</h1>
+  <p>Schrödinger Equation · Born Interpretation · Normalization · Uncertainty Principle</p>
+</header>
+
+<nav>
+  <button class="active" onclick="showSection('s0', this)">🗺 전체 흐름</button>
+  <button onclick="showSection('s1', this)">01 파동함수</button>
+  <button onclick="showSection('s2', this)">02 슈뢰딩거 방정식</button>
+  <button onclick="showSection('s3', this)">03 타당성 검증</button>
+  <button onclick="showSection('s4', this)">04 수학 배경</button>
+  <button onclick="showSection('s5', this)">05 Born 해석</button>
+  <button onclick="showSection('s6', this)">06 정규화</button>
+  <button onclick="showSection('s7', this)">07 특수해 & 불확정성</button>
+  <button onclick="showSection('s8', this)">08 확률 계산</button>
+  <button onclick="showSection('sq', this)">❓ Q&A</button>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════════
+     S0 — 전체 흐름
+═══════════════════════════════════════════ -->
+<div id="s0" class="section active">
+  <div class="sec-title">전체 흐름</div>
+  <div class="sec-subtitle">Ch7B에서 배운 내용이 어떻게 연결되는지 한눈에</div>
+
+  <div class="card blue">
+    <div class="card-title">BIG PICTURE — 한 문장으로</div>
+    <p>슈뢰딩거 방정식을 풀어서 파동함수 ψ를 구하고, ψ로부터 입자의 모든 물리 정보를 뽑아낸다.</p>
+  </div>
+
+  <div class="card amber">
+    <div class="card-title">STORY 흐름</div>
+    <ol class="steps">
+      <li><span><span class="em-blue">파동함수 ψ(x) 소개</span> — 입자는 파동처럼 분포. ψ 안에 모든 물리 정보가 담겨 있다.</span></li>
+      <li><span><span class="em-blue">슈뢰딩거 방정식</span> — ψ를 구하는 방정식. KE + PE = E 구조. Ĥψ = Eψ</span></li>
+      <li><span><span class="em-blue">타당성 검증 (Plausibility)</span> — ψ = coskx 대입 → de Broglie 관계식 자동 재현 → 방정식 신뢰 가능</span></li>
+      <li><span><span class="em-amber">수학 배경</span> — 복소수 · Euler's formula · Taylor 급수 (파동함수를 복소수로 쓰기 위한 도구)</span></li>
+      <li><span><span class="em-amber">Born 해석</span> — ψ = 확률진폭, |ψ|² = 확률밀도. ψ 부호는 의미 없음.</span></li>
+      <li><span><span class="em-green">파동함수 조건</span> — 확률밀도 정의상 당연히 따라오는 조건들 (연속, 단일값, 유한, 미분가능)</span></li>
+      <li><span><span class="em-green">정규화</span> — ∫|ψ|²dx = 1 조건으로 A(진폭) 결정</span></li>
+      <li><span><span class="em-red">경계조건 → 특수해</span> — B=0 또는 A=B 선택 → 불확정성 원리 자연스럽게 등장</span></li>
+      <li><span><span class="em-red">확률 계산</span> — P = ∫|ψ|²dx, 반각공식으로 적분</span></li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-title">일반해 전체 구조</div>
+    <div class="math-box">ψ = Acoskx + Bsinkx &nbsp;=&nbsp; Ae<sup>ikx</sup> + Be<sup>−ikx</sup></div>
+    <p class="note">두 형태는 수학적으로 동치. 실수형은 정상파 표현에, 복소수형은 진행 방향 구분에 편리.</p>
+    <hr class="divider">
+    <div class="grid-2">
+      <div>
+        <p class="em-blue" style="margin-bottom:6px">k → 슈뢰딩거 방정식으로 결정</p>
+        <div class="math-box blue">k = (2m(E−V)/ℏ²)<sup>1/2</sup></div>
+        <p class="note">에너지·퍼텐셜로만 결정. 운동에너지 클수록 k 크고 λ 작음.</p>
+      </div>
+      <div>
+        <p class="em-amber" style="margin-bottom:6px">A, B → 경계조건 + 정규화로 결정</p>
+        <div class="math-box highlight">N²∫ψ*ψ dx = 1</div>
+        <p class="note">확률 합 = 1 조건에서 역으로 A 구하기.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S1 — 파동함수
+═══════════════════════════════════════════ -->
+<div id="s1" class="section">
+  <div class="sec-title">01 파동함수 ψ(x)</div>
+  <div class="sec-subtitle">입자를 기술하는 새로운 방법</div>
+
+  <div class="card blue">
+    <div class="card-title">핵심 아이디어</div>
+    <p>고전역학: 입자 위치가 x(t)로 딱 결정됨.</p>
+    <p style="margin-top:8px">양자역학: 전자는 <span class="em-blue">파동처럼 공간에 퍼져 있음</span>. 위치를 딱 정할 수 없어. 이 "파동"을 수학적으로 표현한 것이 <span class="em-blue">파동함수 ψ(x)</span>.</p>
+  </div>
+
+  <div class="card amber">
+    <div class="card-title">ψ(x) 안에 뭐가 들어있나</div>
+    <p><span class="em-amber">All dynamic information</span> — 위치, 운동량, 에너지 등 입자에 대해 알 수 있는 모든 것이 ψ 안에 담겨 있다.</p>
+    <p style="margin-top:8px">즉, ψ를 알면 = 그 입자에 대해 알 수 있는 건 다 알 수 있다.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">ψ(x) vs ψ(x, t)</div>
+    <table>
+      <tr><th>표기</th><th>의미</th><th>사용 상황</th></tr>
+      <tr><td class="em-blue">ψ(x)</td><td>시간 독립 파동함수</td><td>정상 상태 (Ch7B~8 주로 이것)</td></tr>
+      <tr><td class="em-muted" style="color:var(--muted)">Ψ(x,t)</td><td>시간 의존 파동함수</td><td>시간에 따른 변화 기술</td></tr>
+    </table>
+    <p class="note">시간 독립: 스냅샷. 시간 의존: 동영상. 지금은 스냅샷만.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S2 — 슈뢰딩거 방정식
+═══════════════════════════════════════════ -->
+<div id="s2" class="section">
+  <div class="sec-title">02 슈뢰딩거 방정식</div>
+  <div class="sec-subtitle">양자역학의 F = ma</div>
+
+  <div class="card blue">
+    <div class="card-title">압축형</div>
+    <div class="math-box highlight">Ĥψ = Eψ</div>
+    <table>
+      <tr><th>기호</th><th>의미</th></tr>
+      <tr><td class="em-blue">Ĥ</td><td>해밀토니안 — "에너지를 계산해주는 기계"</td></tr>
+      <tr><td class="em-amber">ψ</td><td>파동함수 — 구하려는 대상</td></tr>
+      <tr><td class="em-green">E</td><td>에너지 — 숫자(고유값)</td></tr>
+    </table>
+    <p class="note">읽는 법: "에너지 기계를 ψ에 적용하면 E×ψ가 나온다"</p>
+  </div>
+
+  <div class="card amber">
+    <div class="card-title">펼친 형태 (1D)</div>
+    <div class="math-box">−(ℏ²/2m)(d²ψ/dx²) + V(x)ψ(x) = Eψ(x)</div>
+    <div class="grid-2" style="margin-top:12px">
+      <div style="background:var(--blue-dim);border-radius:6px;padding:12px;border:1px solid rgba(91,155,213,0.2)">
+        <p class="em-blue" style="font-size:12px;margin-bottom:4px">운동에너지 항 (KE)</p>
+        <div class="math-box blue" style="font-size:12px">−(ℏ²/2m)(d²ψ/dx²)</div>
+      </div>
+      <div style="background:var(--green-dim);border-radius:6px;padding:12px;border:1px solid rgba(106,191,138,0.2)">
+        <p class="em-green" style="font-size:12px;margin-bottom:4px">퍼텐셜에너지 항 (PE)</p>
+        <div class="math-box" style="font-size:12px;border-color:var(--green)">V(x)ψ(x)</div>
+      </div>
+    </div>
+    <div class="key-point">KE + PE = E 구조 — 고등학교 역학적 에너지 보존과 똑같은 틀!</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">ℏ (h-bar)</div>
+    <div class="math-box">ℏ = h/2π</div>
+    <p>양자역학에서 2π가 계속 나오는 이유: k = 2π/λ처럼 <span class="em-blue">라디안 단위계</span> 때문. h보다 ℏ가 훨씬 자주 등장.</p>
+  </div>
+
+  <div class="card purple">
+    <div class="card-title">Ch8 예고 — V(x)에 뭘 넣느냐로 달라지는 모델들</div>
+    <table>
+      <tr><th>V(x)</th><th>모델</th></tr>
+      <tr><td class="em-blue">V = 0</td><td>입자-상자 (Particle in a box)</td></tr>
+      <tr><td class="em-amber">V ~ (x−x₀)²</td><td>조화진동자 (Harmonic oscillator)</td></tr>
+      <tr><td class="em-red">V ~ Q₁Q₂/x</td><td>수소 원자 (Coulomb potential)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S3 — 타당성 검증
+═══════════════════════════════════════════ -->
+<div id="s3" class="section">
+  <div class="sec-title">03 타당성 검증 (Plausibility)</div>
+  <div class="sec-subtitle">슈뢰딩거 방정식이 왜 믿을만한가</div>
+
+  <div class="key-point" style="background:var(--red-dim);border-color:rgba(224,92,106,0.3);color:var(--red)">슈뢰딩거 방정식은 유도된 것이 아니라 가정(postulate)이다. F=ma처럼. 단, de Broglie와 일치함을 보여 타당성을 확인할 수 있다.</div>
+
+  <div class="card blue">
+    <div class="card-title">ODE 형태로 변환</div>
+    <div class="math-box">d²ψ/dx² = (2m/ℏ²)(V−E)ψ</div>
+    <p>이 형태가 중요한 이유: <span class="em-blue">2계 선형 ODE 표준형 d²f/dx² = af</span> 와 같은 패턴.</p>
+    <p style="margin-top:8px">a의 부호에 따라 해의 형태 결정:</p>
+    <table style="margin-top:8px">
+      <tr><th>조건</th><th>a 부호</th><th>해의 형태</th><th>의미</th></tr>
+      <tr><td class="em-blue">E > V</td><td>(V−E) < 0 → a < 0</td><td class="em-green">cos kx, sin kx</td><td>진동 (물리적으로 유효)</td></tr>
+      <tr><td class="em-red">E < V</td><td>(V−E) > 0 → a > 0</td><td class="em-muted" style="color:var(--muted)">e^kx, e^{-kx}</td><td>발산 → 보통 제외</td></tr>
+    </table>
+  </div>
+
+  <div class="card amber">
+    <div class="card-title">검증 과정 (V=0 자유입자)</div>
+    <ol class="steps">
+      <li>
+        <span>ψ = coskx 를 슈뢰딩거 방정식에 대입
+        <div class="math-box" style="text-align:left;margin-top:6px">coskx 두 번 미분 = −k²coskx</div>
+        </span>
+      </li>
+      <li>
+        <span>양변 cos kx 약분
+        <div class="math-box" style="text-align:left;margin-top:6px">−k² = (2m/ℏ²)(V−E) &nbsp;→&nbsp; k = (2m(E−V)/ℏ²)<sup>1/2</sup></div>
+        </span>
+      </li>
+      <li>
+        <span>V=0이면 E−V = Eₖ = p²/2m 이므로
+        <div class="math-box" style="text-align:left;margin-top:6px">Eₖ = k²ℏ²/2m &nbsp;→&nbsp; p = kℏ</div>
+        </span>
+      </li>
+      <li>
+        <span>k = 2π/λ 대입
+        <div class="math-box highlight" style="text-align:left;margin-top:6px">p = (2π/λ) × (h/2π) = h/λ &nbsp;✓ de Broglie!</div>
+        </span>
+      </li>
+    </ol>
+    <div class="key-point">슈뢰딩거 방정식의 해가 자동으로 de Broglie를 만족 → 방정식이 타당하다는 간접 증거.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">k의 물리적 의미</div>
+    <p>k = 2π/λ 이므로 k가 크면 λ 작음.</p>
+    <p style="margin-top:8px">k² = 2m(E−V)/ℏ² 이고 E−V = Eₖ (운동에너지)이므로:</p>
+    <table style="margin-top:8px">
+      <tr><th>운동에너지 E−V</th><th>k</th><th>λ</th><th>p</th></tr>
+      <tr><td>크다 (빠른 입자)</td><td>크다</td><td class="em-blue">작다</td><td>크다</td></tr>
+      <tr><td>작다 (느린 입자)</td><td>작다</td><td class="em-amber">크다</td><td>작다</td></tr>
+    </table>
+    <p class="note">→ 빠를수록 파장 짧아짐. de Broglie λ = h/p 와 완전히 일치.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S4 — 수학 배경
+═══════════════════════════════════════════ -->
+<div id="s4" class="section">
+  <div class="sec-title">04 수학 배경</div>
+  <div class="sec-subtitle">복소수 · Euler's Formula · Taylor Series</div>
+
+  <div class="card blue">
+    <div class="card-title">복소수 기본</div>
+    <div class="math-box">z = x + iy &nbsp;&nbsp;&nbsp; (i = √−1)</div>
+    <table>
+      <tr><th>이름</th><th>식</th><th>의미</th></tr>
+      <tr><td>켤레복소수</td><td class="em-blue">z* = x − iy</td><td>허수부 부호만 바꿈</td></tr>
+      <tr><td>절댓값 제곱</td><td class="em-amber">|z|² = z*z = x² + y²</td><td>항상 양수 → 확률밀도에 사용!</td></tr>
+      <tr><td>절댓값</td><td>|z| = (x²+y²)<sup>1/2</sup></td><td></td></tr>
+    </table>
+  </div>
+
+  <div class="card amber">
+    <div class="card-title">Euler's Formula ← 시험 자주 나옴</div>
+    <div class="math-box highlight">e<sup>iφ</sup> = cosφ + i sinφ</div>
+    <div class="math-box">e<sup>−iφ</sup> = cosφ − i sinφ</div>
+    <p style="margin-top:12px">두 식을 더하고 빼면:</p>
+    <div class="grid-2" style="margin-top:8px">
+      <div class="math-box blue">cosφ = (e<sup>iφ</sup>+e<sup>−iφ</sup>)/2</div>
+      <div class="math-box blue">sinφ = (e<sup>iφ</sup>−e<sup>−iφ</sup>)/2i</div>
+    </div>
+    <div class="key-point">이걸 알면 cos kx, sin kx를 e<sup>ikx</sup> 형태로 쓸 수 있다 → 복소수 파동함수 표현 가능.</div>
+  </div>
+
+  <div class="card green">
+    <div class="card-title">Taylor Series — Euler's Formula 증명</div>
+    <div class="math-box">f(x) = f(a) + f'(a)/1!(x−a) + f''(a)/2!(x−a)² + ···</div>
+    <p style="margin-top:10px">a=0으로 놓으면:</p>
+    <div class="math-box" style="font-size:13px">e<sup>x</sup> = 1 + x + x²/2! + x³/3! + ···</div>
+    <div class="math-box" style="font-size:13px">cosx = 1 − x²/2! + x⁴/4! − ···</div>
+    <div class="math-box" style="font-size:13px">sinx = x − x³/3! + x⁵/5! − ···</div>
+    <p style="margin-top:10px">x 자리에 ix 넣으면:</p>
+    <div class="math-box highlight">e<sup>ix</sup> = cosx + i sinx &nbsp;✓</div>
+    <div class="key-point">실전 활용: e<sup>x</sup> ≈ 1+x (x 작을 때) — 7A 흑체복사 Rayleigh-Jeans 극한 때 썼던 바로 그것!</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">복소수 일반해 변환</div>
+    <p>Acoskx + Bsinkx 에 Euler 공식 대입하면:</p>
+    <div class="math-box" style="font-size:13px;text-align:left;padding:14px 20px">
+      A·(e<sup>ikx</sup>+e<sup>−ikx</sup>)/2 + B·(e<sup>ikx</sup>−e<sup>−ikx</sup>)/2i<br><br>
+      = (A/2 + B/2i)e<sup>ikx</sup> + (A/2 − B/2i)e<sup>−ikx</sup><br><br>
+      = <span class="em-amber">C</span>e<sup>ikx</sup> + <span class="em-blue">D</span>e<sup>−ikx</sup>
+    </div>
+    <div class="key-point">Ae<sup>ikx</sup>+Be<sup>−ikx</sup> 는 Acoskx+Bsinkx 와 수학적으로 같은 일반해. 상수 이름만 바뀐 것.</div>
+    <p style="margin-top:8px">복소수 형태를 쓰는 이유: e<sup>ikx</sup> = +x 방향 진행파, e<sup>−ikx</sup> = −x 방향 진행파 → <span class="em-blue">방향 구분이 편함.</span></p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S5 — Born 해석
+═══════════════════════════════════════════ -->
+<div id="s5" class="section">
+  <div class="sec-title">05 Born 해석</div>
+  <div class="sec-subtitle">ψ가 물리적으로 무엇을 의미하는가 — M. Born (1926)</div>
+
+  <div class="card blue">
+    <div class="card-title">ψ vs |ψ|²</div>
+    <table>
+      <tr><th></th><th>ψ (파동함수)</th><th>|ψ|² (확률밀도)</th></tr>
+      <tr><td>이름</td><td>Probability amplitude</td><td>Probability density</td></tr>
+      <tr><td>값</td><td>복소수 가능, 음수 가능</td><td class="em-green">항상 양수</td></tr>
+      <tr><td>직접 측정</td><td>불가</td><td>가능 (간접적으로)</td></tr>
+      <tr><td>물리적 의미</td><td>없음</td><td>입자 발견 확률</td></tr>
+    </table>
+  </div>
+
+  <div class="card amber">
+    <div class="card-title">확률밀도의 의미</div>
+    <p><span class="em-amber">1D:</span> x와 x+dx 사이에서 입자 발견 확률 = <span class="em-amber">|ψ|²dx</span></p>
+    <p style="margin-top:8px"><span class="em-amber">3D:</span> 부피 요소 dτ = dx dy dz 안에서 발견 확률 = <span class="em-amber">|ψ|²dτ</span></p>
+    <div class="key-point">ψ의 부호는 물리적 의미 없음! ψ = +0.5 와 ψ = −0.5 는 같은 확률밀도를 가짐. |ψ|²을 취하면 부호가 사라지기 때문.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">파동함수 조건 (Born 해석에서 자연스럽게 나오는 것들)</div>
+    <table>
+      <tr><th>조건</th><th>이유</th><th>위반 예시</th></tr>
+      <tr><td class="em-blue">연속</td><td>확률이 불연속이면 물리적으로 이상</td><td>그래프 (a): 중간에 점프</td></tr>
+      <tr><td class="em-blue">2계 미분 가능</td><td>슈뢰딩거 방정식이 d²ψ/dx² 요구</td><td>그래프 (b): 뾰족한 꺾임</td></tr>
+      <tr><td class="em-blue">단일값</td><td>한 위치에서 확률이 두 개면 말이 안 됨</td><td>그래프 (c): 루프</td></tr>
+      <tr><td class="em-blue">유한</td><td>발산하면 정규화 적분이 무한대</td><td>그래프 (d): 발산</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S6 — 정규화
+═══════════════════════════════════════════ -->
+<div id="s6" class="section">
+  <div class="sec-title">06 정규화 (Normalization)</div>
+  <div class="sec-subtitle">A값을 결정하는 방법</div>
+
+  <div class="card blue">
+    <div class="card-title">왜 정규화가 필요한가</div>
+    <p>ψ가 슈뢰딩거 방정식의 해이면 <span class="em-blue">Nψ도 해야.</span> (슈뢰딩거 방정식이 선형이라서)</p>
+    <p style="margin-top:8px">즉 A 값을 방정식만으로는 결정할 수 없어. 추가 조건이 필요함.</p>
+    <div class="key-point">추가 조건 = "입자가 공간 어딘가에 반드시 존재한다" → 확률 합 = 1</div>
+  </div>
+
+  <div class="card amber">
+    <div class="card-title">정규화 조건</div>
+    <div class="math-box highlight">N²∫<sub>−∞</sub><sup>∞</sup>ψ*ψ dx = 1</div>
+    <p style="margin-top:10px">N을 역으로 구하면:</p>
+    <div class="math-box">N = 1 / (∫ψ*ψ dx)<sup>1/2</sup></div>
+    <p class="note">이 N이 바로 파동함수의 A (진폭 계수)를 결정하는 과정.</p>
+    <hr class="divider">
+    <p><span class="em-amber">3D로 확장:</span></p>
+    <div class="math-box">N²∫∫∫ψ*ψ dx dy dz = 1 &nbsp;&nbsp;또는&nbsp;&nbsp; N²∫ψ*ψ dτ = 1</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">A = 진폭인가?</div>
+    <p>맞아. ψ = Acoskx + Bsinkx 에서 A, B 는 진폭 관련 계수야.</p>
+    <p style="margin-top:8px">단, 양자역학에서 진폭의 의미가 고전 파동과 다름:</p>
+    <table style="margin-top:8px">
+      <tr><th></th><th>고전 파동</th><th>양자역학</th></tr>
+      <tr><td>A의 의미</td><td>파동의 세기(intensity)</td><td>|ψ|² 즉 확률밀도의 크기 결정</td></tr>
+      <tr><td>A 결정 방법</td><td>초기조건</td><td>정규화 조건 (∫|ψ|²dx = 1)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S7 — 특수해 & 불확정성
+═══════════════════════════════════════════ -->
+<div id="s7" class="section">
+  <div class="sec-title">07 경계조건 → 특수해 → 불확정성 원리</div>
+  <div class="sec-subtitle">자유입자 케이스 분석</div>
+
+  <div class="card blue">
+    <div class="card-title">자유입자 일반해 (복소수 형태)</div>
+    <div class="math-box">ψ(x) = Ae<sup>ikx</sup> + Be<sup>−ikx</sup> &nbsp;&nbsp;&nbsp; E = k²ℏ²/2m</div>
+    <p class="note">e<sup>ikx</sup> = +x 방향 진행파 &nbsp;|&nbsp; e<sup>−ikx</sup> = −x 방향 진행파</p>
+  </div>
+
+  <div class="case-block">
+    <div class="case-header blue">CASE i) B = 0 &nbsp;→&nbsp; ψ = Ae<sup>ikx</sup></div>
+    <div class="case-body">
+      <p><span class="em-blue">방향:</span> +x 방향 성분만 남음 → <span class="em-blue">+x 방향으로만 진행</span></p>
+      <p style="margin-top:8px"><span class="em-blue">운동량:</span> de Broglie에서 p = kℏ, +x 방향으로만 가니까 p = +kℏ로 크기·방향 모두 확정 → <span class="em-green">운동량 완전 확정</span></p>
+      <div class="math-box blue" style="margin-top:10px">|ψ|² = ψ*ψ = Ae<sup>−ikx</sup> × Ae<sup>ikx</sup> = A² = 상수</div>
+      <p style="margin-top:8px">확률밀도가 공간 전체에서 균일 → 어디서나 같은 확률로 발견 → <span class="em-red">위치 완전 불확정</span></p>
+      <div class="key-point" style="margin-top:10px">운동량 확정 ↔ 위치 불확정 → 하이젠베르크 불확정성 원리!</div>
+      <p class="note">A=0, B만 남겨도 −x 방향만 진행, 같은 결론.</p>
+    </div>
+  </div>
+
+  <div class="case-block" style="margin-top:12px">
+    <div class="case-header green">CASE ii) A = B &nbsp;→&nbsp; ψ = A(e<sup>ikx</sup>+e<sup>−ikx</sup>) = 2Acoskx</div>
+    <div class="case-body">
+      <p><span class="em-green">방향:</span> +x, −x 방향 성분 모두 살아있음 → 어느 방향으로 갈지 모름 → <span class="em-red">운동량 불확정</span></p>
+      <div class="math-box" style="margin-top:10px;border-color:var(--green)">|ψ|² = cos²kx</div>
+      <p style="margin-top:8px">확률밀도가 위치의 함수 → 위치에 따라 발견 확률이 다름 → <span class="em-green">위치(확률분포) 확정</span></p>
+      <p style="margin-top:8px"><span class="em-red">Node(마디):</span> coskx = 0 인 지점에서 |ψ|² = 0 → 그 위치에서 입자를 절대 못 찾음</p>
+      <div class="key-point" style="margin-top:10px">위치 확정 ↔ 운동량 불확정 → 역시 불확정성 원리!</div>
+    </div>
+  </div>
+
+  <div class="card amber" style="margin-top:16px">
+    <div class="card-title">흐름 정리</div>
+    <div class="math-box" style="text-align:left;font-size:13px;padding:14px 20px">
+      일반해 탐구 (Ae<sup>ikx</sup>+Be<sup>−ikx</sup>)<br>
+      &nbsp;&nbsp;↓ |ψ|²은 항상 양수 → 확률밀도로 사용 가능<br>
+      &nbsp;&nbsp;↓ ψ 조건 (확률밀도 정의에서 당연히 따라옴)<br>
+      &nbsp;&nbsp;↓ 정규화 → A 결정<br>
+      &nbsp;&nbsp;↓ 경계조건으로 특수해 선택<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;B=0 → 운동량 확정, 위치 불확정<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;A=B → 위치 확정, 운동량 불확정<br>
+      &nbsp;&nbsp;↓<br>
+      <span class="em-amber">→ 하이젠베르크 불확정성 원리 자연스럽게 등장</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S8 — 확률 계산
+═══════════════════════════════════════════ -->
+<div id="s8" class="section">
+  <div class="sec-title">08 확률 계산</div>
+  <div class="sec-subtitle">∫|ψ|²dx 실제로 어떻게 구하나</div>
+
+  <div class="card blue">
+    <div class="card-title">공식</div>
+    <div class="math-box highlight">P = ∫<sub>x₁</sub><sup>x₂</sup>|ψ(x)|² dx</div>
+    <p>x₁에서 x₂ 구간에서 입자를 발견할 확률.</p>
+  </div>
+
+  <div class="card amber">
+    <div class="card-title">핵심 적분 기술 — 반각공식</div>
+    <p>sin² 또는 cos² 적분할 때 반드시 사용:</p>
+    <div class="grid-2" style="margin-top:10px">
+      <div class="math-box blue">sin²θ = (1−cos2θ)/2</div>
+      <div class="math-box blue">cos²θ = (1+cos2θ)/2</div>
+    </div>
+  </div>
+
+  <div class="card green">
+    <div class="card-title">예제 — 나노튜브 전자 (교수님 Q1)</div>
+    <p>주어진 파동함수:</p>
+    <div class="math-box">ψ(x) = √(2/L) · sin(2πx/L)</div>
+    <p style="margin-top:10px">x = L/4 ~ L/2 사이 발견 확률:</p>
+    <ol class="steps">
+      <li>
+        <span>|ψ|² 계산
+        <div class="math-box" style="text-align:left;font-size:13px;margin-top:6px">|ψ|² = (2/L)·sin²(2πx/L)</div>
+        </span>
+      </li>
+      <li>
+        <span>반각공식 적용
+        <div class="math-box" style="text-align:left;font-size:13px;margin-top:6px">sin²(2πx/L) = [1 − cos(4πx/L)] / 2</div>
+        </span>
+      </li>
+      <li>
+        <span>적분
+        <div class="math-box" style="text-align:left;font-size:13px;margin-top:6px">P = (1/L)∫<sub>L/4</sub><sup>L/2</sup>[1 − cos(4πx/L)] dx<br><br>= (1/L)[x − (L/4π)sin(4πx/L)]<sub>L/4</sub><sup>L/2</sup></div>
+        </span>
+      </li>
+      <li>
+        <span>경계값 대입
+        <div class="math-box" style="text-align:left;font-size:13px;margin-top:6px">x=L/2: L/2 − (L/4π)·sin(2π) = L/2 − 0<br>x=L/4: L/4 − (L/4π)·sin(π) = L/4 − 0</div>
+        </span>
+      </li>
+      <li>
+        <span>결과
+        <div class="math-box highlight" style="margin-top:6px">P = (1/L)(L/2 − L/4) = 1/4 = 25%</div>
+        </span>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SQ — Q&A
+═══════════════════════════════════════════ -->
+<div id="sq" class="section">
+  <div class="sec-title">❓ 공부하면서 파고든 질문들</div>
+  <div class="sec-subtitle">바보 같아 보여도 중요한 질문들 — 클릭해서 펼치기</div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">
+      자유입자라고 하면 왜 V=0이야? <span class="arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      퍼텐셜에너지 V = 입자가 어떤 힘의 영향을 받을 때 생기는 에너지. 전자가 핵 근처면 Coulomb 인력 → V ≠ 0. 자유입자(free particle)는 <strong>아무 힘도 안 받는 입자</strong>. 힘이 없으면 퍼텐셜도 없으니까 V = 0. 허공에 혼자 날아가는 전자를 상상하면 돼.
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">
+      ODE가 뭐야? 미방 안 배웠는데. <span class="arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      ODE = Ordinary Differential Equation (상미분방정식). 함수와 그 미분이 같이 들어있는 방정식. 지금 필요한 건 딱 하나: <strong>d²ψ/dx² = −k²ψ 의 해가 coskx, sinkx</strong>라는 것. 두 번 미분하면 −k²배가 나오는 함수가 뭐냐고 물어보는 것.
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">
+      E &gt; V일 때 진동 해라는 게 무슨 뜻? <span class="arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      슈뢰딩거 정리하면 d²ψ/dx² = (2m/ℏ²)(V−E)ψ. E &gt; V면 (V−E) &lt; 0이라서 오른쪽이 −(양수)×ψ. "두 번 미분하면 자기 자신의 <strong>음수배</strong>"가 되는 함수 → cos, sin. E &lt; V면 반대로 발산하는 지수 해가 나와서 물리적으로 보통 제외.
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">
+      일반해에 상수 c를 추가해서 Acoskx + Bsinkx + c 해도 되는 거 아냐? 두 번 미분하면 사라지잖아. <span class="arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      안 돼. 슈뢰딩거 방정식이 d²ψ/dx² = (2m/ℏ²)(V−E)<strong>ψ</strong>처럼 오른쪽에 ψ 자체가 있어. ψ = Acoskx + Bsinkx + c 대입하면 좌변: −k²(Acoskx+Bsinkx) (c 사라짐), 우변: (2m/ℏ²)(V−E)(Acoskx+Bsinkx+c) (c 안 사라짐). 등식 불성립 → c = 0이어야만 해.
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">
+      k = (2m(E−V)/ℏ²)^1/2 이 식이 어디서 나왔어? <span class="arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      슈뢰딩거 방정식에 ψ = coskx 대입해서 역으로 구한 거야. coskx 두 번 미분 = −k²coskx. 대입하면 −k² = (2m/ℏ²)(V−E). 정리하면 k² = 2m(E−V)/ℏ². ψ = coskx가 해가 되려면 k가 이 조건을 만족해야 한다는 뜻.
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">
+      sin kx + cos kx 일반해 형태로 대입해도 k가 같이 나와? <span class="arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      응. A coskx + B sinkx 전체를 대입하면 −k²(Acoskx+Bsinkx) = (2m/ℏ²)(V−E)(Acoskx+Bsinkx). 양변에 (Acoskx+Bsinkx) 공통으로 약분되면 −k² = (2m/ℏ²)(V−E). A, B 값에 무관하게 k는 동일하게 결정됨.
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">
+      복소수 일반해 Ae^ikx + Be^-ikx 가 갑자기 튀어나왔는데, Acoskx+Bsinkx를 복소수로 바꾸면 다른 형태 아냐? <span class="arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      직접 계산해보면: A·(e^ikx+e^-ikx)/2 + B·(e^ikx−e^-ikx)/2i = (A/2+B/2i)e^ikx + (A/2−B/2i)e^-ikx = Ce^ikx + De^-ikx. 상수 이름만 바뀐 것이라 수학적으로 완전히 같은 일반해야.
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">
+      B=0으로만 만들었다고 운동량이 확정됐다는 말을 어떻게 해? <span class="arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      B=0 자체가 이유가 아니라, B=0의 결과로 e^ikx 형태만 남기 때문. e^ikx는 +x 방향 진행파 → de Broglie에서 p = kℏ로 크기·방향 모두 확정. 반면 coskx(= e^ikx+e^-ikx의 합)는 +/− 방향이 섞여 있어서 운동량 불확정. 엄밀히는 운동량 연산자(다음 챕터)로 증명하지만, 교수님 방식으로는 "한 방향 진행파 → 운동량 확정"으로 이해하면 충분.
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-q" onclick="toggleQA(this)">
+      Spherical polar coordinate 파트가 지금 흐름에서 뜬금없는데? <span class="arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      맞아. 지금까지 내용은 전부 1D 얘기. 구면 극좌표는 3D, 특히 Ch8 수소원자(V ~ Q₁Q₂/x) 풀 때 필요한 도구. 흐름상 Ch8 수소원자 들어가기 직전에 보는 게 자연스럽다. 지금은 "나중에 쓸 도구" 정도로 메모만 해두고 Ch8 때 다시 보면 됨.
+    </div>
+  </div>
+
+</div>
+
+</main>
+
+<script>
+  function showSection(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function toggleQA(qEl) {
+    const aEl = qEl.nextElementSibling;
+    qEl.classList.toggle('open');
+    aEl.classList.toggle('open');
+  }
+</script>
+</body>
+</html>

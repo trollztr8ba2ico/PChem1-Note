@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7D — Particle in a Box</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea'] }
+};
+</script>
+<style>
+:root {
+  --bg: #0f1117;
+  --bg2: #181c27;
+  --bg3: #1e2333;
+  --border: #2a3050;
+  --text: #e8eaf6;
+  --text2: #9aa0c0;
+  --text3: #5a6080;
+  --blue: #5b8dee;
+  --blue-dim: #1a2a4a;
+  --amber: #f0a830;
+  --amber-dim: #2a1e08;
+  --green: #3dd68c;
+  --green-dim: #0d2a1a;
+  --red: #f06060;
+  --red-dim: #2a0f0f;
+  --purple: #b06eff;
+  --purple-dim: #1e0f35;
+  --tab-active: #5b8dee;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.75;
+  min-height: 100vh;
+}
+
+/* ── 헤더 ── */
+header {
+  background: linear-gradient(135deg, #0d1420 0%, #131829 50%, #0f1117 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 32px 40px 28px;
+  position: relative;
+  overflow: hidden;
+}
+header::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -80px;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(91,141,238,0.12) 0%, transparent 70%);
+}
+.header-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--blue);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+header h1 span { color: var(--blue); }
+.header-sub {
+  font-size: 13px;
+  color: var(--text2);
+  margin-top: 6px;
+}
+
+/* ── 탭 ── */
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+
+.tab {
+  padding: 14px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.2s;
+  font-family: 'IBM Plex Sans KR', sans-serif;
+}
+.tab:hover { color: var(--text2); }
+.tab.active {
+  color: var(--blue);
+  border-bottom-color: var(--blue);
+}
+
+/* ── 컨텐츠 ── */
+.content { display: none; padding: 32px 40px 60px; max-width: 960px; }
+.content.active { display: block; }
+
+/* ── 박스 ── */
+.box {
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin: 20px 0;
+  border-left: 3px solid;
+}
+.box-blue { background: var(--blue-dim); border-color: var(--blue); }
+.box-amber { background: var(--amber-dim); border-color: var(--amber); }
+.box-green { background: var(--green-dim); border-color: var(--green); }
+.box-red { background: var(--red-dim); border-color: var(--red); }
+.box-purple { background: var(--purple-dim); border-color: var(--purple); }
+
+.box-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.box-blue .box-title { color: var(--blue); }
+.box-amber .box-title { color: var(--amber); }
+.box-green .box-title { color: var(--green); }
+.box-red .box-title { color: var(--red); }
+.box-purple .box-title { color: var(--purple); }
+
+/* ── 섹션 제목 ── */
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 32px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+h2:first-child { margin-top: 0; }
+h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--blue);
+  margin: 22px 0 10px;
+}
+
+/* ── 단계 박스 ── */
+.steps { display: grid; gap: 12px; margin: 16px 0; }
+.step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+}
+.step-num {
+  min-width: 28px; height: 28px;
+  background: var(--blue);
+  color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'IBM Plex Mono', monospace;
+  flex-shrink: 0;
+}
+.step-body { flex: 1; }
+.step-body strong { color: var(--amber); display: block; margin-bottom: 4px; }
+
+/* ── 표 ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+}
+th {
+  background: var(--bg3);
+  color: var(--blue);
+  font-weight: 600;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(91,141,238,0.04); }
+
+/* ── 코드/수식 블록 ── */
+.formula-block {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin: 16px 0;
+  text-align: center;
+  font-size: 16px;
+}
+.formula-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 2px;
+  text-align: right;
+  margin-top: 8px;
+}
+
+/* ── 비교 그리드 ── */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+.compare-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+.compare-card h4 {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.compare-card.classical h4 { color: var(--amber); }
+.compare-card.quantum h4 { color: var(--blue); }
+
+/* ── 흐름 화살표 ── */
+.flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 16px 0;
+}
+.flow-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 14px;
+  position: relative;
+}
+.flow-arrow {
+  text-align: center;
+  color: var(--blue);
+  font-size: 18px;
+  line-height: 1.2;
+  margin: 2px 0;
+}
+.flow-item .tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+  margin-right: 8px;
+}
+
+/* ── 예상문제 ── */
+.q-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin: 16px 0;
+  overflow: hidden;
+}
+.q-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.q-type {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.type-derive { background: rgba(91,141,238,0.2); color: var(--blue); }
+.type-explain { background: rgba(61,214,140,0.2); color: var(--green); }
+.type-calc { background: rgba(240,168,48,0.2); color: var(--amber); }
+.q-title { font-weight: 600; font-size: 14px; flex: 1; }
+.q-toggle { color: var(--text3); font-size: 18px; transition: transform 0.2s; }
+.q-toggle.open { transform: rotate(180deg); }
+.q-body {
+  padding: 18px 20px;
+  display: none;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.q-body.open { display: block; }
+.q-hint {
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: rgba(91,141,238,0.08);
+  border-radius: 6px;
+  border-left: 2px solid var(--blue);
+  font-size: 13px;
+  color: var(--text2);
+}
+
+/* ── insight 박스 ── */
+.insight {
+  background: linear-gradient(135deg, rgba(91,141,238,0.08), rgba(176,110,255,0.06));
+  border: 1px solid rgba(91,141,238,0.3);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 14px;
+}
+.insight-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--purple);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+
+/* ── 반응형 ── */
+@media (max-width: 700px) {
+  header { padding: 24px 20px; }
+  .content { padding: 24px 20px 40px; }
+  .compare-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">Atkins 12e · Topic 7D · Physical Chemistry</div>
+  <h1>Particle in a <span>Box</span></h1>
+  <div class="header-sub">Translation — Confined Motion in 1D · 슈뢰딩거 방정식의 첫 번째 완주</div>
+</header>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="showTab('t0',this)">① 왜 PIB인가</div>
+  <div class="tab" onclick="showTab('t1',this)">② Free Motion</div>
+  <div class="tab" onclick="showTab('t2',this)">③ 풀이 4단계</div>
+  <div class="tab" onclick="showTab('t3',this)">④ 파동함수 성질</div>
+  <div class="tab" onclick="showTab('t4',this)">⑤ Observables</div>
+  <div class="tab" onclick="showTab('t5',this)">⑥ 확률 계산</div>
+  <div class="tab" onclick="showTab('t6',this)">⑦ 응용 — 공액분자</div>
+  <div class="tab" onclick="showTab('t7',this)">⑧ 심화 Q&amp;A</div>
+  <div class="tab" onclick="showTab('t8',this)">⑨ 출제 예상 문제</div>
+</div>
+
+<!-- ===== 탭 0: 왜 PIB ===== -->
+<div id="t0" class="content active">
+  <h2>PIB를 왜 하는가?</h2>
+
+  <div class="box box-blue">
+    <div class="box-title">핵심 목적</div>
+    슈뢰딩거 방정식을 <strong>처음으로 처음부터 끝까지 푸는</strong> 예제. 파동함수가 주어지는 게 아니라, <strong>경계조건에서 파동함수가 탄생하는 과정</strong>을 처음 보는 것.
+  </div>
+
+  <h3>왜 하필 PIB인가?</h3>
+  <p>현실적인 이유: 포텐셜 에너지 $V$를 가장 단순하게 설정한 게 PIB다. 복잡한 $V$ (수소원자, 조화진동자)로 가기 전에, <strong>가장 쉬운 케이스에서 양자역학 논리 구조 전체를 훈련</strong>하는 것.</p>
+
+  <div class="compare-grid" style="margin-top:20px">
+    <div class="compare-card">
+      <h4 style="color:var(--green)">상자 안 (0 ≤ x ≤ L)</h4>
+      <p>$V = 0$<br>방정식이 단순해짐 → 풀 수 있음</p>
+    </div>
+    <div class="compare-card">
+      <h4 style="color:var(--red)">상자 밖 (x &lt; 0, x &gt; L)</h4>
+      <p>$V = \infty$<br>파동함수 = 0으로 강제됨</p>
+    </div>
+  </div>
+
+  <h3>PIB에서 배우는 것</h3>
+  <table>
+    <tr><th>개념</th><th>의미</th></tr>
+    <tr><td>경계조건이 양자화를 만든다</td><td>에너지가 불연속인 이유</td></tr>
+    <tr><td>$n$이 클수록 에너지가 크다</td><td>운동량↑ = 에너지↑ (curvature 논리)</td></tr>
+    <tr><td>바닥상태 에너지 $\neq 0$</td><td>불확정성 원리의 직접적 결과</td></tr>
+    <tr><td>파동함수 모양 → 확률밀도</td><td>위치 정보 추출법 훈련</td></tr>
+  </table>
+
+  <div class="insight">
+    <div class="insight-label">이 채팅에서 나온 핵심 직관</div>
+    <strong>입자를 파동으로 기술한다</strong>는 게 핵심. 파동을 상자에 가두면 → 보강간섭 조건을 만족하는 파동만 살아남고 → 그 조건이 $n$을 만들어 에너지를 양자화시킨다. 기타 줄의 배음 구조와 완전히 같다.
+  </div>
+</div>
+
+<!-- ===== 탭 1: Free Motion ===== -->
+<div id="t1" class="content">
+  <h2>Free Motion in 1D — 대조군</h2>
+
+  <div class="box box-amber">
+    <div class="box-title">슬라이드 1의 역할</div>
+    "경계조건이 없으면 어떻게 되냐"를 먼저 보여주는 <strong>대조군</strong>. 경계조건 없음 → $k$ 자유 → 에너지 연속, 양자화 없음.
+  </div>
+
+  <h3>슈뢰딩거 방정식 ($V=0$)</h3>
+  <div class="formula-block">
+    $$-\frac{\hbar^2}{2m}\frac{d^2\psi}{dx^2} = E\psi$$
+    <div class="formula-label">Free Motion in 1D</div>
+  </div>
+
+  <h3>일반해</h3>
+  <div class="formula-block">
+    $$\psi_k = Ae^{ikx} + Be^{-ikx}, \qquad E_k = \frac{k^2\hbar^2}{2m}$$
+  </div>
+
+  <p>경계조건이 없으므로 <strong>모든 $k$ 값이 허용</strong> → 에너지가 연속적.</p>
+
+  <h3>B = 0 은 경계조건이 아니다</h3>
+  <div class="box box-red">
+    <div class="box-title">주의 — 자주 헷갈리는 부분</div>
+    "$+x$ 방향으로 입자를 쐈다"는 건 경계조건이 아니라 <strong>물리적 상황 설정</strong>. "오른쪽으로만 간다" → 역방향 파 $Be^{-ikx}$ 없음 → $B=0$. 경계조건으로 결정된 게 아님.
+  </div>
+
+  <h3>Free vs Confined 비교</h3>
+  <table>
+    <tr><th></th><th>Free Motion</th><th>Confined (PIB)</th></tr>
+    <tr><td>경계조건</td><td>없음</td><td>$\psi(0)=\psi(L)=0$</td></tr>
+    <tr><td>허용 $k$</td><td>연속 (아무 값)</td><td>이산: $k=n\pi/L$</td></tr>
+    <tr><td>에너지</td><td>연속</td><td>양자화</td></tr>
+    <tr><td>$|\psi|^2$</td><td>균일 (위치 완전 불확정)</td><td>sin² 형태</td></tr>
+  </table>
+
+  <div class="insight">
+    <div class="insight-label">불확정성 원리 연결</div>
+    자유입자에서 운동량을 측정해서 $p=+\hbar k$를 얻으면 → $k$ 확정 → $E$ 확정. 근데 이건 "양자화"가 아니야. 양자화 = 허용되는 $k$ 값이 <strong>이산적으로 제한</strong>되는 것. 자유입자 측정은 연속적 $k$ 중 하나를 <strong>알게 된</strong> 것에 불과.
+  </div>
+</div>
+
+<!-- ===== 탭 2: 풀이 4단계 ===== -->
+<div id="t2" class="content">
+  <h2>슈뢰딩거 방정식 풀이 — 4단계 프레임워크</h2>
+
+  <div class="box box-green">
+    <div class="box-title">핵심 프레임</div>
+    이 4단계가 PIB뿐 아니라 조화진동자, 수소원자까지 <strong>모든 계에서 동일하게 적용</strong>된다. 형태만 달라지고 흐름은 같다.
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>일반해 형태 놓기</strong>
+        $V=0$ 상자 안에서 슈뢰딩거 방정식 → 2계 상수계수 ODE<br>
+        $$\psi(x) = A\sin kx + B\cos kx \quad \text{(또는 } Ae^{ikx}+Be^{-ikx}\text{)}$$
+        $A, B, k$ 는 아직 미결정. Euler 공식으로 두 표현이 동치임에 주의.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>경계조건 → $k$ 양자화 + $n$ 제한 + $E$ 확정</strong>
+        <p style="margin-top:8px"><strong>① $\psi(0) = 0$:</strong> $A\sin 0 + B\cos 0 = B = 0$ → $B$ 결정</p>
+        <p style="margin-top:6px"><strong>② $\psi(L) = 0$:</strong> $A\sin kL = 0$, $A\neq 0$ 이므로 $\sin kL = 0$</p>
+        $$kL = n\pi \Rightarrow k = \frac{n\pi}{L}, \quad n = 1,2,3,\ldots$$
+        <div class="box box-red" style="margin-top:10px;padding:12px 14px">
+          <div class="box-title">왜 n=0 제외?</div>
+          $n=0$ → $k=0$ → $\psi=0$ everywhere → 입자 존재 안 함 → 물리적으로 무의미
+        </div>
+        $k$ 결정되는 순간 에너지도 확정: $E_n = \hbar^2k^2/2m = n^2h^2/8mL^2$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>정규화 → $C$ 결정</strong>
+        $$\int_0^L |\psi_n|^2 dx = C^2 \int_0^L \sin^2\!\frac{n\pi x}{L}dx = C^2 \cdot \frac{L}{2} = 1$$
+        반각공식: $\sin^2\theta = \dfrac{1-\cos2\theta}{2}$ (부호 주의! $1\mathbf{-}\cos$)
+        $$\therefore C = \sqrt{\frac{2}{L}}$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>최종 $\psi_n$ 정리</strong>
+        $$\psi_n(x) = \sqrt{\frac{2}{L}}\sin\frac{n\pi x}{L} \quad (0 \leq x \leq L)$$
+        $$E_n = \frac{n^2h^2}{8mL^2}, \quad n = 1,2,3,\ldots$$
+      </div>
+    </div>
+  </div>
+
+  <h3>앞으로 이 프레임이 쓰이는 계들</h3>
+  <table>
+    <tr><th>계 (System)</th><th>1단계 일반해 형태</th></tr>
+    <tr><td>PIB (1D)</td><td>$C\sin kx + D\cos kx$</td></tr>
+    <tr><td>터널링 (장벽 안)</td><td>$Ce^{\kappa x} + De^{-\kappa x}$</td></tr>
+    <tr><td>조화진동자 (7E)</td><td>Hermite 다항식 × Gaussian</td></tr>
+    <tr><td>수소원자</td><td>구면조화함수 × 지수함수</td></tr>
+  </table>
+
+  <h3>경계조건이 왜 필요한가?</h3>
+  <div class="box box-blue">
+    <div class="box-title">핵심 원리</div>
+    일반해는 미결정 상수를 포함하는 후보군. 방정식만으로는 해가 무한히 많다. <strong>경계조건 = 물리적 상황이 수학에 주입되는 순간</strong>. 경계조건이 후보군을 필터링해서 허용된 $k$ (= 허용된 상태)만 남긴다.
+  </div>
+</div>
+
+<!-- ===== 탭 3: 파동함수 성질 ===== -->
+<div id="t3" class="content">
+  <h2>파동함수의 물리적 성질</h2>
+
+  <h3>$n$은 무엇인가?</h3>
+  <div class="box box-blue">
+    <div class="box-title">양자수 n의 본질</div>
+    <strong>경계조건이 만들어낸 정수 라벨.</strong> 이 번호 하나가 그 입자의 상태 전부를 결정한다.<br><br>
+    물리적 의미: <strong>상자 안에 몇 개의 반파장이 들어가느냐</strong>
+    $$n=1: \; \frac{\lambda}{2}=L \qquad n=2: \; \lambda=L \qquad n=3: \; \frac{3\lambda}{2}=L$$
+    기타 줄 배음과 완전히 같은 구조. 양 끝 고정(경계조건) → 허용된 진동수만 존재(양자화) → $n$으로 라벨링.
+  </div>
+
+  <h3>Curvature ↔ 에너지</h3>
+  <p>슈뢰딩거 방정식에서: $-\dfrac{\hbar^2}{2m}\dfrac{d^2\psi}{dx^2} = E\psi$</p>
+  <p>$d^2\psi/dx^2$의 크기 = curvature. <strong>curvature가 클수록 $E$가 크다.</strong></p>
+  <div class="flow">
+    <div class="flow-item"><span class="tag">n↑</span>같은 L 안에 파장이 짧아짐</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="tag">결과</span>curvature 커짐</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><span class="tag">결과</span>에너지 $E_n$ 증가 (V=0이므로 KE만 있음)</div>
+  </div>
+
+  <h3>노드 (Node)</h3>
+  <table>
+    <tr><th>$n$</th><th>노드 수</th><th>에너지 $E_n/E_1$</th></tr>
+    <tr><td>1</td><td>0개</td><td>1</td></tr>
+    <tr><td>2</td><td>1개</td><td>4</td></tr>
+    <tr><td>3</td><td>2개</td><td>9</td></tr>
+    <tr><td>$n$</td><td>$n-1$개</td><td>$n^2$</td></tr>
+  </table>
+  <p style="color:var(--text2);font-size:13px">노드 = $\psi=0$인 점 (경계 제외). 노드가 많다 = 더 꼬인 파동 = curvature ↑ = E↑</p>
+
+  <div class="box box-red">
+    <div class="box-title">주의 — 노드와 입자 존재</div>
+    노드에서 $\psi=0$ → $|\psi|^2=0$ → <strong>입자를 발견할 확률 = 0</strong>. 고전적으로는 이해 불가능한 현상. 입자가 노드를 "건너가는" 방법은 파동으로서만 설명된다.
+  </div>
+
+  <h3>Zero-point Energy</h3>
+  <div class="compare-grid">
+    <div class="compare-card classical">
+      <h4>고전역학</h4>
+      <p>정지 가능 → $v=0$, $KE=0$ → $E=0$ 가능</p>
+    </div>
+    <div class="compare-card quantum">
+      <h4>양자역학</h4>
+      <p>$n=0$ 없음 → 최솟값이 $E_1 = h^2/8mL^2 \neq 0$</p>
+    </div>
+  </div>
+
+  <h3>Zero-point Energy — 두 가지 설명</h3>
+  <div class="box box-purple">
+    <div class="box-title">설명 1: 불확정성 원리</div>
+    상자에 가두면 $\Delta x \sim L$ (유한) → $\Delta p \geq \hbar/2L \neq 0$ → $KE \neq 0$<br>
+    정지 = 운동량 확정(=0) + 위치 불확정 → 근데 위치를 상자로 이미 제한했으니 불가능
+  </div>
+  <div class="box box-purple">
+    <div class="box-title">설명 2: Curvature 논리</div>
+    벽에서 $\psi=0$이어야 하는데, smooth하고 continuous한 함수가 0에서 출발해서 0으로 돌아오려면 <strong>반드시 굽어야 한다</strong> → curvature $\neq 0$ → $E \neq 0$
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-title">Zero-point Energy를 없애는 방법?</div>
+    수식 $E_1 = h^2/8mL^2$에서:<br>
+    • $L \to \infty$ (가둠 해제) → Free Motion으로 돌아감 → $E=0$ 가능<br>
+    • $m \to \infty$ (무한히 무거운 입자) → 이론상 가능<br><br>
+    <strong>온도로는 없앨 수 없다.</strong> Zero-point energy는 열적 에너지가 아니다. 0K에서도 존재 (헬륨이 0K에서 고체가 안 되는 이유).
+  </div>
+</div>
+
+<!-- ===== 탭 4: Observables ===== -->
+<div id="t4" class="content">
+  <h2>Properties of Observables</h2>
+
+  <div class="box box-blue">
+    <div class="box-title">슈뢰딩거 방정식을 풀면 뭘 얻나?</div>
+    $\hat{H}\psi_n = E_n\psi_n$ 을 풀면 딱 두 가지:<br><br>
+    • <strong>$E_n$</strong> (숫자): 이 상태에서 에너지를 측정하면 나오는 값<br>
+    • <strong>$\psi_n$</strong> (함수): 이 상태에서 입자에 대한 모든 정보
+  </div>
+
+  <h3>$E_n$ vs $\psi_n$ 정확한 구분</h3>
+  <table>
+    <tr><th></th><th>$E_n$</th><th>$\psi_n$</th></tr>
+    <tr><td>종류</td><td>숫자 (스칼라)</td><td>함수 (x의 함수)</td></tr>
+    <tr><td>의미</td><td>에너지 측정값</td><td>상태 전체를 기술</td></tr>
+    <tr><td>역할</td><td>$\hat{H}$의 eigenvalue</td><td>$\hat{H}$의 eigenfunction</td></tr>
+    <tr><td>정보량</td><td>에너지 하나</td><td>모든 물리량 추출 가능</td></tr>
+  </table>
+
+  <h3>$\psi_n$에서 뽑을 수 있는 정보</h3>
+  <div class="formula-block" style="text-align:left">
+    <table style="margin:0">
+      <tr><th>Operator</th><th>뽑는 물리량</th><th>PIB 결과</th></tr>
+      <tr><td>$\hat{H}$</td><td>에너지</td><td>$E_n$ (확정값)</td></tr>
+      <tr><td>$|\psi_n(x)|^2$</td><td>위치 확률밀도</td><td>$\frac{2}{L}\sin^2\frac{n\pi x}{L}$</td></tr>
+      <tr><td>$\hat{x}$</td><td>평균 위치 $\langle x \rangle$</td><td>$L/2$ (대칭)</td></tr>
+      <tr><td>$\hat{p}_x$</td><td>평균 운동량 $\langle p \rangle$</td><td>$0$ (좌우 대칭)</td></tr>
+    </table>
+  </div>
+
+  <h3>선운동량이 왜 불확정인가? (시험 빈출)</h3>
+  <div class="box box-red">
+    <div class="box-title">핵심 — sin kx는 $\hat{p}_x$의 eigenfunction이 아니다</div>
+    오일러 공식으로 분해하면:
+    $$\psi_n = \sqrt{\frac{2}{L}}\sin\frac{n\pi x}{L} = \frac{1}{2i}\sqrt{\frac{2}{L}}\left(e^{+in\pi x/L} - e^{-in\pi x/L}\right)$$
+    • $e^{+in\pi x/L}$: 운동량 $+\frac{n\pi\hbar}{L}$ (오른쪽 이동)<br>
+    • $e^{-in\pi x/L}$: 운동량 $-\frac{n\pi\hbar}{L}$ (왼쪽 이동)<br><br>
+    <strong>두 상태의 superposition</strong> → 측정하면 각 50% 확률로 $\pm\frac{n\pi\hbar}{L}$<br>
+    물리적 직관: 입자가 상자 안에서 좌우로 똑같이 튕기는 것의 양자역학적 기술
+  </div>
+
+  <div class="insight">
+    <div class="insight-label">구조적 통찰</div>
+    $\psi_n$은 정보의 저장소, operator는 거기서 원하는 정보를 꺼내는 도구.<br>
+    슈뢰딩거 방정식 풀어서 $\psi_n$ 얻기 → 여기에 또 다른 operator 작용 → 다른 물리량 추출.<br>
+    <strong>$\psi_n$ 구하는 게 사실상 끝. 나머지는 거기서 뽑아내는 것뿐.</strong>
+  </div>
+
+  <h3>에너지 준위 간격 — Correspondence Principle</h3>
+  <div class="formula-block">
+    $$E_{n+1} - E_n = (2n+1)\frac{h^2}{8mL^2}$$
+    <div class="formula-label">7D.10</div>
+  </div>
+
+  <table>
+    <tr><th>조건</th><th>간격</th><th>의미</th></tr>
+    <tr><td>$L$ 커짐</td><td>→ 0</td><td>에너지 연속 → 고전역학 복원</td></tr>
+    <tr><td>$n$ 커짐</td><td>상대적 간격↓</td><td>Correspondence Principle</td></tr>
+    <tr><td>$m$ 커짐</td><td>→ 0</td><td>무거운 입자 → 고전적 거동</td></tr>
+  </table>
+
+  <div class="box box-amber">
+    <div class="box-title">Correspondence Principle — 전체 흐름</div>
+    7A (Bohr 모델) → 7C (operator 일반론) → 7D (PIB 시각화 — 슬라이드 6, $n=50$)<br><br>
+    $n=1$: 중앙에 확률 집중, 고전과 전혀 다름<br>
+    $n=50$: $|\psi|^2$ 거의 균일 → 고전역학(어디서든 균일)에 수렴<br>
+    $n \to \infty$: 완전히 고전역학 복원
+  </div>
+</div>
+
+<!-- ===== 탭 5: 확률 계산 ===== -->
+<div id="t5" class="content">
+  <h2>확률 계산 — Q1 풀이</h2>
+
+  <div class="box box-blue">
+    <div class="box-title">문제</div>
+    $n=1$ 상태의 전자가 카본 나노튜브 ($x=0.1L \sim 0.2L$) 구간에서 발견될 확률을 구하라.
+  </div>
+
+  <h3>카본 나노튜브를 왜 PIB로 보는가?</h3>
+  <table>
+    <tr><th>PIB</th><th>카본 나노튜브</th></tr>
+    <tr><td>상자 길이 $L$</td><td>튜브 길이 $L$</td></tr>
+    <tr><td>$V=\infty$ 벽</td><td>튜브 끝단 (전자 탈출 불가)</td></tr>
+    <tr><td>$V=0$ 내부</td><td>$\pi$ 전자 자유 이동</td></tr>
+    <tr><td>1D 운동</td><td>튜브 축 방향 이동</td></tr>
+  </table>
+  <p style="font-size:13px;color:var(--text2)">그래핀을 둥글게 말아 만든 나노튜브. 탄소마다 $p_z$ 오비탈이 겹쳐 $\pi$ 전자가 튜브 전체에 비편재화(delocalized) → PIB 조건 성립.</p>
+
+  <h3>계산 과정</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>확률 적분 설정</strong>
+        $$P = \int_{0.1L}^{0.2L} |\psi_1|^2 dx = \frac{2}{L}\int_{0.1L}^{0.2L}\sin^2\frac{\pi x}{L}\,dx$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>반각공식 적용</strong>
+        $$\sin^2\theta = \frac{1-\cos2\theta}{2}$$
+        $$= \frac{1}{L}\int_{0.1L}^{0.2L}\left(1 - \cos\frac{2\pi x}{L}\right)dx$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>적분 실행</strong>
+        $$= \frac{1}{L}\left[x - \frac{L}{2\pi}\sin\frac{2\pi x}{L}\right]_{0.1L}^{0.2L}$$
+        $$= 0.1 - \frac{1}{2\pi}(\sin 72° - \sin 36°)$$
+        $$= 0.1 - \frac{1}{2\pi}(0.951 - 0.588) = 0.1 - 0.0578$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>결과</strong>
+        $$\boxed{P \approx 0.042 = 4.2\%}$$
+      </div>
+    </div>
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-title">왜 10%가 아니고 4.2%인가?</div>
+    고전역학: 구간 $0.1L \sim 0.2L$은 전체의 10% → 확률 10%<br>
+    양자역학: $n=1$ 파동함수는 <strong>중앙 $x=L/2$ 근처에 확률이 집중</strong>됨. 벽 근처($0.1L\sim0.2L$)는 확률밀도가 낮음.<br><br>
+    → 고전 ≠ 양자. 이게 Correspondence Principle의 반대편: $n$이 작을 때는 고전과 완전히 다르다.
+  </div>
+
+  <h3>두 가지 확률 구분</h3>
+  <table>
+    <tr><th>질문</th><th>답</th><th>수식</th></tr>
+    <tr><td>위치 $x$에서 발견될 확률</td><td>위치 확률밀도</td><td>$|\psi_n(x)|^2 dx$</td></tr>
+    <tr><td>에너지 $E_n$을 측정할 확률</td><td>superposition 계수</td><td>$|c_n|^2$</td></tr>
+  </table>
+  <div class="box box-red">
+    <div class="box-title">주의 — C와 $c_n$ 혼동 금지</div>
+    $C = \sqrt{2/L}$: 정규화 상수 (파동함수 크기 조절)<br>
+    $c_n$: superposition 계수 (에너지 측정 확률 $|c_n|^2$)<br><br>
+    순수 고유상태 $\psi_n$에서는: $c_n = 1$, 나머지 = 0 → 에너지 측정하면 무조건 $E_n$
+  </div>
+</div>
+
+<!-- ===== 탭 6: 응용 ===== -->
+<div id="t6" class="content">
+  <h2>응용 — 공액 분자와 흡수 파장</h2>
+
+  <div class="box box-green">
+    <div class="box-title">핵심 논리</div>
+    $$\pi \text{ 전자 delocalized} \rightarrow L \uparrow \rightarrow \Delta E = E_{n+1}-E_n \downarrow \rightarrow \lambda \uparrow$$
+  </div>
+
+  <h3>왜 $m$에 분자량이 아닌 전자 질량?</h3>
+  <div class="box box-amber">
+    <div class="box-title">핵심 구분</div>
+    PIB로 기술하는 것은 <strong>$\pi$ 전자의 운동</strong>. 탄소 원자핵이 아님.<br>
+    $m = m_e = 9.109 \times 10^{-31}$ kg<br>
+    분자량은 상자 크기 $L$에 영향을 주는 것이지, $m$에 들어가는 게 아님.
+  </div>
+
+  <h3>β-Carotene 계산 (Example 7D.1)</h3>
+  <p>22개 탄소 → $\pi$ 전자 22개 → Pauli 배타 원리 (준위당 2개) → $n=11$까지 채워짐</p>
+  <table>
+    <tr><th>준위</th><th>역할</th><th>전자 수</th></tr>
+    <tr><td>$n = 1 \sim 11$</td><td>채워진 준위 (HOMO: $n=11$)</td><td>22개</td></tr>
+    <tr><td>$n = 12$</td><td>비어있는 준위 (LUMO)</td><td>0개</td></tr>
+  </table>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>에너지 간격 계산 ($L = 2.94$ nm)</strong>
+        $$\Delta E = E_{12} - E_{11} = (2\times11+1)\frac{h^2}{8m_eL^2} = 1.60\times10^{-19}\text{ J}$$
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Bohr 진동수 조건 → 파장</strong>
+        $$\nu = \frac{\Delta E}{h} = 2.42\times10^{14}\text{ s}^{-1}, \quad \lambda = \frac{c}{\nu} = 1240\text{ nm (계산값)}$$
+        실험값: 497 nm (주황색 빛 흡수). 모델이 crude하지만 가시광선 범위 예측 성공.
+      </div>
+    </div>
+  </div>
+
+  <h3>공액계 길이 ↔ 색깔</h3>
+  <table>
+    <tr><th>분자</th><th>공액계 $L$</th><th>$\Delta E$</th><th>흡수</th><th>색깔</th></tr>
+    <tr><td>벤젠</td><td>짧음</td><td>큼</td><td>UV</td><td>무색</td></tr>
+    <tr><td>카로틴</td><td>중간</td><td>중간</td><td>가시광선</td><td>주황</td></tr>
+    <tr><td>더 긴 공액계</td><td>길수록</td><td>작을수록</td><td>적외선 쪽</td><td>진한 색</td></tr>
+  </table>
+
+  <h3>외워야 할 상수</h3>
+  <table>
+    <tr><th>상수</th><th>값</th><th>필요성</th></tr>
+    <tr><td>$h$ (플랑크)</td><td>$6.626 \times 10^{-34}$ J·s</td><td>거의 무조건 암기</td></tr>
+    <tr><td>$m_e$ (전자 질량)</td><td>$9.109 \times 10^{-31}$ kg</td><td>거의 무조건 암기</td></tr>
+    <tr><td>$e$ (전자 전하)</td><td>$1.602 \times 10^{-19}$ C</td><td>암기 권장</td></tr>
+    <tr><td>$c$ (빛의 속도)</td><td>$3.0 \times 10^{8}$ m/s</td><td>암기 권장</td></tr>
+    <tr><td>$k_B$ (볼츠만)</td><td>$1.381 \times 10^{-23}$ J/K</td><td>암기 권장</td></tr>
+    <tr><td>$N_A$ (아보가드로)</td><td>$6.022 \times 10^{23}$ mol⁻¹</td><td>암기 권장</td></tr>
+  </table>
+</div>
+
+<!-- ===== 탭 7: 심화 Q&A ===== -->
+<div id="t7" class="content">
+  <h2>심화 Q&amp;A — 이 채팅에서 파고든 것들</h2>
+
+  <h3>Q1. 측정이 경계조건을 만든다고 볼 수 있나?</h3>
+  <div class="box box-blue">
+    <div class="box-title">부분적으로만 맞음</div>
+    <strong>맞는 부분:</strong> 자유입자에서 운동량 측정 → $k$ 확정 → $E$ 확정 → 위치 불확정. 불확정성 원리와 일치.<br><br>
+    <strong>틀린 부분:</strong> 이건 "양자화"가 아님. 양자화 = 허용 $k$가 이산적으로 제한. 측정은 연속 $k$ 중 하나를 알게 된 것뿐.<br><br>
+    <strong>진짜 연결고리:</strong> 공간적 제한(confinement) → 위치 $\Delta x \sim L$ → 불확정성 원리 → $\Delta p \geq \hbar/L$ → KE ≠ 0 → 영점에너지. 측정이 아니라 <strong>구속(confinement)</strong>이 핵심.
+  </div>
+
+  <h3>Q2. 에너지를 0으로 만들 수 있나? 절대온도 0K와 같은 질문인가?</h3>
+  <div class="box box-purple">
+    <div class="box-title">둘 다 불가능, 근데 이유가 다르다</div>
+    <table style="margin-top:10px">
+      <tr><th></th><th>원인</th><th>없애는 방법</th><th>가능?</th></tr>
+      <tr><td>절대 0도 불가</td><td>열역학 제3법칙</td><td>무한한 냉각 단계</td><td>❌</td></tr>
+      <tr><td>Zero-point energy</td><td>불확정성 원리 + confinement</td><td>$L\to\infty$ (가둠 해제)</td><td>이론상 가능, 근데 그럼 PIB 아님</td></tr>
+    </table>
+    <br>
+    <strong>핵심:</strong> Zero-point energy는 <strong>열적 에너지가 아님</strong>. 온도를 아무리 낮춰도 존재. 헬륨이 0K에서도 액체인 이유가 이것 (zero-point motion이 커서 결정 못 만듦).
+  </div>
+
+  <h3>Q3. $n=1,2,3$을 대입하면 그 에너지를 가질 확률이 나오는가?</h3>
+  <div class="box box-red">
+    <div class="box-title">No — 두 가지 확률을 구분해야 한다</div>
+    $n$ 대입해서 나오는 건 <strong>위치 확률밀도</strong> $|\psi_n(x)|^2$. 에너지 측정 확률이 아님.<br><br>
+    에너지 측정 확률은 superposition 상태 $\psi = \sum c_n\psi_n$에서 $|c_n|^2$으로 나옴.<br>
+    순수 고유상태 $\psi_n$에서는 $c_n=1$ → 에너지는 항상 $E_n$으로 확정.
+  </div>
+
+  <h3>Q4. 상태 $n$은 뭔가?</h3>
+  <div class="box box-blue">
+    <div class="box-title">경계조건이 만들어낸 정수 라벨</div>
+    $n$ 하나가 정해지면 모든 게 딸려온다:<br>
+    $$n \text{ 결정} \rightarrow \psi_n \text{ 확정} \rightarrow E_n \text{ 확정} \rightarrow |\psi_n|^2 \text{ 확정}$$
+    수소원자에선 3D이므로 양자수 3개 필요: $(n, l, m)$ → $s, p, d$ 오비탈
+  </div>
+
+  <h3>Q5. 파동으로 기술한다는 게 왜 핵심인가?</h3>
+  <div class="box box-green">
+    <div class="box-title">이 채팅의 핵심 직관 정리</div>
+    입자를 파동으로 기술 → sin/cos 함수꼴 → 경계조건 = 보강간섭 조건 → 이 조건 만족하는 파동만 생존 → $n$이라는 정수 탄생 → 에너지 양자화<br><br>
+    이 직관이 조화진동자, 수소원자까지 그대로 연결된다.
+  </div>
+
+  <h3>필기 오류 체크리스트</h3>
+  <table>
+    <tr><th>위치</th><th>오류 내용</th><th>올바른 내용</th></tr>
+    <tr><td style="color:var(--red)">Image 3</td><td>$|c_n|^2 = (2/L)^{1/2\cdot2} = 2/L$</td><td>$|c_n|^2 = 1$ (순수 고유상태). $2/L$은 정규화 상수 $C^2$</td></tr>
+    <tr><td style="color:var(--amber)">Image 5</td><td>$\sin^2\theta = (1+\cos2\theta)/2$</td><td>$\sin^2\theta = (1\mathbf{-}\cos2\theta)/2$ (부호 확인)</td></tr>
+    <tr><td style="color:var(--text3)">공통</td><td>$\langle p \rangle = 0$ 이유 미기술</td><td>$\sin kx = $ superposition of $\pm k$ → 측정값 ±$\hbar k$ 각 50%, 평균 = 0</td></tr>
+  </table>
+</div>
+
+<!-- ===== 탭 8: 출제 예상 문제 ===== -->
+<div id="t8" class="content">
+  <h2>출제 예상 문제</h2>
+  <p style="color:var(--text2);font-size:13px;margin-bottom:24px">유도형 40% / 원리·설명형 30% / 계산형 30% 비율</p>
+
+  <!-- 유도형 -->
+  <h3 style="color:var(--blue)">유도형 (40%)</h3>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggleQ(this)">
+      <span class="q-type type-derive">유도형</span>
+      <span class="q-title">PIB 파동함수 $\psi_n$과 에너지 $E_n$을 처음부터 유도하라</span>
+      <span class="q-toggle">▼</span>
+    </div>
+    <div class="q-body">
+      4단계 프레임 전체 유도:<br>
+      ① $V=0$ → 슈뢰딩거 방정식 → 일반해 $\psi = A\sin kx + B\cos kx$<br>
+      ② $\psi(0)=0$ → $B=0$, $\psi(L)=0$ → $\sin kL=0$ → $k=n\pi/L$, $n\geq1$<br>
+      ③ 정규화 → $C = \sqrt{2/L}$<br>
+      ④ $E_n = \hbar^2k^2/2m = n^2h^2/8mL^2$
+      <div class="q-hint">⭐ 이 유도는 백지에서 완벽하게 쓸 수 있어야 함. 특히 $n=0$ 제외 이유, $B=0$ 이유 서술 필수.</div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggleQ(this)">
+      <span class="q-type type-derive">유도형</span>
+      <span class="q-title">정규화 적분 $\int_0^L \sin^2(n\pi x/L)\,dx = L/2$ 를 유도하라</span>
+      <span class="q-toggle">▼</span>
+    </div>
+    <div class="q-body">
+      반각공식 $\sin^2\theta = (1-\cos2\theta)/2$ 적용<br>
+      $$\int_0^L \sin^2\frac{n\pi x}{L}dx = \int_0^L \frac{1-\cos(2n\pi x/L)}{2}dx = \frac{L}{2} - \frac{L}{4n\pi}\left[\sin\frac{2n\pi x}{L}\right]_0^L$$
+      $\sin(2n\pi) = 0$ → 두 번째 항 소멸 → $= L/2$
+      <div class="q-hint">반각공식 부호 실수 금지. $1-\cos$임.</div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggleQ(this)">
+      <span class="q-type type-derive">유도형</span>
+      <span class="q-title">인접 에너지 준위 간격 $E_{n+1}-E_n = (2n+1)h^2/8mL^2$을 유도하고, Correspondence Principle과 연결하라</span>
+      <span class="q-toggle">▼</span>
+    </div>
+    <div class="q-body">
+      $$E_{n+1}-E_n = \frac{(n+1)^2h^2}{8mL^2} - \frac{n^2h^2}{8mL^2} = \frac{[(n+1)^2-n^2]h^2}{8mL^2} = \frac{(2n+1)h^2}{8mL^2}$$
+      $L\to\infty$ 또는 $n\to\infty$: 간격 $\to 0$ → 에너지 연속 → 고전역학 복원 = Correspondence Principle
+      <div class="q-hint">$(n+1)^2 - n^2 = 2n+1$ 전개 과정 서술 필수.</div>
+    </div>
+  </div>
+
+  <!-- 원리·설명형 -->
+  <h3 style="color:var(--green)">원리·설명형 (30%)</h3>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggleQ(this)">
+      <span class="q-type type-explain">설명형</span>
+      <span class="q-title">Zero-point energy의 물리적 기원을 두 가지 방법으로 설명하라</span>
+      <span class="q-toggle">▼</span>
+    </div>
+    <div class="q-body">
+      <strong>방법 1 — 불확정성 원리:</strong><br>
+      상자에 가두면 $\Delta x \sim L$ (유한) → $\Delta p \geq \hbar/2L \neq 0$ → 운동량 완전히 0 불가 → $KE \neq 0$<br><br>
+      <strong>방법 2 — Curvature 논리:</strong><br>
+      $\psi$가 양쪽 벽에서 0이어야 하고 smooth/continuous 해야 하면, 반드시 굽어야 함 → curvature $\neq 0$ → $d^2\psi/dx^2 \neq 0$ → $E \neq 0$
+      <div class="q-hint">두 가지 모두 쓰는 문제로 출제 가능. 방법 2는 curvature ↔ E 관계 (7C 내용) 연결.</div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggleQ(this)">
+      <span class="q-type type-explain">설명형</span>
+      <span class="q-title">PIB에서 선운동량이 well-defined 하지 않은 이유를 설명하라</span>
+      <span class="q-toggle">▼</span>
+    </div>
+    <div class="q-body">
+      $\psi_n = \sqrt{2/L}\sin(n\pi x/L)$은 $\hat{p}_x$의 eigenfunction이 아님.<br>
+      오일러 공식: $\sin kx = (e^{ikx}-e^{-ikx})/2i$ → $+\hbar k$와 $-\hbar k$의 superposition<br>
+      측정하면 각 50% 확률로 $\pm n\pi\hbar/L$ → 확정값 없음<br>
+      $\langle p \rangle = 0$이지만 이건 평균이지 확정값이 아님
+      <div class="q-hint">$\sin kx \neq$ eigenfunction of $\hat{p}_x$ 서술이 핵심. 오일러 분해 보여주면 고득점.</div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggleQ(this)">
+      <span class="q-type type-explain">설명형</span>
+      <span class="q-title">공액 분자가 길수록 가시광선을 흡수하는 이유를 PIB 모델로 설명하라</span>
+      <span class="q-toggle">▼</span>
+    </div>
+    <div class="q-body">
+      $\pi$ 전자 delocalized → 공액 분자를 1D box로 근사<br>
+      $\Delta E = E_{n+1} - E_n = (2n+1)h^2/8mL^2$<br>
+      $L$ 증가 → $\Delta E$ 감소 → $\lambda = hc/\Delta E$ 증가 → 가시광선 영역으로<br>
+      벤젠(짧음) → UV 흡수 → 무색<br>
+      β-Carotene(길음) → 가시광선 흡수 → 주황색
+      <div class="q-hint">계산값 1240nm vs 실험값 497nm 차이의 이유: 분자 끝부분의 포텐셜이 실제로는 $V=\infty$가 아님 (crude model).</div>
+    </div>
+  </div>
+
+  <!-- 계산형 -->
+  <h3 style="color:var(--amber)">계산형 (30%)</h3>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggleQ(this)">
+      <span class="q-type type-calc">계산형</span>
+      <span class="q-title">$n=1$ 상태에서 $x=0.1L$~$0.2L$ 구간에 전자가 발견될 확률을 구하라</span>
+      <span class="q-toggle">▼</span>
+    </div>
+    <div class="q-body">
+      $$P = \frac{2}{L}\int_{0.1L}^{0.2L}\sin^2\frac{\pi x}{L}dx = \frac{1}{L}\int_{0.1L}^{0.2L}\!\left(1-\cos\frac{2\pi x}{L}\right)dx$$
+      $$= 0.1 - \frac{1}{2\pi}(\sin72°-\sin36°) = 0.1 - \frac{0.363}{6.283} \approx \mathbf{0.042}$$
+      <div class="q-hint">반각공식 적용 후 적분. $\sin$ 값 수치 계산이 포인트. 결과 4.2% (고전 10%와 비교).</div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggleQ(this)">
+      <span class="q-type type-calc">계산형</span>
+      <span class="q-title">β-Carotene ($L=2.94$ nm, 탄소 22개)의 HOMO→LUMO 흡수 파장을 추정하라</span>
+      <span class="q-toggle">▼</span>
+    </div>
+    <div class="q-body">
+      전자 22개 → $n=11$까지 채워짐 (HOMO=$n=11$, LUMO=$n=12$)<br>
+      $$\Delta E = (2\times11+1)\frac{h^2}{8m_eL^2} = 23\times\frac{(6.626\times10^{-34})^2}{8\times9.109\times10^{-31}\times(2.94\times10^{-9})^2} = 1.60\times10^{-19}\text{ J}$$
+      $$\lambda = \frac{hc}{\Delta E} = \frac{6.626\times10^{-34}\times3\times10^8}{1.60\times10^{-19}} \approx 1240\text{ nm}$$
+      <div class="q-hint">전자 수 ÷ 2 = HOMO 양자수. $m$에는 전자 질량. 계산값≠실험값인 이유도 서술 가능하면 플러스.</div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-header" onclick="toggleQ(this)">
+      <span class="q-type type-calc">계산형</span>
+      <span class="q-title">길이 100 nm 상자에 있는 전자의 바닥상태 에너지를 계산하라</span>
+      <span class="q-toggle">▼</span>
+    </div>
+    <div class="q-body">
+      $$E_1 = \frac{h^2}{8m_eL^2} = \frac{(6.626\times10^{-34})^2}{8\times9.109\times10^{-31}\times(100\times10^{-9})^2} = 6.02\times10^{-24}\text{ J} = 6.02\text{ yJ}$$
+      <div class="q-hint">단위 환산 주의: $L$을 nm → m으로. $1\text{ yJ} = 10^{-24}\text{ J}$.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showTab(id, el) {
+  document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  // MathJax 재렌더
+  if (window.MathJax) MathJax.typesetPromise([document.getElementById(id)]);
+}
+
+function toggleQ(header) {
+  const body = header.nextElementSibling;
+  const toggle = header.querySelector('.q-toggle');
+  body.classList.toggle('open');
+  toggle.classList.toggle('open');
+  if (body.classList.contains('open') && window.MathJax) MathJax.typesetPromise([body]);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7C 예제 풀이</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+  :root {
+    --blue:        #1d4ed8;
+    --blue-light:  #eff6ff;
+    --blue-mid:    #bfdbfe;
+    --amber:       #d97706;
+    --amber-light: #fffbeb;
+    --amber-mid:   #fde68a;
+    --green:       #059669;
+    --green-light: #ecfdf5;
+    --green-mid:   #a7f3d0;
+    --red:         #dc2626;
+    --red-light:   #fef2f2;
+    --purple:      #7c3aed;
+    --purple-light:#f5f3ff;
+    --slate:       #334155;
+    --slate-light: #f8fafc;
+    --border:      #e2e8f0;
+    --text:        #0f172a;
+    --muted:       #64748b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans KR', 'Noto Sans KR', sans-serif;
+    background: #f1f5f9;
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  .hdr {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #3b82f6 100%);
+    color: #fff;
+    padding: 28px 36px 24px;
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+  }
+  .hdr-badge {
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .hdr-text h1 { font-size: 1.55rem; font-weight: 700; letter-spacing: -.02em; }
+  .hdr-text p  { margin-top: 3px; opacity: .8; font-size: .875rem; }
+
+  /* ── TAB BAR ── */
+  .tabbar {
+    display: flex;
+    background: #fff;
+    border-bottom: 2px solid var(--border);
+    overflow-x: auto;
+    padding: 0 20px;
+    gap: 2px;
+  }
+  .tabbar::-webkit-scrollbar { height: 0; }
+
+  .tb {
+    padding: 13px 18px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font: 600 .82rem 'IBM Plex Sans KR', sans-serif;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    transition: color .15s, border-color .15s;
+  }
+  .tb:hover { color: var(--slate); }
+  .tb.on { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* ── CONTENT ── */
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .panel { display: none; }
+  .panel.on { display: block; }
+
+  /* ── TYPOGRAPHY ── */
+  h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    margin-bottom: 4px;
+  }
+  h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 28px 0 10px;
+    color: var(--slate);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
+  }
+  p { margin: 8px 0; }
+
+  /* ── BOXES ── */
+  .box {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 14px 0;
+  }
+  .box .lbl {
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+  }
+
+  .b-problem { background: var(--blue-light);  border-left: 4px solid var(--blue); }
+  .b-problem .lbl { color: var(--blue); }
+
+  .b-key     { background: var(--amber-light); border-left: 4px solid var(--amber); }
+  .b-key .lbl { color: var(--amber); }
+
+  .b-result  { background: var(--green-light); border-left: 4px solid var(--green); }
+  .b-result .lbl { color: var(--green); }
+
+  .b-warn    { background: var(--red-light);   border-left: 4px solid var(--red); }
+  .b-warn .lbl { color: var(--red); }
+
+  .b-purple  { background: var(--purple-light);border-left: 4px solid var(--purple); }
+  .b-purple .lbl { color: var(--purple); }
+
+  /* ── STEP CARDS ── */
+  .step {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 10px 0;
+  }
+  .step-n {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    font-size: .72rem;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ── MATH BLOCK ── */
+  .math {
+    text-align: center;
+    background: var(--slate-light);
+    border-radius: 8px;
+    padding: 14px 20px;
+    margin: 10px 0;
+    overflow-x: auto;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ── INLINE MARKS ── */
+  .ok  { color: var(--green); font-weight: 700; }
+  .no  { color: var(--red);   font-weight: 700; }
+
+  /* ── TWO COL ── */
+  .two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 14px 0;
+  }
+  @media(max-width:580px){ .two { grid-template-columns:1fr; } }
+
+  .case {
+    background: #fff;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .case.pos { border-color: var(--green); }
+  .case.neg { border-color: var(--amber); }
+  .case-title { font-weight: 700; margin-bottom: 10px; }
+
+  /* ── TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: .875rem;
+  }
+  th {
+    background: var(--blue-light);
+    color: var(--blue);
+    padding: 9px 14px;
+    text-align: left;
+    font-weight: 700;
+  }
+  td { padding: 9px 14px; border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: var(--slate-light); }
+
+  /* ── ORBITAL GRID ── */
+  .orb-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 12px;
+    margin: 14px 0;
+  }
+  @media(max-width:500px){ .orb-grid { grid-template-columns:1fr; } }
+  .orb-card {
+    border-radius: 10px;
+    padding: 16px 14px;
+    text-align: center;
+  }
+  .orb-card h4 { font-size: 1.05rem; margin-bottom: 8px; }
+  .orb-card p  { font-size: .8rem; margin: 4px 0; }
+
+  /* ── EXAM ITEMS ── */
+  .exam {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 10px 0;
+  }
+  .etag {
+    display: inline-block;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+  .t-der { background: var(--purple-light); color: var(--purple); }
+  .t-con { background: var(--amber-light);  color: var(--amber); }
+  .t-cal { background: var(--green-light);  color: var(--green); }
+
+  .hint {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: var(--slate-light);
+    border-radius: 7px;
+    font-size: .84rem;
+    color: var(--muted);
+    border-left: 3px solid var(--border);
+  }
+
+  /* ── FLOW STEPS ── */
+  .flow {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 14px 0;
+    counter-reset: flow;
+  }
+  .flow-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .flow-item:last-child { border-bottom: none; }
+  .flow-num {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .75rem;
+    font-weight: 800;
+    margin-top: 2px;
+  }
+
+  /* ── SECTION HEADER ── */
+  .sec-hdr {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 32px 0 8px;
+  }
+  .sec-hdr .icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .sec-hdr h3 {
+    border: none; padding: 0; margin: 0;
+    font-size: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-badge">7C</div>
+  <div class="hdr-text">
+    <h1>예제 풀이 종합</h1>
+    <p>Vitality Operator · Linear Momentum · Orthogonality · Spherical Coords · ⟨r²⟩^½</p>
+  </div>
+</div>
+
+<div class="tabbar">
+  <button class="tb on"  onclick="go(0)">Q2 Vitality</button>
+  <button class="tb"     onclick="go(1)">Q3 Linear Momentum</button>
+  <button class="tb"     onclick="go(2)">Orthogonality</button>
+  <button class="tb"     onclick="go(3)">구면좌표 이론</button>
+  <button class="tb"     onclick="go(4)">Q3 ⟨r²⟩½ 계산</button>
+  <button class="tb"     onclick="go(5)">출제 예상 문제</button>
+</div>
+
+<div class="wrap">
+
+<!-- ═══════════════════════════════════ TAB 0 ═══════════ -->
+<div class="panel on" id="p0">
+  <h2>Q2 &nbsp;— Vitality Operator · Eigenfunction 판별</h2>
+
+  <div class="box b-problem">
+    <div class="lbl">문제</div>
+    <p>다음 중 vitality operator의 eigenfunction은?<br>
+       살아있는 고양이: vitality = <strong>+1</strong> &nbsp;/&nbsp; 죽은 고양이: vitality = <strong>−1</strong></p>
+    <div class="math" style="text-align:left; display:flex; gap:40px; flex-wrap:wrap; justify-content:center;">
+      <span>(A) \(\dfrac{1}{\sqrt{2}}|\text{alive}\rangle + \dfrac{1}{\sqrt{2}}|\text{dead}\rangle\)</span>
+      <span>(B) \(|\text{alive}\rangle\)</span>
+      <span>(C) \(|\text{dead}\rangle\)</span>
+    </div>
+  </div>
+
+  <div class="box b-key">
+    <div class="lbl">판별 기준 — Eigenfunction 정의</div>
+    <div class="math">\(\hat{V}\psi = \omega\psi \quad \text{(연산자 작용 후 상수배로 돌아오면 eigenfunction)}\)</div>
+    <p>결과 함수가 <strong>입력 함수와 형태가 같으면</strong> eigenfunction. 형태가 바뀌면 superposition.</p>
+  </div>
+
+  <h3>Vitality Operator 작용 규칙</h3>
+  <div class="math">
+    \(\hat{V}|\text{alive}\rangle = +1\cdot|\text{alive}\rangle \qquad \hat{V}|\text{dead}\rangle = -1\cdot|\text{dead}\rangle\)
+  </div>
+
+  <h3>각 후보 검토</h3>
+
+  <div class="step">
+    <span class="step-n">후보 A — Superposition</span>
+    <div class="math">
+      \(\hat{V}\!\left(\tfrac{1}{\sqrt{2}}|\text{alive}\rangle + \tfrac{1}{\sqrt{2}}|\text{dead}\rangle\right)
+        = \tfrac{1}{\sqrt{2}}(+1)|\text{alive}\rangle + \tfrac{1}{\sqrt{2}}(-1)|\text{dead}\rangle
+        = \tfrac{1}{\sqrt{2}}|\text{alive}\rangle \mathbf{-} \tfrac{1}{\sqrt{2}}|\text{dead}\rangle\)
+    </div>
+    <p>결과 ≠ λ × 입력 함수 &nbsp;→&nbsp; <span class="no">✗ Not eigenfunction</span></p>
+    <p style="color:var(--muted);font-size:.87rem;margin-top:6px;">→ 상자 열기 전 슈뢰딩거의 고양이. 삶도 죽음도 확정되지 않은 상태.</p>
+  </div>
+
+  <div class="step">
+    <span class="step-n">후보 B — |alive⟩</span>
+    <div class="math">
+      \(\hat{V}|\text{alive}\rangle = (+1)\cdot|\text{alive}\rangle = +1\cdot\psi_B\)
+    </div>
+    <p><span class="ok">✓ Eigenfunction</span> &nbsp;— eigenvalue = <strong>+1</strong> (살아있음이 확정)</p>
+  </div>
+
+  <div class="step">
+    <span class="step-n">후보 C — |dead⟩</span>
+    <div class="math">
+      \(\hat{V}|\text{dead}\rangle = (-1)\cdot|\text{dead}\rangle = -1\cdot\psi_C\)
+    </div>
+    <p><span class="ok">✓ Eigenfunction</span> &nbsp;— eigenvalue = <strong>−1</strong> (죽음이 확정)</p>
+  </div>
+
+  <div class="box b-result">
+    <div class="lbl">정답 & 해석</div>
+    <table>
+      <tr><th>후보</th><th>Eigenfunction?</th><th>Eigenvalue</th><th>물리적 의미</th></tr>
+      <tr><td>(A) Superposition</td><td class="no">✗</td><td>없음</td><td>관찰 전 — 삶/죽음 미확정</td></tr>
+      <tr><td>(B) |alive⟩</td><td class="ok">✓</td><td>+1</td><td>상자 열었더니 살아있음</td></tr>
+      <tr><td>(C) |dead⟩</td><td class="ok">✓</td><td>−1</td><td>상자 열었더니 죽어있음</td></tr>
+    </table>
+    <p><strong>핵심:</strong> Eigenfunction = 측정 결과가 이미 확정된 상태 (classical-like). Superposition = 측정 전 미결정 상태.</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════ TAB 1 ═══════════ -->
+<div class="panel" id="p1">
+  <h2>Q3 &nbsp;— Construction of Operators · 자유입자 선운동량</h2>
+
+  <div class="box b-problem">
+    <div class="lbl">문제</div>
+    <p>자유입자의 파동함수가 아래와 같을 때 선운동량을 구하라.</p>
+    <div class="math">\(\psi(x) = Ae^{ikx} + Be^{-ikx}\)</div>
+    <p><strong>(a)</strong> B = 0 &emsp; <strong>(b)</strong> A = 0</p>
+  </div>
+
+  <div class="box b-key">
+    <div class="lbl">도구 — 운동량 연산자</div>
+    <div class="math">\(\hat{p}_x = \frac{\hbar}{i}\frac{d}{dx}\)</div>
+    <p>만약 \(\hat{p}_x\psi = p\cdot\psi\) 형태로 떨어지면 → eigenfunction, 운동량이 확정값 \(p\)</p>
+  </div>
+
+  <h3>계산</h3>
+
+  <div class="two">
+    <div class="case pos">
+      <div class="case-title">Case (a) &nbsp;B = 0</div>
+      <p>\(\psi = Ae^{ikx}\)</p>
+      <div class="math" style="font-size:.9rem;">
+        \(\hat{p}_x\psi = \frac{\hbar}{i}\frac{d}{dx}(Ae^{ikx})\)
+        \(= \frac{\hbar}{i}(ik)(Ae^{ikx})\)
+        \(= \frac{ik\hbar}{i}\cdot Ae^{ikx}\)
+        \(= \boldsymbol{+\hbar k}\cdot\psi\)
+      </div>
+      <p><span class="ok">✓ Eigenfunction</span></p>
+      <p>운동량 \(p = +\hbar k\)</p>
+      <p style="color:var(--green);font-size:.85rem;margin-top:5px;">→ +x 방향 진행파</p>
+    </div>
+
+    <div class="case neg">
+      <div class="case-title">Case (b) &nbsp;A = 0</div>
+      <p>\(\psi = Be^{-ikx}\)</p>
+      <div class="math" style="font-size:.9rem;">
+        \(\hat{p}_x\psi = \frac{\hbar}{i}\frac{d}{dx}(Be^{-ikx})\)
+        \(= \frac{\hbar}{i}(-ik)(Be^{-ikx})\)
+        \(= \frac{-ik\hbar}{i}\cdot Be^{-ikx}\)
+        \(= \boldsymbol{-\hbar k}\cdot\psi\)
+      </div>
+      <p><span class="ok">✓ Eigenfunction</span></p>
+      <p>운동량 \(p = -\hbar k\)</p>
+      <p style="color:var(--amber);font-size:.85rem;margin-top:5px;">→ −x 방향 진행파</p>
+    </div>
+  </div>
+
+  <h3>A ≠ 0, B ≠ 0 이면?</h3>
+
+  <div class="box b-warn">
+    <div class="lbl">Superposition → 운동량 미확정</div>
+    <div class="math">
+      \(\hat{p}_x(Ae^{ikx}+Be^{-ikx}) = +\hbar k\cdot Ae^{ikx} - \hbar k\cdot Be^{-ikx}\)
+    </div>
+    <p>결과가 원래 ψ의 상수배가 아님 → <strong>Not eigenfunction</strong></p>
+    <p>→ \(+\hbar k\) 방향과 \(-\hbar k\) 방향의 superposition: 운동량 불확정</p>
+    <p style="margin-top:6px;">→ cos/sin으로 쓰면 더 명확: \(\cos(kx) = \tfrac{1}{2}(e^{ikx}+e^{-ikx})\) → 두 방향 혼합 → 정재파(standing wave)</p>
+  </div>
+
+  <div class="box b-result">
+    <div class="lbl">정리</div>
+    <table>
+      <tr><th>파동함수</th><th>Eigenfunction?</th><th>운동량</th><th>물리 의미</th></tr>
+      <tr><td>\(e^{ikx}\) (B=0)</td><td class="ok">✓</td><td>\(+\hbar k\)</td><td>+x 진행파</td></tr>
+      <tr><td>\(e^{-ikx}\) (A=0)</td><td class="ok">✓</td><td>\(-\hbar k\)</td><td>−x 진행파</td></tr>
+      <tr><td>\(Ae^{ikx}+Be^{-ikx}\)</td><td class="no">✗</td><td>불확정</td><td>두 방향 superposition</td></tr>
+    </table>
+    <p><strong>핵심:</strong> 복소지수 \(e^{\pm ikx}\)는 순수 진행파 = 운동량 확정. cos/sin은 superposition = 운동량 불확정. de Broglie \(p=\hbar k\)의 연산자 버전!</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════ TAB 2 ═══════════ -->
+<div class="panel" id="p2">
+  <h2>Orthogonality Example &nbsp;— sin x & sin 2x</h2>
+
+  <div class="box b-problem">
+    <div class="lbl">상황</div>
+    <p>운동에너지 연산자 \(\hat{E}_k = -\dfrac{\hbar^2}{2m_e}\dfrac{d^2}{dx^2}\)의 두 eigenfunction:</p>
+    <div class="math">\(\psi_1 = \sin x, \qquad \psi_2 = \sin 2x\)</div>
+    <p>직교성 확인: \(\displaystyle\int_0^{2\pi}\sin(2x)\sin(x)\,dx = 0\)</p>
+  </div>
+
+  <h3>Step 1 — 둘 다 진짜 eigenfunction인지 확인</h3>
+
+  <div class="step">
+    <span class="step-n">sin x</span>
+    <div class="math">
+      \(\hat{E}_k\sin x = -\frac{\hbar^2}{2m_e}\frac{d^2\sin x}{dx^2}
+        = -\frac{\hbar^2}{2m_e}(-\sin x) = \frac{\hbar^2}{2m_e}\sin x\)
+    </div>
+    <p>Eigenvalue: \(\omega_1 = \dfrac{\hbar^2}{2m_e}\)</p>
+  </div>
+
+  <div class="step">
+    <span class="step-n">sin 2x</span>
+    <div class="math">
+      \(\hat{E}_k\sin 2x = -\frac{\hbar^2}{2m_e}\frac{d^2\sin 2x}{dx^2}
+        = -\frac{\hbar^2}{2m_e}(-4\sin 2x) = \frac{4\hbar^2}{2m_e}\sin 2x = \frac{2\hbar^2}{m_e}\sin 2x\)
+    </div>
+    <p>Eigenvalue: \(\omega_2 = \dfrac{4\hbar^2}{2m_e}\)</p>
+  </div>
+
+  <div class="box b-key">
+    <div class="lbl">이론 예측 (먼저)</div>
+    <p>\(\omega_1 \neq \omega_2\) → Hermitian operator의 서로 다른 eigenvalue를 갖는 eigenfunction들은 <strong>반드시 직교</strong> (이미 증명된 정리). 적분은 이걸 직접 확인하는 과정.</p>
+  </div>
+
+  <h3>Step 2 — 직접 적분으로 확인</h3>
+
+  <div class="step">
+    <span class="step-n">삼각함수 곱 → 합차 공식</span>
+    <div class="math">
+      \(\sin(2x)\sin(x) = \frac{1}{2}[\cos(2x-x) - \cos(2x+x)] = \frac{1}{2}[\cos x - \cos 3x]\)
+    </div>
+  </div>
+
+  <div class="step">
+    <span class="step-n">적분 실행</span>
+    <div class="math">
+      \(\int_0^{2\pi}\sin(2x)\sin(x)\,dx
+        = \frac{1}{2}\int_0^{2\pi}[\cos x - \cos 3x]\,dx\)
+      \(= \frac{1}{2}\left[\frac{\sin x}{1} - \frac{\sin 3x}{3}\right]_0^{2\pi}\)
+      \(= \frac{1}{2}\Bigl[(0-0)-(0-0)\Bigr] = \mathbf{0}\) <span class="ok"> ✓</span>
+    </div>
+    <p style="font-size:.85rem;color:var(--muted);">정수 배수의 삼각함수를 완전 주기 [0, 2π] 위에서 적분하면 항상 0</p>
+  </div>
+
+  <h3>직관 — 그래프로 보기</h3>
+
+  <div class="box b-key">
+    <div class="lbl">물리적 직관</div>
+    <p>슬라이드 그래프의 초록 영역: sin(2x)×sin(x)의 양수/음수 부분이 <strong>면적이 정확히 상쇄</strong></p>
+    <p>→ 마치 서로 수직인 벡터의 내적이 0인 것처럼 — 두 함수가 함수 공간에서 서로 다른 "방향"을 차지</p>
+    <p>→ sin x, sin 2x, sin 3x … = Fourier 급수의 직교 기저가 되는 이유가 여기 있음</p>
+  </div>
+
+  <div class="box b-result">
+    <div class="lbl">왜 직교성이 중요한가?</div>
+    <p>superposition \(\psi = \sum_k c_k\psi_k\)에서 계수 추출:</p>
+    <div class="math">\(c_m = \int\psi_m^*\,\psi\,d\tau\)</div>
+    <p>직교성이 없으면 양변에 \(\psi_m^*\) 곱해도 다른 항들이 살아남아 \(c_m\)을 <strong>유일하게 결정 불가</strong> → 확률 계산 불가 → 양자역학 붕괴</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════ TAB 3 ═══════════ -->
+<div class="panel" id="p3">
+  <h2>구면 극좌표 이론 &nbsp;— Laplacian · Legendrian · s/p/d 오비탈</h2>
+  <p>수소원자 계산 전에 알아야 할 이론. 이게 s오비탈 vs p·d오비탈 풀이를 갈라놓는다.</p>
+
+  <div class="sec-hdr">
+    <div class="icon" style="background:var(--blue-light);color:var(--blue);">1</div>
+    <h3>좌표 변환 & 부피 요소</h3>
+  </div>
+
+  <div class="step">
+    <div class="math">
+      \(x = r\sin\theta\cos\phi, \quad y = r\sin\theta\sin\phi, \quad z = r\cos\theta\)
+    </div>
+    <div class="math">
+      \(d\tau = r^2\sin\theta\,dr\,d\theta\,d\phi
+        \quad \left(\,r\!\in[0,\infty),\;\theta\!\in[0,\pi],\;\phi\!\in[0,2\pi]\,\right)\)
+    </div>
+    <p><strong>\(r^2\):</strong> 반지름 클수록 껍질 부피 ↑ &emsp; <strong>\(\sin\theta\):</strong> 극(θ=0,π)에서 부피 → 0으로 보정</p>
+    <p>각도 전체 적분: \(\displaystyle\int_0^\pi\sin\theta\,d\theta\int_0^{2\pi}d\phi = 2 \times 2\pi = 4\pi\)</p>
+  </div>
+
+  <div class="sec-hdr">
+    <div class="icon" style="background:var(--blue-light);color:var(--blue);">2</div>
+    <h3>라플라시안 ∇² — 구면좌표 표현</h3>
+  </div>
+
+  <div class="step">
+    <div class="math">
+      \(\nabla^2
+        = \underbrace{\frac{1}{r^2}\frac{\partial}{\partial r}\!\left(r^2\frac{\partial}{\partial r}\right)}_{\text{radial part}}
+        + \underbrace{\frac{1}{r^2}\!\left[\frac{1}{\sin\theta}\frac{\partial}{\partial\theta}\!\left(\sin\theta\frac{\partial}{\partial\theta}\right)
+          + \frac{1}{\sin^2\!\theta}\frac{\partial^2}{\partial\phi^2}\right]}_{\text{angular part} = \Lambda^2/r^2}\)
+    </div>
+    <p>라플라시안 = 반지름 부분 + 각도 부분. 각도 부분만 따로 Legendrian \(\Lambda^2\)으로 정의.</p>
+  </div>
+
+  <div class="sec-hdr">
+    <div class="icon" style="background:var(--amber-light);color:var(--amber);">3</div>
+    <h3>Legendrian Λ² &nbsp;(각도 연산자)</h3>
+  </div>
+
+  <div class="box b-key">
+    <div class="lbl">Legendrian 정의</div>
+    <div class="math">
+      \(\Lambda^2 = \frac{1}{\sin\theta}\frac{\partial}{\partial\theta}\!\left(\sin\theta\frac{\partial}{\partial\theta}\right)
+        + \frac{1}{\sin^2\!\theta}\frac{\partial^2}{\partial\phi^2}\)
+    </div>
+    <p>이걸 쓰면 라플라시안이 깔끔해짐:</p>
+    <div class="math">
+      \(\nabla^2 = \frac{1}{r^2}\frac{\partial}{\partial r}\!\left(r^2\frac{\partial}{\partial r}\right) + \frac{\Lambda^2}{r^2}\)
+    </div>
+  </div>
+
+  <div class="sec-hdr">
+    <div class="icon" style="background:var(--purple-light);color:var(--purple);">4</div>
+    <h3>각운동량 연산자 L̂² 와의 관계</h3>
+  </div>
+
+  <div class="step">
+    <div class="math">
+      \(\hat{L}^2 = -\hbar^2\Lambda^2 \qquad \Longrightarrow \qquad
+        \nabla^2 = \frac{1}{r^2}\frac{\partial}{\partial r}\!\left(r^2\frac{\partial}{\partial r}\right) - \frac{\hat{L}^2}{\hbar^2 r^2}\)
+    </div>
+    <p>구면조화함수(spherical harmonics) \(Y_l^m(\theta,\phi)\)는 \(\hat{L}^2\)의 eigenfunction:</p>
+    <div class="math">
+      \(\hat{L}^2 Y_l^m(\theta,\phi) = \hbar^2 l(l+1)\,Y_l^m(\theta,\phi)\)
+    </div>
+  </div>
+
+  <div class="sec-hdr">
+    <div class="icon" style="background:var(--green-light);color:var(--green);">5</div>
+    <h3>s / p / d 오비탈의 결정적 차이 — 각도 항 있냐 없냐</h3>
+  </div>
+
+  <div class="orb-grid">
+    <div class="orb-card" style="background:var(--green-light);border:2px solid var(--green);">
+      <h4>s 오비탈</h4>
+      <p style="font-weight:700;">l = 0</p>
+      <p>\(\hat{L}^2\psi = 0\)</p>
+      <p style="margin-top:8px;">θ, φ 의존성 <strong>없음</strong></p>
+      <p style="font-size:.78rem;margin-top:6px;color:var(--muted);">구면 대칭. 각도 적분 = 4π로 분리됨</p>
+    </div>
+    <div class="orb-card" style="background:var(--amber-light);border:2px solid var(--amber);">
+      <h4>p 오비탈</h4>
+      <p style="font-weight:700;">l = 1</p>
+      <p>\(\hat{L}^2\psi = 2\hbar^2\psi\)</p>
+      <p style="margin-top:8px;">\(Y_1^m(\theta,\phi)\) 포함</p>
+      <p style="font-size:.78rem;margin-top:6px;color:var(--muted);">각도 적분 별도 계산 필요<br>(\(\cos\theta, \sin\theta e^{\pm i\phi}\) 등)</p>
+    </div>
+    <div class="orb-card" style="background:var(--blue-light);border:2px solid var(--blue);">
+      <h4>d 오비탈</h4>
+      <p style="font-weight:700;">l = 2</p>
+      <p>\(\hat{L}^2\psi = 6\hbar^2\psi\)</p>
+      <p style="margin-top:8px;">\(Y_2^m(\theta,\phi)\) 포함</p>
+      <p style="font-size:.78rem;margin-top:6px;color:var(--muted);">더 복잡한 각도 함수.<br>적분에 추가 항 등장</p>
+    </div>
+  </div>
+
+  <div class="box b-result">
+    <div class="lbl">왜 이게 풀이 방법을 바꾸나?</div>
+    <p>expectation value 계산 \(\langle r^2\rangle = \int|\psi|^2 r^2\,d\tau\)에서:</p>
+    <div class="math">
+      \(\langle r^2\rangle = \int_0^\infty\!\int_0^\pi\!\int_0^{2\pi} |\psi|^2\,r^2 \cdot r^2\sin\theta\,dr\,d\theta\,d\phi\)
+    </div>
+
+    <p><strong style="color:var(--green);">s 오비탈 (각도 의존 없음):</strong></p>
+    <div class="math">
+      \(= \int_0^\infty R(r)^2 r^4\,dr \;\cdot\; \underbrace{\int_0^\pi\sin\theta\,d\theta\int_0^{2\pi}d\phi}_{= 4\pi}
+        \quad \leftarrow\text{ 반지름·각도 완전 분리}\)
+    </div>
+
+    <p><strong style="color:var(--amber);">p, d 오비탈 (각도 의존 있음):</strong></p>
+    <div class="math">
+      \(|\psi|^2 = |R_{nl}(r)|^2\cdot|Y_l^m(\theta,\phi)|^2\)
+      \(\Rightarrow \int|Y_l^m|^2\sin\theta\,d\theta\,d\phi \text{ 별도 계산 필요}\)
+    </div>
+    <p>→ \(Y_l^m\)은 정규화되어 있어서 \(\int|Y_l^m|^2\,d\Omega = 1\)이지만, 적분 대상 자체가 바뀌면 별도 처리.</p>
+    <p style="margin-top:8px;"><strong>수소 1s 예제는 s 오비탈</strong>이라 각도 적분이 4π로 깔끔하게 분리된다!</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════ TAB 4 ═══════════ -->
+<div class="panel" id="p4">
+  <h2>Q3 &nbsp;— Expectation Value · ⟨r²⟩^(1/2) 수소 1s</h2>
+
+  <div class="box b-problem">
+    <div class="lbl">문제</div>
+    <p>수소원자 1s 전자의 root-mean-square 거리 \(\langle r^2\rangle^{1/2}\)를 구하라.</p>
+    <div class="math">\(\psi(r) = \left[\frac{1}{\pi a_0^3}\right]^{1/2}e^{-r/a_0}\)</div>
+    <p style="font-size:.87rem;color:var(--muted);">θ, φ 없음 → s 오비탈 (l=0) → 각도 적분 4π로 분리 가능!</p>
+  </div>
+
+  <div class="box b-key">
+    <div class="lbl">Expectation Value 공식</div>
+    <div class="math">
+      \(\langle r^2\rangle = \int\psi^*\,\hat{r}^2\,\psi\,d\tau = \int|\psi|^2\,r^2\,d\tau\)
+    </div>
+    <p>\(\hat{r}^2\)는 그냥 곱하기 연산자 (위치 연산자): \(\hat{r}^2\,\psi = r^2\,\psi\)</p>
+  </div>
+
+  <h3>Step 1 — 적분 세팅 & 분리</h3>
+  <div class="step">
+    <div class="math">
+      \(\langle r^2\rangle
+        = \int_0^\infty\!\int_0^\pi\!\int_0^{2\pi}
+          \frac{1}{\pi a_0^3}e^{-2r/a_0}\cdot r^2\cdot r^2\sin\theta\,dr\,d\theta\,d\phi\)
+    </div>
+    <p>s 오비탈 → r 부분과 각도 부분 완전 분리:</p>
+    <div class="math">
+      \(= \frac{1}{\pi a_0^3}\int_0^\infty r^4 e^{-2r/a_0}\,dr
+          \cdot \underbrace{\int_0^\pi\sin\theta\,d\theta}_{=\,2}
+          \cdot \underbrace{\int_0^{2\pi}d\phi}_{=\,2\pi}\)
+    </div>
+  </div>
+
+  <h3>Step 2 — 각도 적분 처리</h3>
+  <div class="step">
+    <div class="math">
+      \(2 \times 2\pi = 4\pi\)
+    </div>
+    <div class="math">
+      \(\langle r^2\rangle
+        = \frac{1}{\pi a_0^3}\cdot 4\pi\cdot\int_0^\infty r^4 e^{-2r/a_0}\,dr
+        = \frac{4}{a_0^3}\int_0^\infty r^4 e^{-2r/a_0}\,dr\)
+    </div>
+  </div>
+
+  <h3>Step 3 — 감마함수로 반지름 적분</h3>
+
+  <div class="box b-purple">
+    <div class="lbl">감마함수 공식</div>
+    <div class="math">\(\int_0^\infty r^n e^{-r/a}\,dr = n!\cdot a^{n+1}\)</div>
+    <p>우리 적분: \(n = 4\), &nbsp;\(e^{-2r/a_0} = e^{-r/(a_0/2)}\) 이므로 \(a = a_0/2\)</p>
+  </div>
+
+  <div class="step">
+    <span class="step-n">감마함수 적용</span>
+    <div class="math">
+      \(\int_0^\infty r^4 e^{-2r/a_0}\,dr
+        = 4!\cdot\left(\frac{a_0}{2}\right)^5
+        = 24\cdot\frac{a_0^5}{32}
+        = \frac{3a_0^5}{4}\)
+    </div>
+  </div>
+
+  <h3>Step 4 — 최종 계산</h3>
+  <div class="step">
+    <div class="math">
+      \(\langle r^2\rangle
+        = \frac{4}{a_0^3}\cdot\frac{3a_0^5}{4}
+        = 3a_0^2\)
+    </div>
+  </div>
+
+  <div class="box b-result">
+    <div class="lbl">최종 답</div>
+    <div class="math">
+      \(\langle r^2\rangle^{1/2} = \sqrt{3}\,a_0 \approx 1.73\,a_0\)
+    </div>
+    <p>\(a_0 = 52.9\;\text{pm}\) &nbsp;→&nbsp; RMS 거리 ≈ <strong>91.6 pm</strong></p>
+    <p style="margin-top:8px;"><strong>참고:</strong> 1s 오비탈의 평균 거리 \(\langle r\rangle = \frac{3}{2}a_0 = 1.5\,a_0\)</p>
+    <p>RMS \((\sqrt{3}\,a_0)\) > 평균 \((1.5\,a_0)\) — 파동함수의 꼬리(tail)가 큰 r까지 뻗어 있어서 제곱 평균이 더 커짐</p>
+  </div>
+
+  <h3>전체 계산 흐름 요약</h3>
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-num">1</div>
+      <div>\(\langle r^2\rangle = \int\psi^*\,r^2\,\psi\,d\tau\) 세팅 &nbsp;— r² is just multiply</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">2</div>
+      <div>\(d\tau = r^2\sin\theta\,dr\,d\theta\,d\phi\) 삽입 → \(r^4 e^{-2r/a_0}\) 등장</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">3</div>
+      <div>s 오비탈: θ, φ 없음 → 각도 분리 → \(\int\sin\theta\,d\theta\int d\phi = 4\pi\)</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">4</div>
+      <div>\(\langle r^2\rangle = \dfrac{4}{a_0^3}\int_0^\infty r^4 e^{-2r/a_0}\,dr\)</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">5</div>
+      <div>감마함수: \(n=4,\; a = a_0/2\) &nbsp;→&nbsp; \(4!\cdot(a_0/2)^5 = 24\cdot a_0^5/32 = 3a_0^5/4\)</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">6</div>
+      <div>\(\langle r^2\rangle = 3a_0^2\) &nbsp;→&nbsp; <strong>RMS = \(\sqrt{3}\,a_0\)</strong></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════ TAB 5 ═══════════ -->
+<div class="panel" id="p5">
+  <h2>출제 예상 문제</h2>
+  <p style="color:var(--muted);font-size:.88rem;margin-bottom:20px;">
+    유도형 40% &nbsp;/&nbsp; 원리·설명형 30% &nbsp;/&nbsp; 계산형 30%
+  </p>
+
+  <h3>🔵 유도형 (40%)</h3>
+
+  <div class="exam">
+    <span class="etag t-der">유도형</span>
+    <p><strong>1.</strong> &nbsp;Hermitian operator의 서로 다른 eigenvalue를 갖는 두 eigenfunction이 직교함을 증명하라.</p>
+    <div class="hint">출발: Hermiticity 조건 \(\int\psi_i^*\hat{\Omega}\psi_j\,d\tau = \{\int\psi_j^*\hat{\Omega}\psi_i\,d\tau\}^*\) → \((\omega_i-\omega_j)\int\psi_i^*\psi_j\,d\tau = 0\) → \(\omega_i\neq\omega_j\)이면 내적 = 0</div>
+  </div>
+
+  <div class="exam">
+    <span class="etag t-der">유도형</span>
+    <p><strong>2.</strong> &nbsp;\([\hat{x},\hat{p}_x] = i\hbar\)를 유도하고, 이것이 Heisenberg 불확정성 원리와 어떻게 연결되는지 설명하라.</p>
+    <div class="hint">임의 함수 f(x)에 작용시켜 계산 → 일반화: \(\Delta\Omega_1\cdot\Delta\Omega_2 \geq \tfrac{1}{2}|\langle[\hat{\Omega}_1,\hat{\Omega}_2]\rangle|\) 연결</div>
+  </div>
+
+  <div class="exam">
+    <span class="etag t-der">유도형</span>
+    <p><strong>3.</strong> &nbsp;\(\hat{p}_x = \dfrac{\hbar}{i}\dfrac{d}{dx}\)가 Hermitian임을 증명하라.</p>
+    <div class="hint">부분적분 → 경계항 = 0 (정규화 파동함수는 x→±∞에서 0) → 피적분함수 켤레 교환 성립</div>
+  </div>
+
+  <div class="exam">
+    <span class="etag t-der">유도형</span>
+    <p><strong>4.</strong> &nbsp;\(\psi = \sum_k c_k\psi_k\) (orthonormal basis)에서 계수 \(c_m = \int\psi_m^*\psi\,d\tau\)임을 유도하라.</p>
+    <div class="hint">양변에 \(\psi_m^*\) 곱하고 적분 → 직교성 \(\int\psi_m^*\psi_k\,d\tau = \delta_{mk}\) 적용 → 한 항만 생존</div>
+  </div>
+
+  <h3>🟡 원리·설명형 (30%)</h3>
+
+  <div class="exam">
+    <span class="etag t-con">원리·설명형</span>
+    <p><strong>5.</strong> &nbsp;\(\psi = Ae^{ikx}+Be^{-ikx}\)에서 B=0일 때와 A,B≠0일 때의 선운동량 측정 결과를 비교·설명하라.</p>
+    <div class="hint">Eigenfunction → 단일 확정값 +ℏk / Superposition → ±ℏk 중 하나가 확률로 나옴. 측정 후 collapse도 언급</div>
+  </div>
+
+  <div class="exam">
+    <span class="etag t-con">원리·설명형</span>
+    <p><strong>6.</strong> &nbsp;두 파동함수가 직교한다는 것의 물리적 의미와 왜 양자역학에서 필수적인지 설명하라.</p>
+    <div class="hint">함수 공간 내적 = 0 (다른 "방향") / 직교 없으면 \(c_k\) 유일 결정 불가 / 확률 예측 불가</div>
+  </div>
+
+  <div class="exam">
+    <span class="etag t-con">원리·설명형</span>
+    <p><strong>7.</strong> &nbsp;운동에너지 기대값이 크게 기여하는 두 가지 영역을 물리적으로 설명하라.</p>
+    <div class="hint">① ψ가 큰 영역 (확률 가중치↑) / ② 곡률(d²ψ/dx²)이 큰 영역 (k²↑, Eₖ↑) — eigenfunction일 때만 곡률 ↔ 에너지 직결</div>
+  </div>
+
+  <div class="exam">
+    <span class="etag t-con">원리·설명형</span>
+    <p><strong>8.</strong> &nbsp;수소 1s 오비탈과 2p 오비탈에서 \(\langle r^2\rangle\) 계산 방식이 어떻게 달라지는지 설명하라. Legendrian과 연결하여 서술할 것.</p>
+    <div class="hint">1s: l=0 → \(\hat{L}^2\psi=0\), θ·φ 의존 없음 → 각도 적분 4π 분리 / 2p: l=1 → \(Y_1^m(\theta,\phi)\) 포함 → \(|Y_1^m|^2\) 각도 적분 별도 필요</div>
+  </div>
+
+  <h3>🟢 계산형 (30%)</h3>
+
+  <div class="exam">
+    <span class="etag t-cal">계산형</span>
+    <p><strong>9.</strong> &nbsp;\(\psi(x) = Ae^{3ix}\)의 선운동량과 운동에너지 eigenvalue를 구하라.</p>
+    <div class="hint">\(\hat{p}_x\psi = \frac{\hbar}{i}(3i)\psi = 3\hbar\psi\) → \(p=3\hbar\) &nbsp;/&nbsp; \(E_k = p^2/2m = 9\hbar^2/2m\)</div>
+  </div>
+
+  <div class="exam">
+    <span class="etag t-cal">계산형</span>
+    <p><strong>10.</strong> &nbsp;\(\int_0^{2\pi}\sin(nx)\sin(mx)\,dx\) (\(n\neq m\), 양의 정수)가 0임을 직접 계산으로 보여라.</p>
+    <div class="hint">곱 → 합차 공식 → \(\int_0^{2\pi}\cos(k x)\,dx = 0\) (정수 k) 이용</div>
+  </div>
+
+  <div class="exam">
+    <span class="etag t-cal">계산형</span>
+    <p><strong>11.</strong> &nbsp;수소 1s 전자의 평균 거리 \(\langle r\rangle\)을 계산하라. (\(\psi = [1/\pi a_0^3]^{1/2}e^{-r/a_0}\))</p>
+    <div class="hint">\(\langle r\rangle = \frac{4}{a_0^3}\int_0^\infty r^3 e^{-2r/a_0}dr\) &nbsp;/ n=3, a=a₀/2 → \(3!\cdot(a_0/2)^4 = 6\cdot a_0^4/16\) &nbsp;→&nbsp; \(\langle r\rangle = \frac{3}{2}a_0\)</div>
+  </div>
+
+  <div class="exam">
+    <span class="etag t-cal">계산형</span>
+    <p><strong>12.</strong> &nbsp;\(\psi(x) = \cos(kx)\)는 \(\hat{p}_x\)의 eigenfunction인가? 계산으로 판별하고 아닌 경우 물리적 의미를 설명하라.</p>
+    <div class="hint">\(\cos(kx) = \frac{1}{2}(e^{ikx}+e^{-ikx})\) → \(\hat{p}_x\) 작용 → \(+\hbar k\)와 \(-\hbar k\)의 superposition → NOT eigenfunction → 운동량 불확정</div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+  function go(n) {
+    document.querySelectorAll('.panel').forEach((p,i) => p.classList.toggle('on', i===n));
+    document.querySelectorAll('.tb').forEach((b,i) => b.classList.toggle('on', i===n));
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+</script>
+</body>
+</html>

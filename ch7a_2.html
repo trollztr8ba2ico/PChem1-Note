@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 7A — 흑체복사 & Planck Distribution</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  :root {
+    --bg:#0f0f10; --bg2:#17171a; --bg3:#1e1e23;
+    --border:rgba(255,255,255,0.07);
+    --text:#e2e0d8; --muted:#7a7870;
+    --blue:#4a9eff; --blue-dim:rgba(74,158,255,0.12);
+    --amber:#f0a545; --amber-dim:rgba(240,165,69,0.12);
+    --teal:#3ecfaa; --teal-dim:rgba(62,207,170,0.12);
+    --purple:#a78bfa; --purple-dim:rgba(167,139,250,0.12);
+    --red:#f87171; --red-dim:rgba(248,113,113,0.1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;line-height:1.75;padding:48px 24px}
+  .container{max-width:860px;margin:0 auto}
+  header{border-bottom:1px solid var(--border);padding-bottom:32px;margin-bottom:40px}
+  .course-tag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:26px;font-weight:700;color:#fff;margin-bottom:8px;letter-spacing:-.02em}
+  .subtitle{color:var(--muted);font-size:13px}
+  .section{margin-bottom:36px}
+  .section-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .section-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);min-width:28px}
+  h2{font-size:15px;font-weight:500;color:#fff;letter-spacing:-.01em}
+  .tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;letter-spacing:.05em;text-transform:uppercase}
+  .tag-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(74,158,255,.25)}
+  .tag-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,165,69,.25)}
+  .tag-teal{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(62,207,170,.25)}
+  .tag-purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(167,139,250,.25)}
+  .tag-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,.2)}
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:10px}
+  .card-title{font-size:13px;font-weight:500;color:#fff;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:13px;line-height:1.7}
+  .card p+p{margin-top:6px}
+  .card p strong{color:var(--text);font-weight:500}
+  .formula{font-family:'JetBrains Mono',monospace;font-size:13px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin:10px 0;color:var(--amber)}
+  .formula.blue{color:var(--blue)}
+  .formula.teal{color:var(--teal)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .flow{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:12px 0}
+  .flow-item{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 11px;font-size:12px;color:var(--text)}
+  .flow-arrow{color:var(--muted);font-size:13px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.08em;padding:8px 12px;border-bottom:1px solid var(--border)}
+  td{padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text)}
+  td:first-child{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px}
+  tr:last-child td{border-bottom:none}
+  .divider{border:none;border-top:1px solid var(--border);margin:32px 0}
+  .step-row{display:flex;gap:12px;align-items:flex-start;margin:8px 0}
+  .step-num{min-width:24px;height:24px;border-radius:50%;background:var(--blue-dim);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;margin-top:2px;border:1px solid rgba(74,158,255,.25)}
+  .note{font-size:12px;color:var(--muted);font-style:italic;margin-top:4px}
+  .exam-box{background:var(--amber-dim);border:1px solid rgba(240,165,69,.2);border-radius:8px;padding:14px 18px}
+  .exam-title{font-size:11px;font-weight:500;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+  .exam-item{display:flex;gap:10px;margin:6px 0;font-size:13px}
+  .exam-type{min-width:60px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);padding-top:2px}
+  .highlight{background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.2);border-radius:8px;padding:12px 16px;margin:10px 0}
+  .highlight p{font-size:13px;color:var(--text)}
+  footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="course-tag">Physical Chemistry · Chapter 7A · Blackbody Radiation</div>
+  <h1>흑체복사 & Planck Distribution 완전 정리</h1>
+  <p class="subtitle">Rayleigh-Jeans → UV 파탄 → Planck 해결까지</p>
+</header>
+
+<!-- 0. 모드란? -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">00</span>
+    <h2>모드(Mode)란 무엇인가?</h2>
+    <span class="tag tag-blue">개념 정의</span>
+  </div>
+  <div class="card">
+    <p>모드 = 경계조건을 만족하는 독립적인 정상파 하나. n=1, 2, 3...마다 하나씩 존재.</p>
+    <p>각 모드는 고유한 파장 λₙ = 2L/n과 진동수 νₙ = cn/2L을 가져.</p>
+    <p>흑체 안에서 빛은 이 모드들의 집합으로 이루어져 있고, <strong>각 모드가 에너지를 독립적으로 저장하고 방출</strong>해.</p>
+    <p class="note">PIB에서 n번째 에너지 준위 = 흑체에서 n번째 모드. 완전히 같은 논리.</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 1. 사고실험 세팅 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2>사고실험 세팅 — 경계조건</h2>
+    <span class="tag tag-blue">슬라이드 11</span>
+  </div>
+  <div class="card">
+    <div class="card-title">조건</div>
+    <p>두 거울(x=0, x=L) 사이에 EM파 갇힘. 금속 표면에서 자유전자가 전기장 상쇄 → E=0.</p>
+    <div class="formula">E(0) = 0, E(L) = 0 → 파동함수: sin 형태</div>
+    <p>sin(kL) = 0 → kL = nπ → nλ = 2L</p>
+    <div class="formula">λₙ = 2L/n &nbsp;&nbsp; νₙ = cn/2L &nbsp;&nbsp; δν = c/2L (진동수 간격)</div>
+    <p class="note">PIB와 완전히 동일한 논리. 경계조건 → sin → 허용 파장 이산화.</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 2. Rayleigh-Jeans -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2>Rayleigh-Jeans Distribution 유도</h2>
+    <span class="tag tag-amber">고전역학</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Step 1 — g₁D(ν)dν: 1D 모드 밀도</div>
+    <p>ν~ν+dν 사이 모드 수 = 두 구간 차이:</p>
+    <div class="formula">(ν+dν)/δν − ν/δν = dν/δν = 2L/c × dν</div>
+    <p>÷L (단위 길이당 보편 밀도), ×1 (sin 반대방향 무시, 교수님 방식):</p>
+    <div class="formula">g₁D(ν)dν = 2/c × dν</div>
+    <p class="note">이 단계에서 계산하는 것: 진동수 구간 ν~ν+dν에 존재하는 1D 정상파 모드의 수.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Step 2 — g₃D(ν)dν: 3D 모드 밀도</div>
+    <p>x, y, z 방향 독립 → 확률 독립사건 → 곱:</p>
+    <div class="formula">(2/c)³ dνₓdνᵧdν_z = 8/c³ dνₓdνᵧdν_z</div>
+    <p>구면좌표 변환: ν²=νₓ²+νᵧ²+ν_z² → 구 껍질 부피 4πν²dν</p>
+    <p>유효 영역 (nₓ,nᵧ,n_z 모두 양수) → ×1/8, 편광 방향 2가지 → ×2:</p>
+    <div class="formula">g₃D(ν)dν = 8π/c³ × ν²dν</div>
+    <p class="note">이 단계에서 계산하는 것: 3D 공간에서 진동수 구간 ν~ν+dν에 존재하는 모든 모드의 수.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Step 3 — g(ν) → g(λ) 변환</div>
+    <p>ν = c/λ 대입. dν = c/λ² × dλ 도 변환 필수:</p>
+    <div class="formula">g(λ)dλ = 8π/λ⁴ × dλ</div>
+    <p class="note">이 단계에서 계산하는 것: 파장 기준으로 λ~λ+dλ 구간의 모드 수. 실험 스펙트럼과 비교하기 위해 λ 기준으로 바꿈.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Step 4 — ⟨E(λ,T)⟩ = kT (Boltzmann, 고전)</div>
+    <p>에너지 연속 가정 → Boltzmann 분포로 적분:</p>
+    <div class="formula">⟨E⟩ = ∫₀^∞ E · (1/kT) exp(−E/kT) dE = kT</div>
+    <p>equipartition theorem: 모든 모드가 파장 무관하게 균등하게 kT씩 보유.</p>
+    <p class="note">이 단계에서 계산하는 것: 온도 T에서 모드 하나가 평균적으로 가지는 에너지.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Step 5 — Rayleigh-Jeans 완성</div>
+    <div class="formula">ρ(λ,T) = ⟨E⟩ × g(λ) = kT × 8π/λ⁴ = 8πkT/λ⁴</div>
+    <p>λ→0에서 λ⁴→0 → ρ→∞ → <strong>UV 파탄(Ultraviolet Catastrophe)</strong></p>
+    <p>실험값이랑 단파장에서 완전히 불일치. 고전역학의 한계.</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 3. Planck -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2>Planck Distribution 유도</h2>
+    <span class="tag tag-teal">양자역학 탄생</span>
+  </div>
+
+  <div class="highlight">
+    <p><strong>핵심 가정:</strong> E = nhν (n = 0, 1, 2, ...) — 에너지가 hν 단위로만 존재.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Step 1 — p(n) 구하기</div>
+    <p>n번째 모드에 있을 확률:</p>
+    <div class="formula">p(n) = exp(−nhν/kT) / Σₙ exp(−nhν/kT)</div>
+    <p>핵심 성질: f(x+y) = f(x)·f(y) → exp 함수. 에너지 높을수록 확률 지수적 감소.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Step 2 — ⟨E⟩ 계산 (등비급수 + 미분 트릭)</div>
+    <div class="formula">⟨E⟩ = Σ nhν · exp(−nhν/kT) / Σ exp(−nhν/kT)</div>
+    <p>x = exp(−hν/kT) 치환:</p>
+    <div class="formula">분모: Σxⁿ = 1/(1−x) &nbsp;&nbsp;(등비급수)</div>
+    <div class="formula">분자: hν·Σnxⁿ = hν · x/(1−x)² &nbsp;&nbsp;(분모를 x로 미분)</div>
+    <p>두 수열의 관계: Σnxⁿ은 Σxⁿ을 x로 미분한 것!</p>
+    <div class="formula">⟨E⟩ = hν · x/(1−x) = hν / (e^(hν/kT) − 1)</div>
+    <p class="note">이 단계에서 계산하는 것: 에너지가 이산적일 때 진동수 ν인 모드의 평균 에너지.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Step 3 — Planck Distribution 완성</div>
+    <p>ν = c/λ 대입 후 g(λ) 곱하기:</p>
+    <div class="formula blue">ρ(λ,T) = 8πhc / λ⁵(e^(hc/λkT) − 1)</div>
+    <p>λ⁵이 나오는 이유: g(λ)의 λ⁴ + ⟨E⟩의 hc/λ에서 λ 하나 더 → λ⁵</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 4. 극한 검증 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2>극한 조건 검증</h2>
+    <span class="tag tag-purple">자기 일관성 증명</span>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">단파장 λ→0 (UV 파탄 해결)</div>
+      <p>hc/λkT → ∞</p>
+      <p>e^∞ → ∞ → 분모 폭발</p>
+      <p>→ <strong>ρ → 0</strong></p>
+      <p>발산하지 않고 꺾임. UV 파탄 해결.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">장파장 λ→∞ (Rayleigh-Jeans 수렴)</div>
+      <p>hc/λkT → 0</p>
+      <p>Taylor 전개: e^x ≈ 1+x</p>
+      <p>e^(hc/λkT) − 1 ≈ hc/λkT</p>
+      <p>→ ρ ≈ <strong>8πkT/λ⁴</strong> ✓</p>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 5. 예제 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>예제 — 2000K 용광로</h2>
+    <span class="tag tag-amber">실전 계산</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Q1. 왜 주황색으로 보이나?</div>
+    <p>Planck 그래프에서 2000K 피크 ≈ 1.45μm → 적외선 영역.</p>
+    <p>가시광선(0.42~0.70μm)에는 곡선의 꼬리만 걸침.</p>
+    <p>그 꼬리에서 700nm(빨강) 쪽이 450nm(파랑)보다 훨씬 높음 → <strong>빨강/주황만 유의미하게 방출 → 주황색.</strong></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Q2. ρ(450nm) / ρ(700nm) at T=2000K</div>
+    <p>비율이므로 8πhc 약분. hc/kT = 7189nm.</p>
+    <div class="formula">hc/λkT: &nbsp; λ=700 → 10.27 &nbsp;&nbsp; λ=450 → 15.98</div>
+    <div class="formula">e^10.27−1 ≈ 28,964 &nbsp;&nbsp; e^15.98−1 ≈ 8,718,000</div>
+    <div class="formula">(700/450)⁵ ≈ 9.12</div>
+    <div class="formula teal">ρ(450)/ρ(700) = 9.12 × 28,964 / 8,718,000 ≈ 0.030</div>
+    <p>450nm 에너지는 700nm의 약 3%. 파란빛이 거의 안 나오는 이유.</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 6. 비교 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2>Rayleigh-Jeans vs Planck 한눈 비교</h2>
+    <span class="tag tag-blue">핵심 차이</span>
+  </div>
+  <div class="card">
+    <table>
+      <tr><th></th><th>Rayleigh-Jeans</th><th>Planck</th></tr>
+      <tr><td>에너지 가정</td><td>연속 (∫ 적분)</td><td>이산 E=nhν (Σ 합산)</td></tr>
+      <tr><td>⟨E⟩</td><td>kT (파장 무관)</td><td>hν/(e^(hν/kT)−1)</td></tr>
+      <tr><td>단파장</td><td>∞ 발산 (UV 파탄)</td><td>0으로 수렴</td></tr>
+      <tr><td>장파장</td><td>8πkT/λ⁴</td><td>→ 8πkT/λ⁴ 일치</td></tr>
+      <tr><td>실험 일치</td><td>장파장만</td><td>전 파장 완벽 일치</td></tr>
+    </table>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 7. 출제 예상 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2>출제 예상 문제</h2>
+    <span class="tag tag-amber">시험 대비</span>
+  </div>
+  <div class="exam-box">
+    <div class="exam-title">예상 출제 유형</div>
+    <div class="exam-item">
+      <span class="exam-type">유도형</span>
+      <span>g₃D(ν)dν = 8πν²/c³ × dν 유도 (경계조건 → 1D → 3D 구면좌표)</span>
+    </div>
+    <div class="exam-item">
+      <span class="exam-type">유도형</span>
+      <span>Planck ⟨E⟩ 유도 — E=nhν 가정, 등비급수, 미분 트릭</span>
+    </div>
+    <div class="exam-item">
+      <span class="exam-type">유도형</span>
+      <span>장파장 극한에서 Taylor 전개로 Rayleigh-Jeans 수렴 증명</span>
+    </div>
+    <div class="exam-item">
+      <span class="exam-type">원리형</span>
+      <span>UV 파탄이 발생하는 이유 + Planck가 어떻게 해결했는지</span>
+    </div>
+    <div class="exam-item">
+      <span class="exam-type">원리형</span>
+      <span>λ⁵이 나오는 이유 설명 (g(λ)의 λ⁴ + ⟨E⟩의 hc/λ)</span>
+    </div>
+    <div class="exam-item">
+      <span class="exam-type">계산형</span>
+      <span>특정 T에서 두 파장의 에너지 밀도 비율 계산</span>
+    </div>
+    <div class="exam-item">
+      <span class="exam-type">계산형</span>
+      <span>hc/λkT 값 계산 후 Planck 식 대입</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>Physical Chemistry · Chapter 7A · Blackbody</span>
+  <span>다음: 광전효과 · de Broglie →</span>
+</footer>
+
+</div>
+</body>
+</html>

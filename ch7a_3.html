@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 7A — 양자역학 개론 정리</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  :root {
+    --bg:#0f0f10; --bg2:#17171a; --bg3:#1e1e23;
+    --border:rgba(255,255,255,0.07);
+    --text:#e2e0d8; --muted:#7a7870;
+    --blue:#4a9eff; --blue-dim:rgba(74,158,255,0.12);
+    --amber:#f0a545; --amber-dim:rgba(240,165,69,0.12);
+    --teal:#3ecfaa; --teal-dim:rgba(62,207,170,0.12);
+    --purple:#a78bfa; --purple-dim:rgba(167,139,250,0.12);
+    --red:#f87171; --red-dim:rgba(248,113,113,0.1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;line-height:1.75;padding:48px 24px}
+  .container{max-width:860px;margin:0 auto}
+  header{border-bottom:1px solid var(--border);padding-bottom:32px;margin-bottom:40px}
+  .course-tag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:26px;font-weight:700;color:#fff;margin-bottom:8px;letter-spacing:-.02em}
+  .subtitle{color:var(--muted);font-size:13px}
+  .section{margin-bottom:36px}
+  .section-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .section-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);min-width:28px}
+  h2{font-size:15px;font-weight:500;color:#fff;letter-spacing:-.01em}
+  .tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;letter-spacing:.05em;text-transform:uppercase}
+  .tag-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(74,158,255,.25)}
+  .tag-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,165,69,.25)}
+  .tag-teal{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(62,207,170,.25)}
+  .tag-purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(167,139,250,.25)}
+  .tag-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,.2)}
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:10px}
+  .card-title{font-size:13px;font-weight:500;color:#fff;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:13px;line-height:1.7}
+  .card p+p{margin-top:6px}
+  .card p strong{color:var(--text);font-weight:500}
+  .formula{font-family:'JetBrains Mono',monospace;font-size:13px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin:10px 0;color:var(--amber)}
+  .formula.blue{color:var(--blue)}
+  .formula.teal{color:var(--teal)}
+  .formula.purple{color:var(--purple)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .flow{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:12px 0}
+  .flow-item{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 11px;font-size:12px;color:var(--text)}
+  .flow-arrow{color:var(--muted);font-size:13px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.08em;padding:8px 12px;border-bottom:1px solid var(--border)}
+  td{padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text)}
+  td:first-child{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px}
+  tr:last-child td{border-bottom:none}
+  .divider{border:none;border-top:1px solid var(--border);margin:32px 0}
+  .step-row{display:flex;gap:12px;align-items:flex-start;margin:8px 0}
+  .step-num{min-width:24px;height:24px;border-radius:50%;background:var(--blue-dim);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;margin-top:2px;border:1px solid rgba(74,158,255,.25)}
+  .step-num.amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,165,69,.25)}
+  .note{font-size:12px;color:var(--muted);font-style:italic;margin-top:4px}
+  .highlight{background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.2);border-radius:8px;padding:12px 16px;margin:10px 0}
+  .highlight p{font-size:13px;color:var(--text)}
+  .exam-box{background:var(--amber-dim);border:1px solid rgba(240,165,69,.2);border-radius:8px;padding:14px 18px}
+  .exam-title{font-size:11px;font-weight:500;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+  .exam-item{display:flex;gap:10px;margin:6px 0;font-size:13px}
+  .exam-type{min-width:60px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);padding-top:2px}
+  footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="course-tag">Physical Chemistry · Chapter 7A · Quantum Introduction</div>
+  <h1>양자역학 개론 — 열용량 · 보어 모델 · 광전효과 · de Broglie</h1>
+  <p class="subtitle">고전역학의 실패 → 양자화 → 파동-입자 이중성</p>
+</header>
+
+<!-- 전체 흐름 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">00</span>
+    <h2>전체 흐름</h2>
+    <span class="tag tag-blue">개요</span>
+  </div>
+  <div class="flow">
+    <span class="flow-item">흑체복사 → Planck 양자화</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-item">열용량 → Einstein/Debye</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-item">수소 스펙트럼 → Bohr 모델</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-item">광전효과 → 빛의 입자성</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-item">de Broglie → 물질의 파동성</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-item">7B Schrödinger 방정식</span>
+  </div>
+  <p style="color:var(--muted);font-size:13px">모든 실험이 <strong style="color:var(--text)">에너지 양자화</strong>와 <strong style="color:var(--text)">파동-입자 이중성</strong>으로 수렴.</p>
+</div>
+
+<hr class="divider">
+
+<!-- 1. 열용량 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2>열용량 — Dulong-Petit → Einstein/Debye</h2>
+    <span class="tag tag-amber">고전 → 양자</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">고전역학 — Dulong-Petit</div>
+    <p>고체 원자 = 3D 조화진동자. Equipartition theorem: 자유도 하나당 kT/2.</p>
+    <p>3방향 × (운동에너지 + 퍼텐셜에너지) = 3 × 2 × kT/2 = 3kT</p>
+    <div class="formula">U = 3RT &nbsp;&nbsp; Cᵥ = dU/dT = 3R ≈ 24.9 J/mol/K</div>
+    <p>온도에 완전히 독립적. 근데 저온에서 실험값은 0으로 수렴 → 고전역학 실패.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Einstein/Debye — 양자화 적용</div>
+    <p>흑체복사와 동일한 논리: 진동 에너지가 hν 단위로만 존재.</p>
+    <div class="formula">⟨E⟩ = hν / (e^(hν/kT) − 1)</div>
+    <div class="grid2">
+      <div>
+        <p><strong>고온 극한 (kT >> hν):</strong></p>
+        <p>e^x ≈ 1+x → ⟨E⟩ → kT → Cᵥ → 3R ✓</p>
+      </div>
+      <div>
+        <p><strong>저온 극한 (kT << hν):</strong></p>
+        <p>⟨E⟩ → 0 → Cᵥ → 0 ✓ (실험 일치)</p>
+      </div>
+    </div>
+    <p class="note">Einstein: 모든 원자 같은 ν 가정. Debye: ν 분포 고려 → 실험과 더 잘 맞음.</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 2. Bohr 모델 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2>Bohr 모델 — 수소 스펙트럼 설명</h2>
+    <span class="tag tag-teal">양자화 증거</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">출발: Rydberg 공식 (경험식)</div>
+    <div class="formula">ν = R(1/n₁² − 1/n₂²) &nbsp;&nbsp; R = 3.29×10¹⁵ Hz</div>
+    <p>n₁=1: Lyman (UV) / n₁=2: Balmer (가시광선) / n₁=3: Paschen (IR)</p>
+    <p>왜 이런 식이 나오는지 몰랐음 → Bohr가 설명.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">가정 1 — 원형 궤도: 원심력 = Coulomb 인력</div>
+    <div class="formula">mₑv²/r = Ze²/4πε₀r²</div>
+    <p>양변 정리: mₑv² = Ze²/4πε₀r → ½mₑv² = Ze²/8πε₀r</p>
+    <p>퍼텐셜에너지: V = −Ze²/4πε₀r (반대 전하 인력 → 음수)</p>
+    <div class="formula">E = ½mₑv² + V = Ze²/8πε₀r − Ze²/4πε₀r = −Ze²/8πε₀r</div>
+    <p class="note">전체 에너지가 음수 = 전자가 핵에 속박된 상태.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">가정 2 — 각운동량 양자화</div>
+    <div class="formula">L = mₑvr = nħ &nbsp;&nbsp; (n = 1, 2, 3, ...)</div>
+    <p>물리적 근거: 전자를 파동으로 보면 원형 궤도에서 정상파 조건 nλ = 2πr.</p>
+    <p>λ = h/mₑv 대입 → n(h/mₑv) = 2πr → <strong>mₑvr = nħ</strong></p>
+    <p class="note">n이 정수가 아니면 파동이 자기간섭으로 소멸 → 정수만 허용.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">유도 Step — rₙ, Eₙ</div>
+
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div>
+        <p>L = nħ에서: mₑv = nħ/r → mₑ²v² = n²ħ²/r²</p>
+        <p>가정 1에서: mₑ²v² = mₑZe²/4πε₀r</p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div>
+        <p>두 식 같다고 놓으면: n²ħ²/r² = mₑZe²/4πε₀r</p>
+        <div class="formula">rₙ = 4πε₀n²ħ²/mₑZe² = (a₀/Z)n² &nbsp;&nbsp; a₀ = 0.529Å</div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div>
+        <p>rₙ을 E = −Ze²/8πε₀r에 대입:</p>
+        <div class="formula">Eₙ = −mₑZ²e⁴/8ε₀²h²n² = −Rₕ Z²/n² &nbsp;&nbsp; Rₕ = 13.6 eV</div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div>
+        <p>n₂ → n₁ 전이: ΔE = hν → Bohr 진동수 조건 적용:</p>
+        <div class="formula blue">ν = (Rₕ/h)(1/n₁² − 1/n₂²) = R(1/n₁² − 1/n₂²) ✓</div>
+        <p>Rydberg 경험식이 이론으로 완벽히 유도됨.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">핵심 결과</div>
+    <table>
+      <tr><th>물리량</th><th>식</th><th>의미</th></tr>
+      <tr><td>rₙ</td><td>(a₀/Z)n²</td><td>n² 비례. n 클수록 궤도 급격히 커짐</td></tr>
+      <tr><td>Eₙ</td><td>−RₕZ²/n²</td><td>n² 반비례. n=1이 가장 낮은 바닥상태</td></tr>
+      <tr><td>a₀</td><td>0.529Å</td><td>수소 바닥상태(n=1) 궤도 반지름</td></tr>
+      <tr><td>Rₕ</td><td>13.6 eV</td><td>수소 이온화 에너지</td></tr>
+    </table>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 3. 광전효과 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2>광전효과 — 빛의 입자성</h2>
+    <span class="tag tag-purple">Einstein 1905</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">고전역학 예측 vs 실험</div>
+    <div class="grid2">
+      <div>
+        <p><strong>고전 예측:</strong></p>
+        <p>빛 세기 강하면 전자 더 빠르게 튀어나와야 함.</p>
+      </div>
+      <div>
+        <p><strong>실험 결과:</strong></p>
+        <p>진동수가 문턱값 이상일 때만 전자 나옴. 세기 무관.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Einstein 해석</div>
+    <p>빛 = 광자. 광자 하나가 전자 하나를 1대1로 때림.</p>
+    <p>금속에서 전자를 떼는 데 필요한 최소 에너지 = 일함수 Φ.</p>
+    <div class="formula blue">Eₖ = ½mₑv² = hν − Φ</div>
+    <p>hν < Φ이면 Eₖ < 0 → 전자 안 나옴. 진동수가 관건인 이유.</p>
+    <p class="note">그래프 기울기 = h (보편 상수). x절편 = Φ/h (금속마다 다름).</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 4. de Broglie -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2>de Broglie 관계식 — 물질의 파동성</h2>
+    <span class="tag tag-teal">파동-입자 이중성</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">핵심 아이디어</div>
+    <p>Einstein이 빛의 파동-입자 이중성 보임 → de Broglie: "전자도 파동 아닐까?"</p>
+    <div class="formula blue">λ = h/p = h/mv</div>
+    <p>모든 물질 입자가 파장을 가짐. p 크면(빠르면) λ 짧음.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Davisson-Germer 실험 — 증명</div>
+    <p>전자빔을 Ni 결정에 쏘면 회절 패턴 관찰. 파동만 회절함 → 전자가 파동임을 직접 증명.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Q5. 테니스공 파장 계산</div>
+    <p>m = 57g = 0.057 kg, v = 80 km/h = 22.2 m/s</p>
+    <p>p = mv = 0.057 × 22.2 = 1.265 kg·m/s</p>
+    <div class="formula">λ = h/p = 6.626×10⁻³⁴ / 1.265 = 5.24×10⁻³⁴ m</div>
+    <p>원자 크기(10⁻¹⁰m)보다 10²⁴배 작음 → 거시적 물체 파동성은 측정 불가. 일상에서 못 느끼는 이유.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Bohr 모델과 연결</div>
+    <p>nλ = 2πr에 λ = h/mₑv 대입 → L = nħ 자연스럽게 유도.</p>
+    <p>Bohr가 가정으로 넣었던 각운동량 양자화가 de Broglie 파동성으로 설명됨.</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 5. 비교 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>고전역학 실패 → 양자역학 해결 비교</h2>
+    <span class="tag tag-blue">총정리</span>
+  </div>
+  <div class="card">
+    <table>
+      <tr><th>현상</th><th>고전 예측</th><th>실험</th><th>양자 해결</th></tr>
+      <tr><td>흑체복사</td><td>UV 파탄 (∞ 발산)</td><td>피크 후 감소</td><td>E = nhν (Planck)</td></tr>
+      <tr><td>열용량</td><td>3R (T 무관)</td><td>저온에서 0 수렴</td><td>진동 에너지 양자화 (Einstein)</td></tr>
+      <tr><td>수소 스펙트럼</td><td>연속 스펙트럼</td><td>이산 spectral line</td><td>Eₙ = −Rₕ/n² (Bohr)</td></tr>
+      <tr><td>광전효과</td><td>세기 의존</td><td>진동수 의존</td><td>빛 = 광자 (Einstein)</td></tr>
+      <tr><td>전자 회절</td><td>입자만</td><td>회절 패턴</td><td>λ = h/p (de Broglie)</td></tr>
+    </table>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 출제 예상 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2>출제 예상 문제</h2>
+    <span class="tag tag-amber">시험 대비</span>
+  </div>
+  <div class="exam-box">
+    <div class="exam-title">예상 출제 유형</div>
+    <div class="exam-item">
+      <span class="exam-type">유도형</span>
+      <span>rₙ, Eₙ 유도 — 두 가정에서 시작해서 Rydberg 공식까지</span>
+    </div>
+    <div class="exam-item">
+      <span class="exam-type">유도형</span>
+      <span>각운동량 양자화 L=nħ가 de Broglie 파동성으로 설명되는 과정</span>
+    </div>
+    <div class="exam-item">
+      <span class="exam-type">원리형</span>
+      <span>광전효과에서 빛의 세기가 아니라 진동수가 결정적인 이유</span>
+    </div>
+    <div class="exam-item">
+      <span class="exam-type">원리형</span>
+      <span>저온에서 Cᵥ → 0이 되는 이유 — equipartition과 양자화 비교</span>
+    </div>
+    <div class="exam-item">
+      <span class="exam-type">계산형</span>
+      <span>Rydberg 공식으로 특정 전이 파장 계산</span>
+    </div>
+    <div class="exam-item">
+      <span class="exam-type">계산형</span>
+      <span>de Broglie 파장 계산 (테니스공, 전자 등)</span>
+    </div>
+    <div class="exam-item">
+      <span class="exam-type">계산형</span>
+      <span>광전효과 — hν, Φ, Eₖ 관계식 계산</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>Physical Chemistry · Chapter 7A · Quantum Intro</span>
+  <span>다음: 7B Schrödinger 방정식 · 파동함수 →</span>
+</footer>
+
+</div>
+</body>
+</html>
