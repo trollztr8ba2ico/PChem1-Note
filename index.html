@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PChem1 Note — SNU</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root { --transition: 0.35s cubic-bezier(.4,0,.2,1); }
+
+[data-theme="dark"] {
+  --bg:        #0c0e16;
+  --bg2:       #13172280;
+  --bg3:       #1a1f30;
+  --bg4:       #222840;
+  --border:    #2a3050;
+  --text:      #e2e6f8;
+  --text2:     #8a92b8;
+  --text3:     #454d70;
+  --blue:      #5b8dee;
+  --blue-dim:  rgba(91,141,238,0.12);
+  --amber:     #f0a830;
+  --amber-dim: rgba(240,168,48,0.12);
+  --green:     #3dd68c;
+  --green-dim: rgba(61,214,140,0.12);
+  --purple:    #b06eff;
+  --purple-dim:rgba(176,110,255,0.12);
+  --pink:      #ff6eb4;
+  --pink-dim:  rgba(255,110,180,0.12);
+  --cyan:      #4cd8e3;
+  --cyan-dim:  rgba(76,216,227,0.12);
+}
+
+[data-theme="light"] {
+  --bg:        #f5f6fa;
+  --bg2:       rgba(255,255,255,0.8);
+  --bg3:       #ffffff;
+  --bg4:       #eef0f8;
+  --border:    #d0d5e8;
+  --text:      #1a1f38;
+  --text2:     #5a6080;
+  --text3:     #9aa0c0;
+  --blue:      #2d6be4;
+  --blue-dim:  rgba(45,107,228,0.08);
+  --amber:     #c07800;
+  --amber-dim: rgba(192,120,0,0.08);
+  --green:     #1a9e62;
+  --green-dim: rgba(26,158,98,0.08);
+  --purple:    #7c35d4;
+  --purple-dim:rgba(124,53,212,0.08);
+  --pink:      #d62d8a;
+  --pink-dim:  rgba(214,45,138,0.08);
+  --cyan:      #1aa3b0;
+  --cyan-dim:  rgba(26,163,176,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Pretendard', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.75;
+  min-height: 100vh;
+  transition: background var(--transition), color var(--transition);
+  overflow-x: hidden;
+}
+a { color: var(--blue); text-decoration: none; }
+
+.bg-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+.orb1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(91,141,238,0.08) 0%, transparent 70%);
+  top: -100px; right: -100px;
+}
+.orb2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(176,110,255,0.06) 0%, transparent 70%);
+  bottom: 200px; left: -100px;
+}
+[data-theme="light"] .bg-orb { opacity: 0.4; }
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 900px; margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+nav {
+  position: sticky; top: 0; z-index: 100;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.nav-inner {
+  max-width: 900px; margin: 0 auto;
+  height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px; font-weight: 600;
+  color: var(--blue);
+  letter-spacing: 1px;
+}
+.nav-logo span { color: var(--text2); font-weight: 400; }
+.theme-toggle {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+.theme-toggle:hover { border-color: var(--blue); }
+
+.hero {
+  padding: 64px 0 48px;
+  animation: fadeUp 0.6s ease both;
+}
+.hero-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 24px; height: 1px;
+  background: var(--blue);
+}
+.hero h1 {
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  margin-bottom: 16px;
+}
+.hero h1 .accent { color: var(--blue); }
+.hero-sub {
+  font-size: 15px;
+  color: var(--text2);
+  max-width: 560px;
+  line-height: 1.8;
+}
+.hero-meta {
+  margin-top: 24px;
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.meta-pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  letter-spacing: 1px;
+}
+
+.section-tabs {
+  display: flex; gap: 2px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 32px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.section-tabs::-webkit-scrollbar { display: none; }
+.stab {
+  flex: 1; min-width: max-content;
+  padding: 10px 16px;
+  font-size: 13px; font-weight: 500;
+  color: var(--text2);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  border: none; background: none;
+  font-family: 'Pretendard', sans-serif;
+}
+.stab:hover { color: var(--text); background: var(--bg4); }
+.stab.active {
+  color: var(--bg);
+  background: var(--blue);
+  font-weight: 600;
+}
+[data-theme="light"] .stab.active { color: #fff; }
+
+.section-content { display: none; animation: fadeUp 0.3s ease both; }
+.section-content.active { display: block; }
+
+.progress-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px;
+}
+.section-title {
+  font-size: 13px; font-weight: 600;
+  color: var(--text2);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.overall-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--green);
+  background: var(--green-dim);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.subject-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.subject-card:hover { border-color: var(--blue); }
+.subject-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+}
+.subject-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.subject-name { font-weight: 600; font-size: 14px; flex: 1; }
+.subject-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: var(--text3);
+  background: var(--bg4);
+}
+.subject-prog-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--text2);
+  min-width: 50px;
+  text-align: right;
+}
+.subject-chevron {
+  color: var(--text3);
+  font-size: 12px;
+  transition: transform 0.2s;
+}
+.subject-card.open .subject-chevron { transform: rotate(180deg); }
+
+.progress-bar-wrap {
+  height: 3px;
+  background: var(--bg4);
+  margin: 0 20px;
+}
+.progress-bar-fill {
+  height: 100%;
+  transition: width 1s cubic-bezier(.4,0,.2,1);
+}
+
+.chapter-list {
+  padding: 12px 20px 16px;
+  display: none;
+  border-top: 1px solid var(--border);
+}
+.subject-card.open .chapter-list { display: block; }
+.chapter-section-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin: 8px 0 4px;
+}
+.chapter-section-label:first-child { margin-top: 0; }
+
+.chapter-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.chapter-item:last-child { border-bottom: none; }
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.status-done { background: var(--green); }
+.status-progress { background: var(--amber); }
+.status-todo { background: var(--border); }
+.chapter-name { flex: 1; }
+.chapter-name.done { color: var(--text); }
+.chapter-name.progress { color: var(--amber); }
+.chapter-name.todo { color: var(--text3); }
+.chapter-link {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--blue);
+  padding: 2px 8px;
+  border: 1px solid var(--blue);
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+.chapter-link:hover { background: var(--blue-dim); }
+.chapter-date {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+}
+.tbd-pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--bg4);
+  color: var(--text3);
+}
+
+.update-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.update-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  transition: border-color 0.2s;
+}
+.update-item:hover { border-color: var(--blue); }
+.update-date {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  min-width: 80px;
+  padding-top: 2px;
+}
+.update-body { flex: 1; }
+.update-title { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+.update-desc { font-size: 12px; color: var(--text2); }
+.update-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  align-self: flex-start;
+}
+.badge-new { background: var(--blue-dim); color: var(--blue); }
+.badge-update { background: var(--amber-dim); color: var(--amber); }
+
+.coming-soon {
+  background: linear-gradient(135deg, var(--purple-dim), var(--cyan-dim), var(--pink-dim));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 60px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.coming-soon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(176,110,255,0.15), transparent 50%),
+              radial-gradient(circle at 70% 50%, rgba(76,216,227,0.15), transparent 50%);
+  pointer-events: none;
+}
+.cs-inner { position: relative; z-index: 1; }
+.cs-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 16px;
+  animation: float 3s ease-in-out infinite;
+}
+.cs-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--purple);
+  margin-bottom: 12px;
+}
+.cs-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--purple), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.cs-desc {
+  font-size: 14px;
+  color: var(--text2);
+  max-width: 460px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+.cs-hint {
+  margin-top: 24px;
+  padding: 14px 18px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--text3);
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cs-hint-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--cyan);
+  margin-bottom: 6px;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+footer {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 24px;
+  text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 1px;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .page-wrap { padding: 0 16px 60px; }
+  .hero { padding: 40px 0 32px; }
+  .hero-meta { gap: 6px; }
+  .stab { padding: 8px 12px; font-size: 12px; }
+  .cs-title { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">PChem<span>.note</span></div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="테마 전환">🌙</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+<section class="hero">
+  <div class="hero-eyebrow">SNU 2026 SPRING</div>
+  <h1>화학과 학부생의<br><span class="accent">공부 노트</span></h1>
+  <p class="hero-sub">
+    물리화학, 유기화학, 그리고 지구과학.<br>
+    수식은 왜 이렇게 생겼고, 물리는 어떤 의미인지 함께 정리.
+  </p>
+  <div class="hero-meta">
+    <span class="meta-pill">SNU CHEM</span>
+    <span class="meta-pill">2026 SPRING</span>
+  </div>
+</section>
+
+<div class="section-tabs">
+  <button class="stab active" onclick="showSection('progress',this)">📊 진도 현황</button>
+  <button class="stab" onclick="showSection('updates',this)">🕐 최근 업데이트</button>
+  <button class="stab" onclick="showSection('magic',this)">🪄 양자 마법학교</button>
+</div>
+
+<!-- 진도 현황 -->
+<div id="sec-progress" class="section-content active">
+
+  <div class="progress-header">
+    <span class="section-title">// 과목별 진도</span>
+    <span class="overall-badge">2026 1학기</span>
+  </div>
+
+  <!-- 물리화학 1 -->
+  <div class="subject-card open" onclick="toggleCard(this)">
+    <div class="subject-header">
+      <div class="subject-dot" style="background:#5b8dee"></div>
+      <div class="subject-name">물리화학 1</div>
+      <div class="subject-tag">PChem</div>
+      <div class="subject-prog-text">8/15</div>
+      <div class="subject-chevron">▼</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:53%;background:#5b8dee"></div>
+    </div>
+    <div class="chapter-list">
+      <div class="chapter-section-label">// FOCUS 7 — QUANTUM THEORY</div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7a — 양자역학의 등장 (1)</div>
+        <a href="ch7a_1.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7a — 양자역학의 등장 (2)</div>
+        <a href="ch7a_2.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7a — 양자역학의 등장 (3)</div>
+        <a href="ch7a_3.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7b — 파동함수와 슈뢰딩거 방정식</div>
+        <a href="ch7b.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7c — Operator와 Observable (1)</div>
+        <a href="ch7c_1.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7c — Operator와 Observable (2)</div>
+        <a href="ch7c_2.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7c — Operator와 Observable (3)</div>
+        <a href="ch7c_3.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7d — PIB 1D (Free Motion → PIB)</div>
+        <a href="ch7d_1.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-progress"></div>
+        <div class="chapter-name progress">ch7d — PIB 2D/3D + Degeneracy</div>
+        <span class="chapter-date">진행중</span>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-progress"></div>
+        <div class="chapter-name progress">ch7d — Quantum Tunneling</div>
+        <span class="chapter-date">진행중</span>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">ch7e — 조화진동자 (Harmonic Oscillator)</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">ch7e — 강체 회전 (Rigid Rotor)</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">ch7f — 수소원자</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">ch7f — 다전자 원자</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">기말 종합 정리</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 유기화학 1 -->
+  <div class="subject-card" onclick="toggleCard(this)">
+    <div class="subject-header">
+      <div class="subject-dot" style="background:#f0a830"></div>
+      <div class="subject-name">유기화학 1</div>
+      <div class="subject-tag">Klein 4e</div>
+      <div class="subject-prog-text">10/15</div>
+      <div class="subject-chevron">▼</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:67%;background:#f0a830"></div>
+    </div>
+    <div class="chapter-list">
+      <div class="chapter-section-label">// 중간 범위 — Ch.1-10</div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">Ch.1-10 — 구조, 산염기, 입체화학, SN/E, 알켄 등</div>
+        <span class="chapter-date">중간 완료</span>
+      </div>
+      <div class="chapter-section-label">// 기말 범위 — Ch.11-15</div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">Ch.11 — (제목 추후 입력)</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">Ch.12 — (제목 추후 입력)</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">Ch.13 — (제목 추후 입력)</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">Ch.14 — (제목 추후 입력)</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">Ch.15 — IR Spectroscopy & Mass Spectrometry</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 암석학 -->
+  <div class="subject-card" onclick="toggleCard(this)">
+    <div class="subject-header">
+      <div class="subject-dot" style="background:#3dd68c"></div>
+      <div class="subject-name">암석학</div>
+      <div class="subject-tag">Petrology</div>
+      <div class="subject-prog-text"><span class="tbd-pill">TBD</span></div>
+      <div class="subject-chevron">▼</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:0%;background:#3dd68c"></div>
+    </div>
+    <div class="chapter-list">
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">진도 범위 미정. PPT 정리 후 업데이트 예정.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 판구조론 -->
+  <div class="subject-card" onclick="toggleCard(this)">
+    <div class="subject-header">
+      <div class="subject-dot" style="background:#b06eff"></div>
+      <div class="subject-name">판구조론</div>
+      <div class="subject-tag">Plate Tect.</div>
+      <div class="subject-prog-text"><span class="tbd-pill">TBD</span></div>
+      <div class="subject-chevron">▼</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:0%;background:#b06eff"></div>
+    </div>
+    <div class="chapter-list">
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">추후 업데이트 예정.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 죽과이 (교양) -->
+  <div class="subject-card" onclick="toggleCard(this)">
+    <div class="subject-header">
+      <div class="subject-dot" style="background:#ff6eb4"></div>
+      <div class="subject-name">죽과이</div>
+      <div class="subject-tag">교양</div>
+      <div class="subject-prog-text"><span class="tbd-pill">TBD</span></div>
+      <div class="subject-chevron">▼</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:0%;background:#ff6eb4"></div>
+    </div>
+    <div class="chapter-list">
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">추후 업데이트 예정 ㅋㅋ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 한음 (교양) -->
+  <div class="subject-card" onclick="toggleCard(this)">
+    <div class="subject-header">
+      <div class="subject-dot" style="background:#4cd8e3"></div>
+      <div class="subject-name">한음</div>
+      <div class="subject-tag">교양</div>
+      <div class="subject-prog-text"><span class="tbd-pill">TBD</span></div>
+      <div class="subject-chevron">▼</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:0%;background:#4cd8e3"></div>
+    </div>
+    <div class="chapter-list">
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">추후 업데이트 예정 ㅋㅋ</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 업데이트 -->
+<div id="sec-updates" class="section-content">
+  <div class="section-title" style="margin-bottom:20px">// 최근 업데이트</div>
+  <div class="update-list">
+    <div class="update-item">
+      <div class="update-date">2026.05.24</div>
+      <div class="update-body">
+        <div class="update-title">ch7d_1 — PIB 1D 완성</div>
+        <div class="update-desc">Free Motion → PIB → Observables → β-Carotene 응용. 출제예상문제 포함.</div>
+      </div>
+      <span class="update-badge badge-new">NEW</span>
+    </div>
+    <div class="update-item">
+      <div class="update-date">2026.05.24</div>
+      <div class="update-body">
+        <div class="update-title">홈페이지 세팅 완료</div>
+        <div class="update-desc">GitHub Pages + index. 폰에서도 n회독 가능.</div>
+      </div>
+      <span class="update-badge badge-new">NEW</span>
+    </div>
+    <div class="update-item">
+      <div class="update-date">2026.05.20</div>
+      <div class="update-body">
+        <div class="update-title">ch7c — Operator 정리본 완성</div>
+        <div class="update-desc">Hermiticity, commutator, Heisenberg 불확정성, superposition.</div>
+      </div>
+      <span class="update-badge badge-update">UPDATE</span>
+    </div>
+  </div>
+</div>
+
+<!-- 양자 마법학교 (COMING SOON) -->
+<div id="sec-magic" class="section-content">
+  <div class="coming-soon">
+    <div class="cs-inner">
+      <span class="cs-icon">🪄</span>
+      <div class="cs-label">COMING SOON</div>
+      <div class="cs-title">양자 마법학교</div>
+      <p class="cs-desc">
+        벽을 통과하고, 여러 잔상으로 동시에 존재하고, 사람이 파동이 되는 마법.<br>
+        현실에선 일어날 수 없지만 <strong>전자, 미생물, 원자의 세계</strong>에선 매일 일어나는 일들.<br>
+        양자역학을 처음 접하는 사람도 단숨에 빠져들 수 있는 이야기로 풀어볼 예정.
+      </p>
+      <div class="cs-hint">
+        <div class="cs-hint-title">// PREVIEW</div>
+        만약 우리가 전자 크기였다면 어떤 세상이 펼쳐졌을까?
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<footer>
+  trollztr8ba2ico.github.io/PChem1-Note · SNU 2026
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.querySelector('.theme-toggle').textContent = isDark ? '🌙' : '☀️';
+}
+
+function showSection(id, el) {
+  document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function toggleCard(card) {
+  card.classList.toggle('open');
+}
+
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.progress-bar-fill').forEach(bar => {
+      const w = bar.style.width;
+      bar.style.width = '0';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => { bar.style.width = w; });
+      });
+    });
+  }, 300);
+});
+</script>
+</body>
+</html>
