@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>기말 한판 노트</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root { --transition: 0.35s cubic-bezier(.4,0,.2,1); }
+
+[data-theme="dark"] {
+  --bg:        #0c0e16;
+  --bg2:       rgba(19,23,34,0.6);
+  --bg3:       #1a1f30;
+  --bg4:       #222840;
+  --border:    #2a3050;
+  --text:      #e2e6f8;
+  --text2:     #8a92b8;
+  --text3:     #454d70;
+  --blue:      #5b8dee;
+  --blue-dim:  rgba(91,141,238,0.12);
+  --amber:     #f0a830;
+  --amber-dim: rgba(240,168,48,0.12);
+  --green:     #3dd68c;
+  --green-dim: rgba(61,214,140,0.12);
+  --purple:    #b06eff;
+  --purple-dim:rgba(176,110,255,0.12);
+  --pink:      #ff6eb4;
+  --pink-dim:  rgba(255,110,180,0.12);
+  --cyan:      #4cd8e3;
+  --cyan-dim:  rgba(76,216,227,0.12);
+}
+
+[data-theme="light"] {
+  --bg:        #f5f6fa;
+  --bg2:       rgba(255,255,255,0.7);
+  --bg3:       #ffffff;
+  --bg4:       #eef0f8;
+  --border:    #d0d5e8;
+  --text:      #1a1f38;
+  --text2:     #5a6080;
+  --text3:     #9aa0c0;
+  --blue:      #2d6be4;
+  --blue-dim:  rgba(45,107,228,0.08);
+  --amber:     #c07800;
+  --amber-dim: rgba(192,120,0,0.08);
+  --green:     #1a9e62;
+  --green-dim: rgba(26,158,98,0.08);
+  --purple:    #7c35d4;
+  --purple-dim:rgba(124,53,212,0.08);
+  --pink:      #d62d8a;
+  --pink-dim:  rgba(214,45,138,0.08);
+  --cyan:      #1aa3b0;
+  --cyan-dim:  rgba(26,163,176,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Pretendard', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.75;
+  min-height: 100vh;
+  transition: background var(--transition), color var(--transition);
+  overflow-x: hidden;
+}
+a { color: var(--blue); text-decoration: none; }
+
+/* ═════ 배경 오브 ═════ */
+.bg-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+.orb1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(91,141,238,0.1) 0%, transparent 70%);
+  top: -150px; right: -150px;
+}
+.orb2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(176,110,255,0.08) 0%, transparent 70%);
+  top: 60vh; left: -150px;
+}
+.orb3 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(255,110,180,0.06) 0%, transparent 70%);
+  top: 130vh; right: -100px;
+}
+[data-theme="light"] .bg-orb { opacity: 0.5; }
+
+/* ═════ 컨테이너 ═════ */
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 900px; margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ═════ NAV ═════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.nav-inner {
+  max-width: 900px; margin: 0 auto;
+  height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px; font-weight: 600;
+  color: var(--blue);
+  letter-spacing: 1px;
+}
+.nav-logo span { color: var(--text2); font-weight: 400; }
+.theme-toggle {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+.theme-toggle:hover { border-color: var(--blue); transform: scale(1.05); }
+
+/* ═════ HERO ═════ */
+.hero {
+  min-height: 75vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 100px 0 60px;
+}
+.hero-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 10px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 28px; height: 1px;
+  background: var(--blue);
+}
+.hero h1 {
+  font-size: clamp(32px, 6vw, 56px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  margin-bottom: 24px;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: clamp(15px, 2vw, 18px);
+  color: var(--text2);
+  max-width: 580px;
+  line-height: 1.8;
+  margin-bottom: 32px;
+}
+.hero-sub strong { color: var(--text); font-weight: 600; }
+.hero-meta {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+/* scroll-hint 기존 animation 제거 (위에서 재정의) */
+.meta-pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 14px;
+  letter-spacing: 1px;
+}
+
+/* ═════ 스크롤 인디케이터 ═════ */
+.scroll-hint {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px;
+  color: var(--text3);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  margin-top: 40px;
+}
+.scroll-hint .arrow {
+  width: 1px; height: 32px;
+  background: linear-gradient(to bottom, var(--text3), transparent);
+}
+@keyframes bounceY {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+/* ═════ 섹션 공통 ═════ */
+.section {
+  padding: 80px 0 40px;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(.4,0,.2,1), transform 0.8s cubic-bezier(.4,0,.2,1);
+}
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-header {
+  margin-bottom: 32px;
+}
+.section-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 10px;
+}
+.section-title-big {
+  font-size: clamp(24px, 4vw, 34px);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.3;
+}
+.section-desc {
+  font-size: 14px;
+  color: var(--text2);
+  margin-top: 10px;
+  max-width: 580px;
+}
+
+/* ═════ 진도 카드 ═════ */
+.subject-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.subject-card:hover { border-color: var(--blue); transform: translateY(-2px); }
+.subject-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 18px 22px;
+  cursor: pointer;
+}
+.subject-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 12px currentColor;
+}
+.subject-name { font-weight: 600; font-size: 15px; flex: 1; }
+.subject-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  color: var(--text3);
+  background: var(--bg4);
+}
+.subject-prog-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--text2);
+  min-width: 50px;
+  text-align: right;
+}
+.subject-chevron {
+  color: var(--text3);
+  font-size: 12px;
+  transition: transform 0.3s;
+}
+.subject-card.open .subject-chevron { transform: rotate(180deg); }
+
+.progress-bar-wrap {
+  height: 3px;
+  background: var(--bg4);
+  margin: 0 22px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  transition: width 1.2s cubic-bezier(.4,0,.2,1);
+  border-radius: 2px;
+}
+
+.chapter-list {
+  padding: 14px 22px 18px;
+  display: none;
+  border-top: 1px solid var(--border);
+}
+.subject-card.open .chapter-list { display: block; }
+.chapter-section-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin: 10px 0 6px;
+}
+.chapter-section-label:first-child { margin-top: 0; }
+
+.chapter-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.chapter-item:last-child { border-bottom: none; }
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.status-done { background: var(--green); }
+.status-progress { background: var(--amber); }
+.status-todo { background: var(--border); }
+.chapter-name { flex: 1; }
+.chapter-name.done { color: var(--text); }
+.chapter-name.progress { color: var(--amber); }
+.chapter-name.todo { color: var(--text3); }
+.chapter-link {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--blue);
+  padding: 3px 9px;
+  border: 1px solid var(--blue);
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+.chapter-link:hover { background: var(--blue-dim); }
+.chapter-date {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+}
+.tbd-pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--bg4);
+  color: var(--text3);
+}
+
+/* ═════ COMING SOON 패널 ═════ */
+.cs-panel {
+  border-radius: 18px;
+  padding: 56px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.cs-panel.magic {
+  background: linear-gradient(135deg, var(--purple-dim), var(--cyan-dim), var(--pink-dim));
+}
+.cs-panel.kpop {
+  background: linear-gradient(135deg, var(--pink-dim), var(--amber-dim), var(--purple-dim));
+}
+.cs-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(176,110,255,0.15), transparent 50%),
+              radial-gradient(circle at 70% 50%, rgba(76,216,227,0.15), transparent 50%);
+  pointer-events: none;
+}
+.cs-inner { position: relative; z-index: 1; }
+.cs-icon {
+  font-size: 52px;
+  display: block;
+  margin-bottom: 18px;
+  animation: float 3s ease-in-out infinite;
+}
+.cs-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--purple);
+  margin-bottom: 14px;
+}
+.cs-title {
+  font-size: clamp(22px, 3.5vw, 30px);
+  font-weight: 700;
+  margin-bottom: 14px;
+  background: linear-gradient(135deg, var(--purple), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.cs-panel.kpop .cs-title {
+  background: linear-gradient(135deg, var(--pink), var(--amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.cs-desc {
+  font-size: 14px;
+  color: var(--text2);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.85;
+}
+.cs-desc strong { color: var(--text); }
+.cs-hint {
+  margin-top: 26px;
+  padding: 14px 18px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 12px;
+  color: var(--text3);
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cs-hint-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--cyan);
+  margin-bottom: 8px;
+}
+.cs-panel.kpop .cs-hint-title { color: var(--pink); }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* ═════ 최근 업데이트 (작게) ═════ */
+.updates-mini {
+  margin-top: 20px;
+}
+.updates-mini .section-tag { color: var(--text3); }
+.updates-mini .section-title-big {
+  font-size: 18px;
+  color: var(--text2);
+  font-weight: 600;
+}
+.update-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.update-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  transition: border-color 0.2s;
+}
+.update-item:hover { border-color: var(--blue); }
+.update-date {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+  min-width: 76px;
+  padding-top: 2px;
+}
+.update-body { flex: 1; }
+.update-title { font-weight: 600; font-size: 13px; margin-bottom: 2px; }
+.update-desc { font-size: 11px; color: var(--text2); }
+.update-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  align-self: flex-start;
+  letter-spacing: 1px;
+}
+.badge-new { background: var(--blue-dim); color: var(--blue); }
+.badge-update { background: var(--amber-dim); color: var(--amber); }
+
+/* ═════ FOOTER ═════ */
+footer {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 24px;
+  text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 1px;
+  margin-top: 60px;
+}
+
+/* ═════ Hero 그라데이션 타이핑 애니메이션 ═════ */
+.hero-eyebrow {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: heroFadeUp 0.7s cubic-bezier(.2,.8,.3,1) 0.2s forwards;
+}
+.hero h1 {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: heroFadeUp 0.7s cubic-bezier(.2,.8,.3,1) 0.45s forwards;
+}
+.hero-sub {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: heroFadeUp 0.7s cubic-bezier(.2,.8,.3,1) 0.7s forwards;
+}
+.hero-meta {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: heroFadeUp 0.6s cubic-bezier(.2,.8,.3,1) 0.95s forwards;
+}
+.scroll-hint {
+  opacity: 0;
+  animation: heroFadeUp 0.6s ease 1.3s forwards, bounceY 2s ease-in-out 1.9s infinite;
+}
+@keyframes heroFadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* accent 텍스트에 shimmer 효과 */
+.hero h1 .accent {
+  background-size: 200% auto;
+  animation: shimmer 4s linear 1.2s infinite;
+}
+@keyframes shimmer {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ═════ 진도카드 모바일 ═════ */
+@media (max-width: 600px) {
+  .subject-header { padding: 14px 16px; gap: 8px; }
+  .subject-name { font-size: 14px; }
+  .subject-tag { display: none; }
+  .subject-prog-text { font-size: 11px; min-width: 36px; }
+  .chapter-list { padding: 12px 16px 16px; }
+  .chapter-item { gap: 8px; font-size: 12px; padding: 8px 0; flex-wrap: nowrap; }
+  .chapter-name { font-size: 12px; line-height: 1.45; }
+  .chapter-link {
+    font-size: 10px;
+    padding: 3px 7px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .chapter-date { font-size: 10px; white-space: nowrap; flex-shrink: 0; }
+  .chapter-section-label { font-size: 9px; letter-spacing: 1.5px; }
+  .progress-bar-wrap { margin: 0 16px; }
+}
+
+/* ═════ Mobile 공통 ═════ */
+@media (max-width: 600px) {
+  .page-wrap { padding: 0 16px; }
+  .nav-inner { padding: 0; }
+  .nav-logo { font-size: 12px; }
+  .hero { min-height: 60vh; padding: 80px 0 40px; }
+  .hero h1 { font-size: clamp(28px, 8vw, 42px); letter-spacing: -0.5px; }
+  .hero-sub { font-size: 14px; }
+  .hero-meta { gap: 5px; flex-wrap: wrap; }
+  .meta-pill { font-size: 10px; padding: 4px 10px; }
+  .section { padding: 52px 0 28px; }
+  .section-title-big { font-size: clamp(20px, 5.5vw, 28px); }
+  .cs-panel { padding: 36px 18px; }
+  .cs-icon { font-size: 40px; }
+  .cs-title { font-size: clamp(18px, 4.5vw, 24px); }
+  .update-item { gap: 10px; flex-wrap: wrap; }
+  .update-date { font-size: 10px; min-width: 60px; }
+  .update-body { min-width: 0; flex: 1; }
+  .update-title { font-size: 13px; }
+  .update-desc { font-size: 11px; }
+  .update-badge { font-size: 9px; padding: 3px 7px; align-self: flex-start; }
+  .bg-orb { opacity: 0.3; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
+<div class="bg-orb orb3"></div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">Karmomile<span>.note</span></div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="테마 전환">☀️</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+<!-- ═════ HERO ═════ -->
+<section class="hero">
+  <div class="hero-eyebrow">2026 1학기 기말 준비</div>
+  <h1>26-1 기말을<br><span class="accent">알차고 보람차게</span></h1>
+  <p class="hero-sub">
+    어려운 전공 과목을 <strong>케이크 🍰처럼 쉽게 떠먹어보아요.</strong><br>
+    한 학기치 정리 한 곳에 모았어요.
+  </p>
+  <div class="hero-meta">
+    <span class="meta-pill">SNU CHEM</span>
+    <span class="meta-pill">2026 SPRING</span>
+    <span class="meta-pill">FINAL TERM</span>
+  </div>
+  <div class="scroll-hint">
+    <span>SCROLL</span>
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- ═════ 진도 현황 ═════ -->
+<section class="section" id="sec-progress">
+  <div class="section-header">
+    <div class="section-tag">// 01 — PROGRESS</div>
+    <h2 class="section-title-big">현재 진도, 한눈에 📊</h2>
+    <p class="section-desc">과목별 현재 어디까지 왔는지. 카드를 누르면 챕터별 진도가 펼쳐져요.</p>
+  </div>
+
+  <!-- 물리화학 1 -->
+  <div class="subject-card open" onclick="toggleCard(this)">
+    <div class="subject-header">
+      <div class="subject-dot" style="background:#5b8dee;color:#5b8dee"></div>
+      <div class="subject-name">물리화학 1</div>
+      <div class="subject-tag">PChem</div>
+      <div class="subject-prog-text">8/15</div>
+      <div class="subject-chevron">▼</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:53%;background:#5b8dee"></div>
+    </div>
+    <div class="chapter-list">
+      <div class="chapter-section-label">// FOCUS 7 — QUANTUM THEORY</div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7a — 양자역학의 등장 (1)</div>
+        <a href="ch7a_1.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7a — 양자역학의 등장 (2)</div>
+        <a href="ch7a_2.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7a — 양자역학의 등장 (3)</div>
+        <a href="ch7a_3.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7b — 파동함수와 슈뢰딩거 방정식</div>
+        <a href="ch7b.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7c — Operator와 Observable (1)</div>
+        <a href="ch7c_1.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7c — Operator와 Observable (2)</div>
+        <a href="ch7c_2.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7c — Operator와 Observable (3)</div>
+        <a href="ch7c_3.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">ch7d — PIB 1D (Free Motion → PIB)</div>
+        <a href="ch7d_1.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-progress"></div>
+        <div class="chapter-name progress">ch7d — PIB 2D/3D + Degeneracy</div>
+        <span class="chapter-date">진행중</span>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-progress"></div>
+        <div class="chapter-name progress">ch7d — Quantum Tunneling</div>
+        <span class="chapter-date">진행중</span>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">ch7e — 조화진동자 (Harmonic Oscillator)</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">ch7e — 강체 회전 (Rigid Rotor)</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">ch7f — 수소원자</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">ch7f — 다전자 원자</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">기말 종합 정리</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 유기화학 1 -->
+  <div class="subject-card" onclick="toggleCard(this)">
+    <div class="subject-header">
+      <div class="subject-dot" style="background:#f0a830;color:#f0a830"></div>
+      <div class="subject-name">유기화학 1</div>
+      <div class="subject-tag">Klein 4e</div>
+      <div class="subject-prog-text">10/15</div>
+      <div class="subject-chevron">▼</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:67%;background:#f0a830"></div>
+    </div>
+    <div class="chapter-list">
+      <div class="chapter-section-label">// 중간 범위 — Ch.1-10</div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">Ch.1-10 — 구조, 산염기, 입체화학, SN/E, 알켄 등</div>
+        <span class="chapter-date">중간 완료</span>
+      </div>
+      <div class="chapter-section-label">// 기말 범위 — Ch.11-15</div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">Ch.11 — (제목 추후 입력)</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">Ch.12 — (제목 추후 입력)</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">Ch.13 — (제목 추후 입력)</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">Ch.14 — (제목 추후 입력)</div>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">Ch.15 — IR Spectroscopy & Mass Spectrometry</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 암석학 -->
+  <div class="subject-card" onclick="toggleCard(this)">
+    <div class="subject-header">
+      <div class="subject-dot" style="background:#3dd68c;color:#3dd68c"></div>
+      <div class="subject-name">암석학</div>
+      <div class="subject-tag">Petrology</div>
+      <div class="subject-prog-text"><span class="tbd-pill">TBD</span></div>
+      <div class="subject-chevron">▼</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:0%;background:#3dd68c"></div>
+    </div>
+    <div class="chapter-list">
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">진도 범위 미정. PPT 정리 후 업데이트 예정.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 판구조론 -->
+  <div class="subject-card" onclick="toggleCard(this)">
+    <div class="subject-header">
+      <div class="subject-dot" style="background:#b06eff;color:#b06eff"></div>
+      <div class="subject-name">판구조론</div>
+      <div class="subject-tag">Plate Tect.</div>
+      <div class="subject-prog-text"><span class="tbd-pill">TBD</span></div>
+      <div class="subject-chevron">▼</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:0%;background:#b06eff"></div>
+    </div>
+    <div class="chapter-list">
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">추후 업데이트 예정.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 죽과이 -->
+  <div class="subject-card" onclick="toggleCard(this)">
+    <div class="subject-header">
+      <div class="subject-dot" style="background:#ff6eb4;color:#ff6eb4"></div>
+      <div class="subject-name">죽과이</div>
+      <div class="subject-tag">교양</div>
+      <div class="subject-prog-text"><span class="tbd-pill">TBD</span></div>
+      <div class="subject-chevron">▼</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:0%;background:#ff6eb4"></div>
+    </div>
+    <div class="chapter-list">
+      <div class="chapter-item">
+        <div class="status-dot status-todo"></div>
+        <div class="chapter-name todo">추후 업데이트 예정 ㅋㅋ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 한음 -->
+  <div class="subject-card" onclick="toggleCard(this)">
+    <div class="subject-header">
+      <div class="subject-dot" style="background:#4cd8e3;color:#4cd8e3"></div>
+      <div class="subject-name">한국음악의 이해</div>
+      <div class="subject-tag">교양</div>
+      <div class="subject-prog-text">12/13</div>
+      <div class="subject-chevron">▼</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:92%;background:#4cd8e3"></div>
+    </div>
+    <div class="chapter-list">
+      <div class="chapter-section-label">// 전반부 — 역사 · 악기 · 기보법</div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">WEEK 02 — 한국음악사 (음악학 기초 ~ 조선 후기)</div>
+        <a href="한국음악의이해.html#view-week2" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">WEEK 03–09 — 국악기 실습 (현악·관악·타악)</div>
+        <a href="한국음악의이해.html#view-week3" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">WEEK 06⁺ — 악기 개론 (분류 · 사진 맞히기)</div>
+        <a href="한국음악의이해.html#view-week6" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-section-label">// 중반부 — 음악이론 · 근대사</div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">WEEK 07-1 — 근대음악사 (제도 · 미디어 격변)</div>
+        <a href="한국음악의이해.html#view-week7" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">WEEK 07-2 — 기보법 &amp; 12율법 (정간보 시각)</div>
+        <a href="한국음악의이해.html#view-week7b" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">WEEK 10-1 — 장단 (빠르기 · 구음 · 종류)</div>
+        <a href="한국음악의이해.html#view-jangdan" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-section-label">// 후반부 — 장르 · 연희 · 판소리</div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">WEEK 10-2 — 민요 &amp; 토리 (권역별 특색)</div>
+        <a href="한국음악의이해.html#view-minyo" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">WEEK 11 — 한국의 연희 (풍물·남사당·사물놀이)</div>
+        <a href="한국음악의이해.html#view-week11" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">WEEK 12 — 판소리 (11대 특징 완전 정리)</div>
+        <a href="한국음악의이해.html#view-week12" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-progress"></div>
+        <div class="chapter-name progress">WEEK 13 — 창작국악</div>
+        <span class="chapter-date">진행중</span>
+      </div>
+      <div class="chapter-item">
+        <div class="status-dot status-done"></div>
+        <div class="chapter-name done">전체 목차 (암기 사이트)</div>
+        <a href="한국음악의이해.html" class="chapter-link" onclick="event.stopPropagation()">노트 →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ 양자 마법학교 ═════ -->
+<section class="section" id="sec-magic">
+  <div class="section-header">
+    <div class="section-tag" style="color:var(--purple)">// 02 — QUANTUM MAGIC</div>
+    <h2 class="section-title-big">🪄 양자 마법학교</h2>
+    <p class="section-desc">양자역학을 처음 접하는 사람도 단숨에 빠져드는 이야기 모음. 곧 공개 예정.</p>
+  </div>
+
+  <div class="cs-panel magic">
+    <div class="cs-inner">
+      <span class="cs-icon">🪄</span>
+      <div class="cs-label">COMING SOON</div>
+      <div class="cs-title">현실에선 불가능한 마법들</div>
+      <p class="cs-desc">
+        벽을 통과하고, 여러 잔상으로 동시에 존재하고, 사람이 파동이 되는 마법.<br>
+        현실에선 일어날 수 없지만 <strong>전자, 미생물, 원자의 세계</strong>에선 매일 일어나요.
+      </p>
+      <div class="cs-hint">
+        <div class="cs-hint-title">// PREVIEW</div>
+        만약 우리가 전자 크기였다면 어떤 세상이 펼쳐졌을까?
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ K-pop 비유법 스토리 ═════ -->
+<section class="section" id="sec-kpop">
+  <div class="section-header">
+    <div class="section-tag" style="color:var(--pink)">// 03 — K-POP MNEMONIC</div>
+    <h2 class="section-title-big">🎤 지구과학 K-pop 월드빌딩</h2>
+    <p class="section-desc">암석학 · 판구조론의 어려운 개념을 K-pop 캐릭터로 풀어낸 스토리. 한 번 보면 절대 안 잊혀요.</p>
+  </div>
+
+  <div class="cs-panel kpop">
+    <div class="cs-inner">
+      <span class="cs-icon">🎤</span>
+      <div class="cs-label">COMING SOON</div>
+      <div class="cs-title">제니 추사랑st 비유법</div>
+      <p class="cs-desc">
+        Rb = 제니 (인싸 원소), Sm = SM 엔터테인먼트, ¹⁴³Nd = 뉴진스...<br>
+        <strong>맨틀이라는 거대한 K-pop 세계관</strong>에서 원소들이 펼치는 서사.<br>
+        교과서로 외워지지 않던 개념들이 가요계 사건처럼 머리에 박혀요.
+      </p>
+      <div class="cs-hint">
+        <div class="cs-hint-title">// PREVIEW</div>
+        "마그마가 식으면 인싸 원소는 마지막에 결정으로 떠나기 싫어해요"
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ 최근 업데이트 (작게) ═════ -->
+<section class="section updates-mini" id="sec-updates">
+  <div class="section-header">
+    <div class="section-tag">// 99 — CHANGELOG</div>
+    <h2 class="section-title-big">최근 업데이트</h2>
+  </div>
+  <div class="update-list">
+    <div class="update-item">
+      <div class="update-date">26.05.26</div>
+      <div class="update-body">
+        <div class="update-title">한음 — 전 주차 암기 사이트 완성</div>
+        <div class="update-desc">WEEK 02~12 (한국음악사·국악기·기보법·장단·민요·연희·판소리)</div>
+      </div>
+      <span class="update-badge badge-new">NEW</span>
+    </div>
+    <div class="update-item">
+      <div class="update-date">26.05.26</div>
+      <div class="update-body">
+        <div class="update-title">홈페이지 — Karmomile.note 리브랜딩</div>
+        <div class="update-desc">로고 변경 · 라이트모드 기본값 · 한음 진도 카드 연동</div>
+      </div>
+      <span class="update-badge badge-new">NEW</span>
+    </div>
+    <div class="update-item">
+      <div class="update-date">26.05.24</div>
+      <div class="update-body">
+        <div class="update-title">ch7d_1 — PIB 1D 완성</div>
+        <div class="update-desc">Free Motion → PIB → Observables → β-Carotene 응용</div>
+      </div>
+      <span class="update-badge badge-new">NEW</span>
+    </div>
+    <div class="update-item">
+      <div class="update-date">26.05.24</div>
+      <div class="update-body">
+        <div class="update-title">홈페이지 리뉴얼</div>
+        <div class="update-desc">스크롤 기반으로 변경. 양자 마법학교 + K-pop 스토리 코너 추가 예정</div>
+      </div>
+      <span class="update-badge badge-new">NEW</span>
+    </div>
+    <div class="update-item">
+      <div class="update-date">26.05.20</div>
+      <div class="update-body">
+        <div class="update-title">ch7c — Operator 정리본 완성</div>
+        <div class="update-desc">Hermiticity, commutator, Heisenberg 불확정성</div>
+      </div>
+      <span class="update-badge badge-update">UPDATE</span>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  trollztr8ba2ico.github.io/PChem1-Note · SNU 2026 SPRING
+</footer>
+
+<script>
+// ── 테마 토글 ──
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.querySelector('.theme-toggle').textContent = isDark ? '☀️' : '🌙';
+}
+
+// ── 카드 토글 ──
+function toggleCard(card) {
+  card.classList.toggle('open');
+}
+
+// ── 완료시 🤣 이스터에그 ──
+function checkComplete() {
+  document.querySelectorAll('.subject-card').forEach(card => {
+    const fill = card.querySelector('.progress-bar-fill');
+    const progText = card.querySelector('.subject-prog-text');
+    if (!fill || !progText) return;
+    const width = parseFloat(fill.style.width);
+    if (width >= 100) {
+      progText.innerHTML = '<span style="font-size:18px">🤣</span>';
+    }
+  });
+}
+
+// ── 스크롤 페이드인 (Intersection Observer) ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, {
+  threshold: 0.12,
+  rootMargin: '0px 0px -80px 0px'
+});
+
+document.querySelectorAll('.section').forEach(s => observer.observe(s));
+
+// ── 페이지 로드시 진도바 애니메이션 + 이스터에그 ──
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.progress-bar-fill').forEach(bar => {
+      const w = bar.style.width;
+      bar.style.width = '0';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => { bar.style.width = w; });
+      });
+    });
+    checkComplete();
+  }, 300);
+});
+</script>
+</body>
+</html>
