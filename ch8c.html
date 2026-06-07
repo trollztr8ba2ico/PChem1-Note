@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8C — Atomic Spectra | PChem1 Note</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet">
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    tags: 'ams'
+  },
+  output: { font: 'mathjax-stix2' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/@mathjax/mathjax-stix2-font@4.0.0/tex-mml-chtml-mathjax-stix2.js"></script>
+
+<style>
+/* ── CSS Variables ── */
+:root {
+  --bg: #f7f5f0;
+  --bg2: #efecea;
+  --bg3: #e5e2db;
+  --surface: #ffffff;
+  --border: #d4cfc6;
+  --text: #1a1916;
+  --text2: #4a4740;
+  --text3: #7a7570;
+  --header-bg: #1a3a2a;
+  --accent: #2d7a4a;
+  --accent2: #1e5c38;
+  --accent-light: #e8f5ed;
+  --tab-active: #2d7a4a;
+  --tab-inactive: #5a9a72;
+  --blue: #1e4d8c;
+  --blue-bg: #e8f0fa;
+  --amber: #8c5a00;
+  --amber-bg: #fdf3e0;
+  --green: #1a5c2a;
+  --green-bg: #e8f5ed;
+  --red: #8c1a1a;
+  --red-bg: #fde8e8;
+  --purple: #5a1a8c;
+  --purple-bg: #f3e8fd;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --radius: 10px;
+}
+
+[data-theme="dark"] {
+  --bg: #12110e;
+  --bg2: #1a1916;
+  --bg3: #242220;
+  --surface: #1e1c19;
+  --border: #3a3830;
+  --text: #f0ece4;
+  --text2: #b8b4aa;
+  --text3: #7a7570;
+  --header-bg: #0d1f16;
+  --accent: #4aaa6a;
+  --accent2: #3d9058;
+  --accent-light: #0d2a18;
+  --tab-active: #4aaa6a;
+  --tab-inactive: #2d6a42;
+  --blue: #7aaaee;
+  --blue-bg: #0d1e38;
+  --amber: #ddaa44;
+  --amber-bg: #2a1e08;
+  --green: #66cc88;
+  --green-bg: #0d2a18;
+  --red: #ee6666;
+  --red-bg: #2a0d0d;
+  --purple: #bb88ee;
+  --purple-bg: #1e0d2a;
+  --shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.75;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ── Header ── */
+header {
+  background: var(--header-bg);
+  color: #fff;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  min-height: 52px;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px 10px 0;
+  border-right: 1px solid rgba(255,255,255,0.15);
+  margin-right: 8px;
+  white-space: nowrap;
+}
+.header-title .chap-badge {
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+.header-title h1 {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #e8f5ed;
+}
+
+.header-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.header-tabs::-webkit-scrollbar { display: none; }
+
+.htab {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.55);
+  font-family: 'IBM Plex Sans KR', sans-serif;
+  font-size: 13px;
+  padding: 0 14px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+.htab:hover { color: rgba(255,255,255,0.85); }
+.htab.active {
+  color: #fff;
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+.theme-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.7);
+  border-radius: 6px;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  margin: auto 0 auto 8px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.theme-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* ── Main Layout ── */
+main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── Section ── */
+.section {
+  margin-bottom: 36px;
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent-light);
+  font-family: 'Noto Serif KR', serif;
+}
+.subsection-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 20px 0 10px;
+}
+
+p { margin-bottom: 12px; color: var(--text2); }
+
+/* ── Boxes ── */
+.box {
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin: 16px 0;
+  border-left: 4px solid;
+}
+.box-blue { background: var(--blue-bg); border-color: var(--blue); }
+.box-blue .box-label { color: var(--blue); }
+.box-amber { background: var(--amber-bg); border-color: var(--amber); }
+.box-amber .box-label { color: var(--amber); }
+.box-green { background: var(--green-bg); border-color: var(--green); }
+.box-green .box-label { color: var(--green); }
+.box-red { background: var(--red-bg); border-color: var(--red); }
+.box-red .box-label { color: var(--red); }
+.box-purple { background: var(--purple-bg); border-color: var(--purple); }
+.box-purple .box-label { color: var(--purple); }
+
+.box-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* Analogy box */
+.analogy-box {
+  background: var(--bg3);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 14px;
+  color: var(--text2);
+}
+.analogy-box .analogy-icon {
+  font-size: 18px;
+  margin-right: 6px;
+}
+
+/* ── Math display ── */
+.math-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 20px;
+  margin: 14px 0;
+  overflow-x: auto;
+  font-size: 15px;
+}
+
+/* ── Table ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  font-size: 14px;
+}
+th {
+  background: var(--header-bg);
+  color: #e8f5ed;
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 13px;
+}
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+}
+tr:nth-child(even) td { background: var(--bg2); }
+td code, th code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  background: var(--bg3);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* ── Flow diagram ── */
+.flow {
+  background: var(--bg2);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin: 14px 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 2;
+}
+.flow .arrow { color: var(--accent); }
+.flow .highlight { color: var(--accent); font-weight: 600; }
+
+/* ── Stepbox ── */
+.steps {
+  counter-reset: step;
+  margin: 14px 0;
+}
+.step {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 14px;
+  align-items: flex-start;
+}
+.step-num {
+  counter-increment: step;
+  min-width: 28px;
+  height: 28px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.step-body { flex: 1; color: var(--text2); }
+.step-title { font-weight: 600; color: var(--text); margin-bottom: 4px; }
+
+/* ── Details (exam Q) ── */
+details {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 10px 0;
+  overflow: hidden;
+}
+summary {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+summary::before {
+  content: '▶';
+  color: var(--accent);
+  font-size: 11px;
+  transition: transform 0.2s;
+}
+details[open] summary::before { transform: rotate(90deg); }
+.details-body {
+  padding: 14px 16px;
+  border-top: 1px solid var(--border);
+  color: var(--text2);
+  font-size: 14px;
+}
+
+/* ── Tag badges ── */
+.tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-right: 4px;
+  letter-spacing: 0.03em;
+}
+.tag-axiom { background: var(--blue-bg); color: var(--blue); }
+.tag-def { background: var(--amber-bg); color: var(--amber); }
+.tag-thm { background: var(--purple-bg); color: var(--purple); }
+.tag-result { background: var(--green-bg); color: var(--green); }
+
+/* ── Grid compare ── */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 14px 0;
+}
+@media (max-width: 580px) { .compare-grid { grid-template-columns: 1fr; } }
+
+.compare-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+}
+.compare-card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--accent-light);
+}
+
+/* ── Highlight inline ── */
+mark {
+  background: linear-gradient(120deg, rgba(45,122,74,0.25) 0%, rgba(45,122,74,0.1) 100%);
+  color: var(--text);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  background: var(--bg3);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--accent);
+}
+
+hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+/* ── Exam tab ── */
+.exam-q {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 14px 0;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.exam-q-header {
+  background: var(--header-bg);
+  color: #e8f5ed;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.exam-type {
+  font-size: 11px;
+  background: rgba(255,255,255,0.15);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.exam-q-body { padding: 14px 16px; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  header { padding: 0 12px; }
+  .header-title h1 { font-size: 13px; }
+  main { padding: 20px 14px 60px; }
+  .section-title { font-size: 17px; }
+}
+</style>
+</head>
+
+<body data-theme="light">
+
+<!-- ══════════════ HEADER ══════════════ -->
+<header>
+  <div class="header-title">
+    <span class="chap-badge">8C</span>
+    <h1>Atomic Spectra</h1>
+  </div>
+  <nav class="header-tabs" id="tabNav">
+    <button class="htab active" data-tab="tab1">빛-분자 상호작용</button>
+    <button class="htab" data-tab="tab2">전이 쌍극자</button>
+    <button class="htab" data-tab="tab3">선택 규칙</button>
+    <button class="htab" data-tab="tab4">Spin-Orbit Coupling</button>
+    <button class="htab" data-tab="tab5">Term Symbols</button>
+    <button class="htab" data-tab="tab6">인광·형광</button>
+    <button class="htab" data-tab="tab7">📝 출제 예상</button>
+  </nav>
+  <button class="theme-btn" id="themeBtn">🌙 다크</button>
+</header>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<main>
+
+<!-- ─────────── TAB 1: 빛-분자 상호작용 ─────────── -->
+<div class="tab-panel active" id="tab1">
+
+  <div class="section">
+    <h2 class="section-title">왜 "시간"이 갑자기 등장하는가?</h2>
+
+    <div class="box box-blue">
+      <span class="box-label">🎯 핵심 동기</span>
+      지금까지 푼 Ĥψ = Eψ는 "원자가 혼자 있을 때의 에너지 준위"를 묻는 질문이었다. 스펙트럼은 빛이 <em>들어와서</em> 전자 상태가 <em>바뀌는</em> 현상 — 즉 시간이 흐르는 이야기다.
+    </div>
+
+    <div class="analogy-box">
+      <span class="analogy-icon">🎵</span>
+      <strong>비유 — 악기 줄:</strong> 혼자 있는 기타 줄은 그냥 정지 상태(시간독립). 손가락으로 퉁기면(빛이 들어오면) 줄이 진동하기 시작한다(시간의존). 스펙트럼은 "어떤 진동수로 퉁길 때 줄이 가장 잘 울리는가"를 측정하는 것.
+    </div>
+
+    <table>
+      <thead><tr><th></th><th>시간독립 Schrödinger</th><th>시간의존 Schrödinger</th></tr></thead>
+      <tbody>
+        <tr><td>방정식</td><td>\( \hat{H}\psi = E\psi \)</td><td>\( i\hbar\frac{d\Psi}{dt} = \hat{H}\Psi \)</td></tr>
+        <tr><td>묻는 질문</td><td>에너지 준위가 뭐야?</td><td>상태가 어떻게 변해가?</td></tr>
+        <tr><td>해의 특징</td><td>시간 없음, 정적</td><td>\(\Psi(t) = \Psi(0)e^{-iEt/\hbar}\)</td></tr>
+        <tr><td>쓰이는 상황</td><td>원자 구조 계산</td><td>빛과의 상호작용, 전이</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">시간의존 해 유도</h2>
+    <p>에너지 고유상태일 때 시간의존 방정식은 1계 ODE로 단순화된다.</p>
+
+    <div class="math-block">
+      $$i\hbar\frac{d\Psi}{dt} = E\Psi \;\Longrightarrow\; \frac{d\Psi}{\Psi} = -\frac{iE}{\hbar}dt$$
+      $$\boxed{\Psi(t) = \Psi(0)\,e^{-iEt/\hbar}}$$
+    </div>
+
+    <div class="box box-amber">
+      <span class="box-label">⚠️ 핵심 포인트</span>
+      \(|e^{-iEt/\hbar}|^2 = 1\) — 위상 인자는 확률 분포를 바꾸지 않는다. <br>
+      → 에너지 고유상태는 <strong>정상상태(stationary state)</strong>: 혼자 있는 원자는 아무리 시간이 지나도 상태가 안 바뀐다. 당연!
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">빛이 들어오면 — 교란 해밀토니안</h2>
+
+    <h3 class="subsection-title">① 빛 = 진동하는 전기장</h3>
+    <div class="math-block">$$\mathbf{E}(t) = \mathbf{E}_0\,e^{i\omega t}$$</div>
+    <p><span class="tag tag-axiom">참고</span> 실제 전기장은 실수 \(\mathbf{E}_0\cos\omega t\)이나, 계산 편의상 복소수 형태를 쓰고 나중에 실수부를 취한다.</p>
+
+    <h3 class="subsection-title">② 쌍극자 모멘트 μ</h3>
+    <div class="math-block">$$\boldsymbol{\mu} = \sum_i e_i\mathbf{r}_i$$</div>
+    <div class="analogy-box">
+      <span class="analogy-icon">🧲</span>
+      전하(eᵢ)와 위치(rᵢ)의 가중합. HCl처럼 전자가 한쪽으로 쏠리면 μ ≠ 0. 전하 분포의 "무게중심" 같은 것.
+    </div>
+
+    <h3 class="subsection-title">③ 빛-분자 상호작용 에너지</h3>
+    <div class="math-block">
+      $$\hat{V}(t) = \boldsymbol{\mu}\cdot\mathbf{E}_0\,e^{i\omega t}$$
+      $$\hat{H}' = \hat{H} + \hat{V}(t)$$
+    </div>
+
+    <div class="box box-red">
+      <span class="box-label">❗ 왜 중요한가</span>
+      \(\hat{V}(t)\)가 추가되면 Ψₐ, Ψ_b는 더 이상 \(\hat{H}'\)의 고유함수가 아니다!<br>
+      \(\hat{H}'\Psi_a = E_a\Psi_a + \hat{V}\Psi_a\) — \(\hat{V}\Psi_a\)가 Ψₐ에 비례하지 않으므로 고유함수 조건 깨짐.<br>
+      → 상태가 시간에 따라 변할 수 있다 = <strong>전이가 가능해진다</strong>.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">C_a(t), C_b(t) 미분방정식 유도</h2>
+
+    <p>빛이 없을 때 일반해 \(\Psi(t) = c_a\Psi_ae^{-iE_at/\hbar} + c_b\Psi_be^{-iE_bt/\hbar}\)에서, 빛이 들어오면 상수 \(c_{a,b}\)가 시간 함수 \(C_{a,b}(t)\)로 바뀐다. (<span class="tag tag-def">variation of parameters</span>)</p>
+
+    <div class="math-block">
+      $$\Psi(t) = C_a(t)\Psi_a\,e^{-iE_at/\hbar} + C_b(t)\Psi_b\,e^{-iE_bt/\hbar}$$
+    </div>
+
+    <p>이를 \(i\hbar\frac{d\Psi}{dt} = \hat{H}'\Psi\)에 대입하면, Ĥ 텀이 양변에서 상쇄되어 순수하게 \(\hat{V}\) 때문에 생기는 변화만 남는다:</p>
+
+    <div class="math-block">
+      $$i\hbar\!\left\{\Psi_a e^{-iE_at/\hbar}\frac{dC_a}{dt} + \Psi_b e^{-iE_bt/\hbar}\frac{dC_b}{dt}\right\} = \hat{V}(t)\!\left\{C_a\Psi_a e^{-iE_at/\hbar} + C_b\Psi_b e^{-iE_bt/\hbar}\right\}$$
+    </div>
+
+    <p>여기에 \(\Psi_a^*e^{+iE_at/\hbar}\)를 곱하고 공간 적분하면 (<span class="tag tag-thm">직교 정규성</span> \(\int\Psi_a^*\Psi_b\,d\tau = \delta_{ab}\) 적용):</p>
+
+    <div class="math-block">
+      $$i\hbar\frac{dC_a}{dt} = \langle\Psi_a|\hat{V}|\Psi_b\rangle C_b\,e^{-i(E_b-E_a)t/\hbar}$$
+      $$i\hbar\frac{dC_b}{dt} = \langle\Psi_b|\hat{V}|\Psi_a\rangle C_a\,e^{-i(E_a-E_b)t/\hbar}$$
+    </div>
+
+    <div class="box box-amber">
+      <span class="box-label">⚠️ 왜 ⟨Ψₐ|V̂|Ψₐ⟩ = 0인가</span>
+      \(\hat{V} \propto \boldsymbol{\mu} \propto x\) (홀수 함수). \(|\Psi_a|^2\)는 짝수 함수.<br>
+      홀수 × 짝수 = 홀수 → 전체 공간 적분 = <strong>0</strong>.<br>
+      물리적 의미: 진동 전기장이 전자를 좌우로 밀었다 당겼다 → 평균 0.
+    </div>
+  </div>
+
+</div><!-- /tab1 -->
+
+
+<!-- ─────────── TAB 2: 전이 쌍극자 ─────────── -->
+<div class="tab-panel" id="tab2">
+
+  <div class="section">
+    <h2 class="section-title">전이 확률 공식 — |C_b(t)|²</h2>
+
+    <p>초기조건 \(C_a(0)=1,\; |C_b(0)|^2=0\) + 약한 빛(E₀ 작음) → \(C_a(t)\approx 1\) 상수로 취급 가능. 그러면 dC_b/dt를 직접 적분할 수 있다:</p>
+
+    <div class="math-block">
+      $$\boxed{|C_b(t)|^2 = \frac{|\langle\Psi_b|\boldsymbol{\mu}|\Psi_a\rangle|^2 |\mathbf{E}_0|^2 t^2}{2\hbar^2}\cdot\frac{\sin^2\!\left[\frac{1}{2}\!\left(\frac{E_b-E_a}{\hbar}-\omega\right)t\right]}{\left[\frac{1}{2}\!\left(\frac{E_b-E_a}{\hbar}-\omega\right)t\right]^2}}$$
+    </div>
+
+    <div class="box box-green">
+      <span class="box-label">✅ 이 공식에서 읽는 것</span>
+      전이 확률 \(|C_b(t)|^2\)는 두 인자의 곱이다.<br>
+      <strong>인자 ①</strong> \(|\langle\Psi_b|\boldsymbol{\mu}|\Psi_a\rangle|^2\) → 전이 쌍극자 모멘트 (선택규칙의 근원)<br>
+      <strong>인자 ②</strong> \(\text{sinc}^2\) 함수 → 공명 조건 (Bohr 진동수 조건)
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">sinc² 함수와 Bohr 조건</h2>
+
+    <div class="analogy-box">
+      <span class="analogy-icon">🎸</span>
+      <strong>공명 비유:</strong> 그네를 밀 때 그네의 고유 주기에 맞춰 밀어야만 진폭이 커진다. 아무 타이밍에나 밀면 오히려 방해가 돼서 평균이 0이 된다. sinc² 함수가 바로 이 "공명 창문"을 수식화한 것.
+    </div>
+
+    <div class="math-block">
+      $$\frac{E_b-E_a}{\hbar} = \omega \;\Longrightarrow\; \boxed{\Delta E = \hbar\omega}$$
+    </div>
+
+    <p>이때 \(\text{sinc}^2\)의 인자가 0 → 함수값 최대(1). 공명 조건이 맞을 때만 \(|C_b(t)|^2\)가 시간에 비례해 증가. 조금이라도 ω가 다르면 지수가 빠르게 진동해서 평균 0 → 전이 안 일어남.</p>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">전이 쌍극자 모멘트의 물리적 해석</h2>
+
+    <div class="math-block">
+      $$\mu_{fi} = \int\Psi_b^*\,\hat{\boldsymbol{\mu}}\,\Psi_a\,d\tau = \langle\Psi_b|\hat{\boldsymbol{\mu}}|\Psi_a\rangle$$
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4>해석 ① — 빛이 분자를 distort</h4>
+        <p>\(\hat{\boldsymbol{\mu}}\Psi_a\): 빛이 상태 a를 뒤흔든 결과물.<br>
+        이게 상태 b와 얼마나 닮았냐 = 전이 확률.</p>
+      </div>
+      <div class="compare-card">
+        <h4>해석 ② — 유도 쌍극자</h4>
+        <p>빛이 양자계에 <em>유도한</em> 쌍극자. 이 유도 쌍극자가 다시 빛과 \(\hat{V}=\boldsymbol{\mu}\cdot\mathbf{E}_0e^{i\omega t}\)로 상호작용.</p>
+      </div>
+      <div class="compare-card">
+        <h4>해석 ③ — 전하 재분포</h4>
+        <p>전이 시 전하 재분포가 <strong>쌍극자적(dipolar)</strong>이어야만 빛과 커플링됨.</p>
+      </div>
+      <div class="compare-card">
+        <h4>해석 ④ — non-orthogonality</h4>
+        <p>\(\hat{\boldsymbol{\mu}}\)가 Ψₐ에 작용 → Ψ_b와 비직교하게 만들어야 전이 가능. 직교성 유지 = 전이 금지.</p>
+      </div>
+    </div>
+
+    <div class="box box-purple">
+      <span class="box-label">📐 핵심 수식</span>
+      \(\int\Psi_b^*\Psi_a\,d\tau = 0\) (직교성, 항상) — 그런데<br>
+      \(\int\Psi_b^*(\hat{\boldsymbol{\mu}}\Psi_a)\,d\tau \neq 0\) 가 되어야 전이 가능.<br>
+      μ̂가 Ψₐ의 <em>모양을 바꿔서</em> Ψ_b와 겹치게 해준다.
+    </div>
+
+    <h3 class="subsection-title">1s→2s vs 1s→2p 비교</h3>
+    <table>
+      <thead><tr><th>전이</th><th>전하 재분포</th><th>쌍극자적?</th><th>허용?</th></tr></thead>
+      <tbody>
+        <tr><td>1s → 2s</td><td>구형 → 구형</td><td>✗ (대칭 유지)</td><td>❌ 금지</td></tr>
+        <tr><td>1s → 2p</td><td>구형 → 아령형</td><td>✓ (한쪽 쏠림)</td><td>✅ 허용</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">전이를 위한 두 가지 조건 요약</h2>
+    <div class="flow">
+      <span class="highlight">전이 확률 ∝ |⟨Ψ_b|μ̂|Ψₐ⟩|²</span> × <span class="highlight">sinc²(공명항)</span><br>
+      <br>
+      조건 ①: <span class="highlight">⟨Ψ_b|μ̂|Ψₐ⟩ ≠ 0</span> <span class="arrow">→</span> 선택규칙 (전하 재분포가 dipolar해야)<br>
+      조건 ②: <span class="highlight">ΔE = ℏω</span> <span class="arrow">→</span> Bohr 조건 (빛 진동수가 에너지 차와 공명해야)<br>
+      <br>
+      <span class="arrow">→</span> 두 조건 모두 충족될 때만 전이 일어남
+    </div>
+  </div>
+
+</div><!-- /tab2 -->
+
+
+<!-- ─────────── TAB 3: 선택 규칙 ─────────── -->
+<div class="tab-panel" id="tab3">
+
+  <div class="section">
+    <h2 class="section-title">수소원자 선택규칙 유도</h2>
+
+    <p>전이 쌍극자 모멘트 \(\mu_{fi} = -e\int\psi_f^*\,\mathbf{r}\,\psi_i\,d\tau\)를 구체적으로 계산하자. z 성분부터:</p>
+
+    <div class="math-block">
+      $$\mu_{z,fi} = -e\int\psi_f^*\,z\,\psi_i\,d\tau$$
+    </div>
+
+    <h3 class="subsection-title">핵심 치환: z = r cosθ = r(4π/3)^{1/2} Y_{1,0}</h3>
+
+    <div class="analogy-box">
+      <span class="analogy-icon">🔮</span>
+      <strong>왜 Y_{1,0}으로 바꾸냐:</strong> 수소 파동함수가 ψ = R(r)·Y(θ,φ)로 분리되어 있잖아. z도 r × Y의 형태로 바꾸면 적분을 "반지름 적분 × 각도 적분"으로 깔끔하게 쪼갤 수 있다. 마치 파이를 가로로 잘라서 따로 계산하는 것처럼.
+    </div>
+
+    <div class="math-block">
+      $$\int\psi_f^*z\,\psi_i\,d\tau = \left(\frac{4\pi}{3}\right)^{1/2}\!\underbrace{\int_0^\infty R_{n_f,l_f}^*\,r^3\,R_{n_i,l_i}\,dr}_{\text{radial 적분}}\times\underbrace{\int_0^{2\pi}\!\!\int_0^\pi Y_{l_f,m_{l,f}}^*\,Y_{1,0}\,Y_{l_i,m_{l,i}}\sin\theta\,d\theta\,d\phi}_{\text{angular 적분}}$$
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Angular 적분 → 선택규칙</h2>
+
+    <p>선택규칙을 결정하는 건 <strong>angular 적분</strong>이다. 삼중 구면조화함수 적분의 결과:</p>
+
+    <div class="math-block">
+      $$\int Y_{l_f,m_{l,f}}^*\,Y_{1,0}\,Y_{l_i,m_{l,i}}\,d\Omega = \delta_{l_f,\,l_i\pm 1}\cdot\delta_{m_{l,f},\,m_{l,i}}$$
+    </div>
+
+    <div class="analogy-box">
+      <span class="analogy-icon">🎹</span>
+      <strong>비유 — 피아노 음:</strong> 구면조화함수 Y_{l,m}들은 "구면 위의 음계"라고 생각해봐. 특정 음계끼리만 공명하듯, Y₁,₀이 끼어들면 l을 ±1만큼 바꾸는 음계끼리만 0이 아닌 적분값이 나온다. Y₁,₀의 "l=1" 정보가 각운동량 변화량을 1로 고정시키는 것.
+    </div>
+
+    <p>x, y 성분은 Y_{1,±1}을 포함하므로 \(\Delta m_l = \pm 1\) 조건 추가. 세 방향 종합하면:</p>
+
+    <div class="box box-green">
+      <span class="box-label">✅ 수소원자 선택규칙</span>
+      $$\boxed{\Delta l = \pm 1} \qquad \boxed{\Delta m_l = 0,\,\pm 1}$$
+    </div>
+
+    <table>
+      <thead><tr><th>규칙</th><th>조건</th><th>물리적 근원</th></tr></thead>
+      <tbody>
+        <tr><td>Δl = ±1</td><td>\(l_f = l_i\pm 1\)</td><td>z는 Y₁,₀, x/y는 Y₁,±₁ → l을 ±1 바꿈</td></tr>
+        <tr><td>Δm_l = 0, ±1</td><td></td><td>z → Δm_l=0, x/y → Δm_l=±1, 종합하면 0,±1</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">각운동량 보존과 선택규칙의 연결</h2>
+
+    <div class="box box-blue">
+      <span class="box-label">💡 깊은 이해</span>
+      광자는 스핀 s=1 → 각운동량 ℏ를 갖는다.<br>
+      전이 시 전체 각운동량 보존 → \(\Delta(l\cdot\hbar) = \pm\hbar\) → <strong>Δl = ±1</strong><br>
+      수식에서는 z = rY₁,₀ 치환에서 나타남: Y₁,₀의 l=1이 광자의 각운동량 1을 반영.
+    </div>
+
+    <p>따라서 <mark>ν = |ΔE|/h는 필요조건이지 충분조건이 아니다.</mark> Δl = ±1도 동시에 만족해야 한다.</p>
+
+    <h3 class="subsection-title">Grotrian 다이어그램 읽기</h3>
+
+    <table>
+      <thead><tr><th>전이</th><th>Δl</th><th>허용?</th><th>예시 계열</th></tr></thead>
+      <tbody>
+        <tr><td>s ↔ p</td><td>±1 ✓</td><td>✅</td><td>Lyman (n→1), Balmer (n→2)</td></tr>
+        <tr><td>p ↔ d</td><td>±1 ✓</td><td>✅</td><td>Paschen (n→3)</td></tr>
+        <tr><td>s ↔ d</td><td>±2 ✗</td><td>❌</td><td>금지</td></tr>
+        <tr><td>s ↔ s</td><td>0 ✗</td><td>❌</td><td>금지</td></tr>
+      </tbody>
+    </table>
+
+    <div class="box box-amber">
+      <span class="box-label">📝 Q1 풀이</span>
+      4s 전자(l=0)의 허용 전이: Δl=±1이므로 <strong>l=1인 p 오비탈만</strong> 가능.<br>
+      → 1p, 2p, 3p (방출), 5p, 6p... (흡수)
+    </div>
+  </div>
+
+</div><!-- /tab3 -->
+
+
+<!-- ─────────── TAB 4: Spin-Orbit Coupling ─────────── -->
+<div class="tab-panel" id="tab4">
+
+  <div class="section">
+    <h2 class="section-title">왜 ΔS = 0 선택규칙이 생기나</h2>
+
+    <p>전이 쌍극자 모멘트 \(\mu_{fi} = \int\psi_f^*\hat{\boldsymbol{\mu}}\psi_i\,d\tau\)에서 파동함수를 공간×스핀으로 분리하면:</p>
+
+    <div class="math-block">
+      $$\mu_{fi} = \underbrace{\int\phi_f^*\hat{\boldsymbol{\mu}}\phi_i\,d\tau}_{\text{공간 적분}}\times\underbrace{\int\sigma_f^*\sigma_i\,d\sigma}_{\text{스핀 적분}}$$
+    </div>
+
+    <p>μ̂는 위치 연산자라 스핀에 작용하지 않는다. Singlet(S=0)과 Triplet(S=1) 스핀함수는 직교:</p>
+
+    <div class="math-block">
+      $$\int\sigma_{S=0}^*\sigma_{S=1}\,d\sigma = 0 \;\Longrightarrow\; \mu_{fi} = 0$$
+    </div>
+
+    <div class="box box-red">
+      <span class="box-label">❗ ΔS = 0 선택규칙</span>
+      Singlet ↔ Triplet 전이는 μ̂가 스핀을 못 건드리기 때문에 금지된다.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Spin-Orbit Coupling (SOC) — 도입 동기</h2>
+
+    <div class="analogy-box">
+      <span class="analogy-icon">🌀</span>
+      <strong>비유 — 전자 입장에서 보기:</strong> 전자가 핵 주위를 돈다고 생각해봐. 근데 전자 입장에서 보면 <em>핵이 전자 주위를 도는 것처럼</em> 보여. 움직이는 양전하(핵) = 전류 = 자기장 발생. 이 자기장이 전자의 스핀 자석과 상호작용 → 에너지 추가!
+    </div>
+
+    <div class="math-block">
+      $$E_{\text{interaction}} \propto -\boldsymbol{\mu}\cdot\mathbf{B} \propto \mathbf{s}\cdot\mathbf{l}$$
+    </div>
+
+    <p>스핀과 궤도 각운동량이 <strong>에너지적으로 결합</strong>됨. 이게 Spin-Orbit Coupling (SOC).</p>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">s·l 을 양자역학적으로 계산</h2>
+
+    <p><span class="tag tag-def">정의</span> 전체 각운동량 \(\mathbf{j} = \mathbf{l} + \mathbf{s}\)로부터:</p>
+
+    <div class="math-block">
+      $$\mathbf{j}\cdot\mathbf{j} = (\mathbf{l}+\mathbf{s})^2 = l^2 + s^2 + 2\mathbf{s}\cdot\mathbf{l}$$
+      $$\mathbf{s}\cdot\mathbf{l} = \frac{1}{2}\{j^2 - l^2 - s^2\}$$
+    </div>
+
+    <p><span class="tag tag-thm">양자 대응</span> 각운동량 연산자의 고유값 \(j^2 \to j(j+1)\hbar^2\):</p>
+
+    <div class="math-block">
+      $$\boxed{\mathbf{s}\cdot\mathbf{l} = \frac{\hbar^2}{2}\{j(j+1) - l(l+1) - s(s+1)\}}$$
+    </div>
+
+    <div class="analogy-box">
+      <span class="analogy-icon">📐</span>
+      <strong>기하학적 직관:</strong> j, l, s를 벡터 삼각형의 세 변이라고 생각해봐. 코사인 법칙으로 두 벡터의 내적을 구하는 것과 같은 구조야: \(\mathbf{s}\cdot\mathbf{l} = \frac{1}{2}(|\mathbf{j}|^2 - |\mathbf{l}|^2 - |\mathbf{s}|^2)\).
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">에너지 준위 분리</h2>
+
+    <div class="math-block">
+      $$E_{l,s,j} = \frac{1}{2}hc\tilde{A}\{j(j+1) - l(l+1) - s(s+1)\}$$
+    </div>
+
+    <p>여기서 \(\tilde{A}\) (cm⁻¹)는 spin-orbit coupling constant.</p>
+
+    <h3 class="subsection-title">2p 오비탈 (l=1, s=1/2) 예시</h3>
+
+    <p>가능한 j: \(|l-s| \leq j \leq l+s\) → j = 1/2 또는 3/2</p>
+
+    <table>
+      <thead><tr><th>j</th><th>계산</th><th>에너지</th><th>Term</th></tr></thead>
+      <tbody>
+        <tr><td>3/2</td><td>\(\frac{1}{2}hc\tilde{A}\left\{\frac{15}{4}-2-\frac{3}{4}\right\}\)</td><td>\(+\frac{1}{2}hc\tilde{A}\)</td><td>²P₃/₂</td></tr>
+        <tr><td>1/2</td><td>\(\frac{1}{2}hc\tilde{A}\left\{\frac{3}{4}-2-\frac{3}{4}\right\}\)</td><td>\(-hc\tilde{A}\)</td><td>²P₁/₂</td></tr>
+      </tbody>
+    </table>
+
+    <div class="box box-amber">
+      <span class="box-label">🔬 Na D선 doublet 설명</span>
+      Na: 3p¹ → l=1, s=1/2. SOC가 3p를 ²P₃/₂(16973 cm⁻¹)과 ²P₁/₂(16956 cm⁻¹)로 분리.<br>
+      → 두 선이 589.16 nm (D₂)와 589.76 nm (D₁)로 나타남. <strong>겨우 17 cm⁻¹ 차이!</strong>
+    </div>
+
+    <h3 class="subsection-title">Ã ∝ Z⁴ — 무거운 원소일수록 SOC 강함</h3>
+
+    <table>
+      <thead><tr><th>원소</th><th>Ã (cm⁻¹)</th><th>SOC 강도</th></tr></thead>
+      <tbody>
+        <tr><td>Li</td><td>0.23</td><td>매우 약함</td></tr>
+        <tr><td>Na</td><td>11.5</td><td>약함 (D선 doublet 관측 가능)</td></tr>
+        <tr><td>K</td><td>38.5</td><td>중간</td></tr>
+        <tr><td>Rb</td><td>158</td><td>강함</td></tr>
+        <tr><td>Cs</td><td>370</td><td>매우 강함</td></tr>
+      </tbody>
+    </table>
+
+    <div class="analogy-box">
+      <span class="analogy-icon">🏋️</span>
+      핵전하 Z가 클수록 전자가 핵 근처를 더 빠르게 돌고(특히 s 오비탈), 핵이 만드는 자기장이 더 강해진다. Ã ∝ Z⁴라는 급격한 의존성이 바로 이 때문.
+    </div>
+  </div>
+
+</div><!-- /tab4 -->
+
+
+<!-- ─────────── TAB 5: Term Symbols ─────────── -->
+<div class="tab-panel" id="tab5">
+
+  <div class="section">
+    <h2 class="section-title">Term Symbol이란?</h2>
+
+    <div class="box box-blue">
+      <span class="box-label">💡 동기</span>
+      개별 전자를 n, l, mₗ, mₛ로 기술했는데, 원자 <em>전체</em>의 상태를 하나의 기호로 나타내고 싶다. Term Symbol은 전체 L, S, J를 한 줄에 요약.
+    </div>
+
+    <div class="math-block">
+      $$^{2S+1}L_J$$
+    </div>
+
+    <table>
+      <thead><tr><th>위치</th><th>의미</th><th>예: ²P₃/₂</th></tr></thead>
+      <tbody>
+        <tr><td>왼쪽 위 <code>2S+1</code></td><td>스핀 다중도 (multiplicity)</td><td>2 = doublet</td></tr>
+        <tr><td>가운데 <code>L</code></td><td>전체 궤도 각운동량 (문자)</td><td>P = L=1</td></tr>
+        <tr><td>오른쪽 아래 <code>J</code></td><td>전체 각운동량</td><td>3/2</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">L 숫자↔문자 대응</h3>
+    <table>
+      <thead><tr><th>L</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead>
+      <tbody><tr><td>기호</td><td>S</td><td>P</td><td>D</td><td>F</td><td>G</td><td>H</td></tr></tbody>
+    </table>
+
+    <div class="analogy-box">
+      <span class="analogy-icon">🎭</span>
+      <strong>외우는 법:</strong> <em>S</em>ome <em>P</em>hysicists <em>D</em>on't <em>F</em>ind <em>G</em>reen <em>H</em>ats... 또는 Sharp/Principal/Diffuse/Fundamental(옛 분광학 용어에서 따옴)
+    </div>
+
+    <div class="box box-amber">
+      <span class="box-label">⚠️ Closed Shell 무시</span>
+      닫힌 껍질(예: 1s², 2p⁶)은 mₗ들의 합 = 0, mₛ들의 합 = 0 → L=0, S=0.<br>
+      → Term Symbol엔 미기여. <strong>채워지지 않은 껍질의 전자만 보면 된다.</strong>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">각운동량 덧셈 — Clebsch-Gordan 규칙</h2>
+
+    <div class="math-block">
+      $$L = l_1+l_2,\; l_1+l_2-1,\; \ldots,\; |l_1-l_2|$$
+      $$S = s_1+s_2,\; s_1+s_2-1,\; \ldots,\; |s_1-s_2|$$
+      $$J = L+S,\; L+S-1,\; \ldots,\; |L-S|$$
+    </div>
+
+    <div class="analogy-box">
+      <span class="analogy-icon">🧭</span>
+      <strong>벡터 덧셈 비유:</strong> l₁=2, l₂=1인 두 화살표를 더할 때, 같은 방향이면 L=3(최대), 반대 방향이면 L=1(최소). 중간 방향들도 가능한데, 양자화 때문에 정수 단계로만 존재. 그래서 L=3, 2, 1 세 가지.
+    </div>
+
+    <h3 class="subsection-title">Q3 풀이 — p³과 f¹d¹의 L</h3>
+
+    <details>
+      <summary>p³의 L = ?</summary>
+      <div class="details-body">
+        전자 3개, 각각 l=1. 두 개씩 더해가자.<br><br>
+        전자 1+2: L₁₂ = 2, 1, 0<br>
+        L₁₂=2 + l=1: L = 3, 2, 1<br>
+        L₁₂=1 + l=1: L = 2, 1, 0<br>
+        L₁₂=0 + l=1: L = 1<br><br>
+        이론상 L = 0, 1, 2, 3. 그러나 Pauli 원리 적용 후 실제 허용 term: <strong>⁴S (L=0), ²D (L=2), ²P (L=1)</strong>
+      </div>
+    </details>
+
+    <details>
+      <summary>f¹d¹의 L = ?</summary>
+      <div class="details-body">
+        f: l₁=3, d: l₂=2. 서로 다른 오비탈이므로 Pauli 제한 없음.<br><br>
+        $$L = 3+2,\, 3+1,\, 3+0,\, 3-1,\, |3-2| = 5, 4, 3, 2, 1$$
+        → <strong>H, G, F, D, P 다섯 가지</strong>
+      </div>
+    </details>
+
+    <h3 class="subsection-title">Q4 풀이 — 전자 3개의 S</h3>
+
+    <details>
+      <summary>세 전자의 총 스핀 S = ?</summary>
+      <div class="details-body">
+        각 전자: s=1/2.<br><br>
+        전자 1+2: S₁₂ = 1 (triplet) 또는 0 (singlet)<br><br>
+        S₁₂=1에 전자 3 (s=1/2) 추가:<br>
+        S = 1+1/2 = <strong>3/2</strong> 또는 S = 1-1/2 = <strong>1/2</strong><br><br>
+        S₁₂=0에 전자 3 추가:<br>
+        S = 0+1/2 = <strong>1/2</strong><br><br>
+        결과: S = 3/2 (quartet, 2S+1=4) 또는 S = 1/2 (doublet, 2S+1=2)
+      </div>
+    </details>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">p² 예시 — Term Symbol 결정 흐름</h2>
+
+    <div class="flow">
+      전자 배치 p² (예: 탄소 2p²)<br>
+      <span class="arrow">↓</span> 정전기 상호작용 → 궤도 점유<br>
+      L 가능값: l₁=l₂=1이므로 L = 2, 1, 0 → <span class="highlight">D, P, S</span><br>
+      <span class="arrow">↓</span> 스핀 상관 (exchange energy)<br>
+      S = 1 (triplet) 또는 0 (singlet) → Pauli 후 허용: <span class="highlight">¹D, ³P, ¹S</span><br>
+      <span class="arrow">↓</span> SOC → J 분리<br>
+      ³P (L=1, S=1): J = 2, 1, 0 → <span class="highlight">³P₂, ³P₁, ³P₀</span>
+    </div>
+
+    <div class="box box-green">
+      <span class="box-label">✅ Hund's Rule — Term 에너지 순서</span>
+      1. 다중도(2S+1) 최대 → 에너지 최저 (exchange energy 이득)<br>
+      2. 같은 다중도면 L 최대 → 에너지 최저<br>
+      3. (J 결정): 반채움 미만 → J 최소, 반채움 초과 → J 최대<br><br>
+      탄소 기저상태: <strong>³P₀</strong>
+    </div>
+  </div>
+
+</div><!-- /tab5 -->
+
+
+<!-- ─────────── TAB 6: 형광·인광 ─────────── -->
+<div class="tab-panel" id="tab6">
+
+  <div class="section">
+    <h2 class="section-title">Singlet/Triplet 스핀 함수</h2>
+
+    <table>
+      <thead><tr><th>기호</th><th>식</th><th>S</th><th>대칭</th><th>이름</th></tr></thead>
+      <tbody>
+        <tr><td>\(\psi_{0,0}\)</td><td>\(\frac{1}{\sqrt{2}}[\alpha(1)\beta(2)-\beta(1)\alpha(2)]\)</td><td>0</td><td>반대칭</td><td>Singlet</td></tr>
+        <tr><td>\(\psi_{1,1}\)</td><td>\(\alpha(1)\alpha(2)\)</td><td>1</td><td>대칭</td><td>Triplet</td></tr>
+        <tr><td>\(\psi_{1,0}\)</td><td>\(\frac{1}{\sqrt{2}}[\alpha(1)\beta(2)+\beta(1)\alpha(2)]\)</td><td>1</td><td>대칭</td><td>Triplet</td></tr>
+        <tr><td>\(\psi_{1,-1}\)</td><td>\(\beta(1)\beta(2)\)</td><td>1</td><td>대칭</td><td>Triplet</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">형광 vs 인광</h2>
+
+    <div class="flow">
+      <span class="highlight">빛 흡수</span>: S₀(singlet 바닥) → S*(singlet 들뜬) <span class="arrow">← 빠름, ΔS=0 허용</span><br>
+      <span class="arrow">↓</span> internal conversion (진동 완화, 열방출)<br>
+      S* 낮은 진동 준위<br>
+      <span class="arrow">↓</span> ISC (Intersystem Crossing) — SOC 덕분에 가능!<br>
+      <span class="highlight">T (triplet 들뜬)</span> 상태에 갇힘<br>
+      <span class="arrow">↓</span> T → S₀ 매우 느린 전이 (ΔS=±1, 약허용)<br>
+      <span class="highlight">인광(Phosphorescence)</span> 방출 — 잔광!
+    </div>
+
+    <div class="analogy-box">
+      <span class="analogy-icon">🌙</span>
+      <strong>어두운 데서 빛나는 스티커 비유:</strong><br>
+      형광 = 불 끄자마자 즉시 사라짐 (나노초). S*→S₀, ΔS=0이라 빠름.<br>
+      인광 = 불 꺼도 수 초~분간 빛남. T→S₀, ΔS=±1이라 "금지된 전이"인데 SOC 덕에 아주 느리게나마 일어남. 금지라서 오래 걸리고, 오래 걸리니까 잔광이 긴 역설적 상황!
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4>형광 (Fluorescence)</h4>
+        <p>경로: S* → S₀<br>
+        ΔS = 0 (허용)<br>
+        속도: 나노초<br>
+        빛 끄면: 즉시 소멸</p>
+      </div>
+      <div class="compare-card">
+        <h4>인광 (Phosphorescence)</h4>
+        <p>경로: T → S₀<br>
+        ΔS = ±1 (금지, SOC로 약허용)<br>
+        속도: 밀리초~초<br>
+        빛 끄면: 잔광 남음</p>
+      </div>
+    </div>
+
+    <div class="box box-blue">
+      <span class="box-label">💡 ISC가 가능한 이유 — SOC의 역할</span>
+      Spin-Orbit Coupling이 강하면 순수한 Singlet/Triplet 상태가 섞인다. 즉 T 상태에 Singlet 성분이 조금 혼입되고, S* 상태에 Triplet 성분이 혼입됨.<br>
+      → 완전 금지가 아니라 <strong>약하게 허용</strong>된 전이 가능 (SOC가 강한 무거운 원소일수록 ISC 잘 일어남)
+    </div>
+  </div>
+
+</div><!-- /tab6 -->
+
+
+<!-- ─────────── TAB 7: 출제 예상 ─────────── -->
+<div class="tab-panel" id="tab7">
+
+  <div class="section">
+    <h2 class="section-title">📝 출제 예상 문제</h2>
+    <p style="color:var(--text3);font-size:13px;">유도형 40% / 계산형 30% / 설명형 30% 기준으로 구성</p>
+
+    <div class="exam-q">
+      <div class="exam-q-header">
+        Q1 <span class="exam-type">유도형</span>
+      </div>
+      <div class="exam-q-body">
+        <p><strong>⟨Ψₐ|V̂|Ψₐ⟩ = 0임을 대칭성을 이용해 논하시오.</strong></p>
+        <details>
+          <summary>풀이 보기</summary>
+          <div class="details-body">
+            \(\hat{V} \propto \boldsymbol{\mu} \propto x\) (홀수 함수). \(|\Psi_a|^2\)는 확률밀도로 짝수 함수.<br>
+            피적분함수 = 홀수×짝수 = 홀수 함수.<br>
+            홀수 함수의 전체 공간 적분 = 0 (대칭 소거).<br>
+            물리적 의미: 진동 전기장이 같은 상태 내에서 평균 일을 하지 못함.
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="exam-q-header">
+        Q2 <span class="exam-type">유도형</span>
+      </div>
+      <div class="exam-q-body">
+        <p><strong>수소원자의 선택규칙 Δl = ±1을 전이 쌍극자 모멘트의 각도 적분으로부터 유도하시오.</strong></p>
+        <details>
+          <summary>풀이 보기</summary>
+          <div class="details-body">
+            z = r cosθ = r(4π/3)^{1/2}Y₁,₀으로 치환.<br>
+            적분 분리: \(\int\psi_f^*z\psi_i\,d\tau = C\int R_{n_f,l_f}^*r^3R_{n_i,l_i}\,dr \times \int Y_{l_f,m_{l,f}}^*Y_{1,0}Y_{l_i,m_{l,i}}\sin\theta\,d\theta\,d\phi\)<br>
+            각도 적분 = \(\delta_{l_f,l_i\pm1}\cdot\delta_{m_{l,f},m_{l,i}}\) (삼중 구면조화함수 적분 결과).<br>
+            x, y 성분 포함 시 Δmₗ = 0, ±1.
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="exam-q-header">
+        Q3 <span class="exam-type">계산형</span>
+      </div>
+      <div class="exam-q-body">
+        <p><strong>2p 오비탈 (l=1, s=1/2)에서 spin-orbit coupling에 의한 두 준위 ²P₃/₂와 ²P₁/₂의 에너지를 coupling constant Ã로 표현하시오.</strong></p>
+        <details>
+          <summary>풀이 보기</summary>
+          <div class="details-body">
+            \(E_{l,s,j} = \frac{1}{2}hc\tilde{A}\{j(j+1)-l(l+1)-s(s+1)\}\)<br><br>
+            j=3/2: \(E = \frac{1}{2}hc\tilde{A}\{\frac{15}{4}-2-\frac{3}{4}\} = +\frac{1}{2}hc\tilde{A}\)<br>
+            j=1/2: \(E = \frac{1}{2}hc\tilde{A}\{\frac{3}{4}-2-\frac{3}{4}\} = -hc\tilde{A}\)<br><br>
+            에너지 차이 = \(\frac{3}{2}hc\tilde{A}\). Na의 경우 이게 D선 doublet 17 cm⁻¹ 분리에 해당.
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="exam-q-header">
+        Q4 <span class="exam-type">계산형</span>
+      </div>
+      <div class="exam-q-body">
+        <p><strong>f¹d¹ 배치에서 가능한 L값을 모두 구하고, Term Symbol을 나열하시오. (S 무시)</strong></p>
+        <details>
+          <summary>풀이 보기</summary>
+          <div class="details-body">
+            f: l=3, d: l=2. Clebsch-Gordan:<br>
+            L = 5, 4, 3, 2, 1 → H, G, F, D, P<br>
+            서로 다른 오비탈이므로 Pauli 제한 없음.
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="exam-q-header">
+        Q5 <span class="exam-type">설명형</span>
+      </div>
+      <div class="exam-q-body">
+        <p><strong>형광(fluorescence)과 인광(phosphorescence)의 차이를 선택규칙, 수명, spin-orbit coupling의 역할을 포함하여 설명하시오.</strong></p>
+        <details>
+          <summary>풀이 보기</summary>
+          <div class="details-body">
+            형광: S*→S₀, ΔS=0 허용 전이, 나노초 수명.<br>
+            인광: T→S₀, ΔS=±1 금지 전이이나 SOC가 Singlet/Triplet을 혼합시켜 약하게 허용.<br>
+            ISC (S*→T)가 SOC로 가능해지고, T에서 오래 머물다 천천히 S₀로 전이 → 잔광.<br>
+            무거운 원소(Rb, Cs)는 Ã ∝ Z⁴라 SOC 강 → ISC 효율 높음.
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="exam-q-header">
+        Q6 <span class="exam-type">설명형</span>
+      </div>
+      <div class="exam-q-body">
+        <p><strong>Bohr 진동수 조건 ΔE = hν가 필요조건이지 충분조건이 아닌 이유를 설명하고, 빛 흡수를 위한 충분조건을 제시하시오.</strong></p>
+        <details>
+          <summary>풀이 보기</summary>
+          <div class="details-body">
+            ΔE = hν만 만족해도 전이 쌍극자 모멘트 ⟨Ψ_b|μ̂|Ψₐ⟩ = 0이면 전이 안 일어남.<br>
+            충분조건: (1) ΔE = hν (Bohr 조건) AND (2) ⟨Ψ_b|μ̂|Ψₐ⟩ ≠ 0 (전이 허용).<br>
+            수소원자에서 조건 (2)는 Δl=±1, Δmₗ=0,±1로 구체화됨.
+          </div>
+        </details>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">핵심 공식 모음</h2>
+
+    <table>
+      <thead><tr><th>이름</th><th>공식</th><th>조건/출처</th></tr></thead>
+      <tbody>
+        <tr><td>시간의존 해</td><td>\(\Psi(t) = \Psi(0)e^{-iEt/\hbar}\)</td><td>에너지 고유상태일 때</td></tr>
+        <tr><td>전이 확률</td><td>\(|C_b(t)|^2 \propto |\langle\Psi_b|\boldsymbol{\mu}|\Psi_a\rangle|^2\cdot\text{sinc}^2\)</td><td>약한 빛, 초기 상태 a</td></tr>
+        <tr><td>Bohr 조건</td><td>\(\Delta E = \hbar\omega\)</td><td>sinc² 최대 조건</td></tr>
+        <tr><td>SOC 에너지</td><td>\(E = \frac{1}{2}hc\tilde{A}\{j(j+1)-l(l+1)-s(s+1)\}\)</td><td>단전자 원자</td></tr>
+        <tr><td>s·l</td><td>\(\mathbf{s}\cdot\mathbf{l} = \frac{\hbar^2}{2}\{j(j+1)-l(l+1)-s(s+1)\}\)</td><td>j = l+s로부터</td></tr>
+        <tr><td>CG 급수 (L)</td><td>\(L = l_1+l_2,\ldots,|l_1-l_2|\)</td><td>정수 단계</td></tr>
+        <tr><td>선택규칙</td><td>\(\Delta l = \pm 1,\;\Delta m_l = 0,\pm 1\)</td><td>전기쌍극자 전이</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /tab7 -->
+
+</main>
+
+<script>
+// ── Tab switching ──
+const tabs = document.querySelectorAll('.htab');
+const panels = document.querySelectorAll('.tab-panel');
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.dataset.tab;
+    tabs.forEach(t => t.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(target).classList.add('active');
+    if (window.MathJax) MathJax.typesetPromise();
+  });
+});
+
+// ── Theme toggle ──
+const themeBtn = document.getElementById('themeBtn');
+const body = document.body;
+
+themeBtn.addEventListener('click', () => {
+  const isDark = body.dataset.theme === 'dark';
+  body.dataset.theme = isDark ? 'light' : 'dark';
+  themeBtn.textContent = isDark ? '🌙 다크' : '☀️ 라이트';
+});
+</script>
+</body>
+</html>

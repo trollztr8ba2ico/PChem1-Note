@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8장 — Hydrogenic Atoms | PChem1</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(','\\)'], ['$','$']], displayMath: [['$$','$$']] },
+  output: { font: 'mathjax-stix2' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/@mathjax/mathjax-stix2-font@4.0.0/tex-mml-chtml-mathjax-stix2.js"></script>
+<style>
+:root {
+  --bg: #f7f5f0;
+  --bg2: #efede7;
+  --surface: #ffffff;
+  --border: #d8d4cc;
+  --text: #1a1a18;
+  --text2: #4a4a44;
+  --muted: #888880;
+  --header-bg: #1a3a2a;
+  --accent: #2d7a4a;
+  --accent2: #1f5c38;
+  --blue: #1e3a6e;
+  --blue-bg: #eef2fb;
+  --amber: #92600a;
+  --amber-bg: #fdf5e6;
+  --green: #1a5c2e;
+  --green-bg: #eaf5ee;
+  --red: #8b1a1a;
+  --red-bg: #fdf0f0;
+  --purple: #4a1a7a;
+  --purple-bg: #f5eeff;
+  --tab-active: #2d7a4a;
+  --tab-text: #f0ede6;
+}
+[data-theme="dark"] {
+  --bg: #12110e;
+  --bg2: #1a1916;
+  --surface: #1e1d1a;
+  --border: #2e2d28;
+  --text: #e8e4dc;
+  --text2: #aaa89e;
+  --muted: #666660;
+  --blue-bg: #0e1a30;
+  --amber-bg: #1e1500;
+  --green-bg: #0a1e10;
+  --red-bg: #1e0a0a;
+  --purple-bg: #1a0e2e;
+  --blue: #7099dd;
+  --amber: #d4a050;
+  --green: #5ab878;
+  --red: #dd7070;
+  --purple: #bb88ff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans KR', sans-serif;
+  font-size: 15px;
+  line-height: 1.8;
+  min-height: 100vh;
+}
+
+/* HEADER */
+header {
+  background: var(--header-bg);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.header-title {
+  color: #a8d8b8;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+}
+.header-title span { color: #e8f5ee; font-weight: 600; }
+.theme-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #c8e8d4;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  transition: all 0.2s;
+}
+.theme-btn:hover { background: rgba(255,255,255,0.2); }
+
+/* TABS */
+.tab-bar {
+  background: var(--header-bg);
+  padding: 0 24px;
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 2px solid var(--accent2);
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab {
+  background: transparent;
+  border: none;
+  color: rgba(168,216,184,0.65);
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-family: 'IBM Plex Sans KR', sans-serif;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  position: relative;
+  top: 2px;
+}
+.tab:hover { color: #c8e8d4; }
+.tab.active {
+  color: #e8f5ee;
+  border-bottom-color: #6dc891;
+  font-weight: 500;
+}
+
+/* CONTENT */
+.content { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* SECTION HEADINGS */
+h2 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 22px;
+  color: var(--accent);
+  margin: 44px 0 18px;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid var(--border);
+}
+h2:first-child { margin-top: 8px; }
+h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 28px 0 10px;
+}
+h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text2);
+  margin: 20px 0 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.03em;
+}
+p { color: var(--text2); margin-bottom: 14px; }
+
+/* BOXES */
+.box {
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin: 18px 0;
+  border-left: 4px solid;
+}
+.box-blue { background: var(--blue-bg); border-color: var(--blue); }
+.box-blue .box-title { color: var(--blue); }
+.box-amber { background: var(--amber-bg); border-color: var(--amber); }
+.box-amber .box-title { color: var(--amber); }
+.box-green { background: var(--green-bg); border-color: var(--green); }
+.box-green .box-title { color: var(--green); }
+.box-red { background: var(--red-bg); border-color: var(--red); }
+.box-red .box-title { color: var(--red); }
+.box-purple { background: var(--purple-bg); border-color: var(--purple); }
+.box-purple .box-title { color: var(--purple); }
+.box-title {
+  font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.box p { margin-bottom: 6px; }
+.box p:last-child { margin-bottom: 0; }
+
+/* MATH DISPLAY */
+.math-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 14px 0;
+  overflow-x: auto;
+  font-size: 1.05em;
+}
+
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+}
+th {
+  background: var(--header-bg);
+  color: #c8e8d4;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 500;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+}
+tr:hover td { background: var(--bg2); }
+
+/* FLOW DIAGRAM */
+.flow {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 18px 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  line-height: 2;
+  color: var(--text2);
+}
+.flow-arrow { color: var(--accent); font-weight: bold; }
+.flow-highlight { color: var(--accent); font-weight: 600; }
+.flow-branch { display: flex; gap: 40px; margin: 8px 0; }
+.flow-branch-item { flex: 1; }
+
+/* COMPARE TABLE */
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+.compare-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+.compare-card h4 { margin-top: 0; color: var(--accent); }
+
+/* MONO */
+code {
+  font-family: 'IBM Plex Mono', monospace;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 13px;
+}
+
+/* DETAILS (exam Q) */
+details {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 10px 0;
+}
+details summary {
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--text);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+details summary::before {
+  content: '▶';
+  font-size: 10px;
+  color: var(--accent);
+  transition: transform 0.2s;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details summary::-webkit-details-marker { display: none; }
+.answer {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  color: var(--text2);
+}
+.answer-label {
+  font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+/* BADGE */
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.badge-red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red); }
+.badge-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber); }
+.badge-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); }
+
+/* SCROLL ANIMATION */
+.fade-in { opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s; }
+.fade-in.visible { opacity: 1; transform: none; }
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .compare { grid-template-columns: 1fr; }
+  .flow-branch { flex-direction: column; gap: 10px; }
+  .content { padding: 24px 16px 60px; }
+}
+</style>
+</head>
+<body data-theme="light">
+
+<header>
+  <div class="header-title">Atkins PChem 12th ed. &nbsp;/&nbsp; <span>8A — Hydrogenic Atoms</span></div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙 다크</button>
+</header>
+
+<div class="tab-bar">
+  <button class="tab active" onclick="showTab('intro')">① 도입</button>
+  <button class="tab" onclick="showTab('hamiltonian')">② Hamiltonian</button>
+  <button class="tab" onclick="showTab('separation')">③ 변수분리</button>
+  <button class="tab" onclick="showTab('radial')">④ Radial WF</button>
+  <button class="tab" onclick="showTab('qnumbers')">⑤ 양자수 & Shell</button>
+  <button class="tab" onclick="showTab('sorb')">⑥ s orbital</button>
+  <button class="tab" onclick="showTab('porb')">⑦ p orbital</button>
+  <button class="tab" onclick="showTab('dorb')">⑧ d orbital</button>
+  <button class="tab" onclick="showTab('exam')">⑨ 출제예상</button>
+</div>
+
+<div class="content">
+
+<!-- ===== TAB 1: 도입 ===== -->
+<div class="tab-pane active" id="tab-intro">
+  <h2>왜 수소원자부터 시작하나?</h2>
+
+  <div class="box box-blue">
+    <div class="box-title">📌 Hydrogenic Atom 정의</div>
+    <p>전자가 딱 1개인 원자/이온. <strong>H, He²⁺, Li²⁺, O⁷⁺</strong> 같은 것들.</p>
+    <p>핵심은 이거야 — 이 계는 Schrödinger 방정식을 <strong>근사 없이 정확하게(exactly)</strong> 풀 수 있어. 다전자 원자는 전자끼리 반발이 있어서 exact solution이 없는데, 수소꼴은 핵-전자 딱 두 입자라서 가능.</p>
+  </div>
+
+  <h3>출발점은 실험이었어</h3>
+  <p>1800년대 말, 수소 방전관에서 빛을 쪼개면 연속 스펙트럼이 아니라 <strong>딱 정해진 파장의 선들만</strong> 나왔어. Balmer가 1885년에 경험식으로 맞췄는데, 왜 그런지는 아무도 몰랐지. Bohr가 1913년에 "전자가 특정 궤도만 돈다"고 <em>가정</em>해서 값을 맞췄지만 그건 그냥 가정이었어.</p>
+
+  <div class="box box-amber">
+    <div class="box-title">🎯 이 챕터의 목표</div>
+    <p>Schrödinger 방정식을 풀어서, <strong>가정 없이 순수하게</strong> 에너지 준위와 스펙트럼을 유도해내는 것. Bohr가 가정했던 것들이 수학에서 자연스럽게 튀어나오게 만드는 거야.</p>
+  </div>
+
+  <h2>Hydrogen Spectrum — 실험 배경</h2>
+  <p>수소 방전관 실험으로 얻은 스펙트럼. 연속이 아니라 선 스펙트럼이고, Rydberg 공식으로 정리돼:</p>
+
+  <div class="math-block">$$\tilde{\nu} = \tilde{R}_H \left(\frac{1}{n_1^2} - \frac{1}{n_2^2}\right) \qquad \tilde{R}_H = 109{,}677 \text{ cm}^{-1}$$</div>
+
+  <p>편하게 \(T_n = \tilde{R}_H / n^2\) 로 정의하면:</p>
+  <div class="math-block">$$\tilde{\nu} = T_1 - T_2, \quad \nu = cT_1 - cT_2, \quad \Delta E = hcT_1 - hcT_2$$</div>
+
+  <table>
+    <tr><th>시리즈</th><th>n₁</th><th>영역</th><th>특징</th></tr>
+    <tr><td>Lyman</td><td>1</td><td>자외선 (UV)</td><td>에너지 가장 큼</td></tr>
+    <tr><td>Balmer</td><td>2</td><td>가시광선</td><td>우리 눈에 보임</td></tr>
+    <tr><td>Paschen</td><td>3</td><td>적외선 (IR)</td><td>에너지 가장 작음</td></tr>
+    <tr><td>Brackett</td><td>4</td><td>적외선 (IR)</td><td></td></tr>
+  </table>
+
+  <h2>전체 흐름도</h2>
+  <div class="flow">
+    <div><span class="flow-highlight">실험 관측</span> — 수소 선 스펙트럼, 왜 불연속인가?</div>
+    <div class="flow-arrow">↓</div>
+    <div><span class="flow-highlight">물리계 설정</span> — 전자 + 핵, 쿨롱 퍼텐셜 V(r) = −Ze²/4πε₀r</div>
+    <div class="flow-arrow">↓</div>
+    <div><span class="flow-highlight">환산질량</span> — 두 입자 → 한 입자 문제로 축소 (μ)</div>
+    <div class="flow-arrow">↓</div>
+    <div><span class="flow-highlight">Schrödinger 방정식 세팅</span> — −ℏ²/2μ ∇²ψ − Ze²/4πε₀r · ψ = Eψ</div>
+    <div class="flow-arrow">↓</div>
+    <div><span class="flow-highlight">변수분리</span> — ψ(r,θ,φ) = R(r) × Y(θ,φ)</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-branch">
+      <div class="flow-branch-item">
+        <strong style="color:var(--accent)">각도 부분 Y(θ,φ)</strong><br>
+        → 7F에서 이미 완료!<br>
+        → 양자수 l, m_l 결정
+      </div>
+      <div class="flow-branch-item">
+        <strong style="color:var(--accent)">Radial 부분 R(r)</strong><br>
+        → 지금 여기서 푸는 것<br>
+        → 급수 절단 → n 양자화
+      </div>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div><span class="flow-highlight">결과</span> — ψ_{n,l,m_l} = atomic orbital, E_n = −13.6 eV × Z²/n²</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-branch">
+      <div class="flow-branch-item">① 스펙트럼 설명 (가정 없이!)</div>
+      <div class="flow-branch-item">② 오비탈 구조 확립</div>
+      <div class="flow-branch-item">③ 다전자 원자의 언어</div>
+    </div>
+  </div>
+
+  <div class="box box-green">
+    <div class="box-title">✅ 핵심 한 줄</div>
+    <p>수소원자를 정확히 풀면 Bohr가 "가정"했던 것들이 전부 수학에서 강제로 튀어나와. 그게 이 챕터 전체의 핵심이야.</p>
+  </div>
+</div>
+
+<!-- ===== TAB 2: HAMILTONIAN ===== -->
+<div class="tab-pane" id="tab-hamiltonian">
+  <h2>Potential Energy & Hamiltonian</h2>
+
+  <h3>쿨롱 퍼텐셜</h3>
+  <p>두 전하 q₁, q₂가 거리 r 떨어져 있을 때 힘과 퍼텐셜:</p>
+  <div class="math-block">$$F = \frac{q_1 q_2}{4\pi\varepsilon_0 r^2}, \qquad V = \frac{q_1 q_2}{4\pi\varepsilon_0 r}$$</div>
+
+  <p>핵 전하 <em>Ze</em>, 전자 전하 <em>−e</em> 대입하면:</p>
+  <div class="math-block">$$V(r) = -\frac{Ze^2}{4\pi\varepsilon_0 r}$$</div>
+
+  <div class="box box-red">
+    <div class="box-title">⚠️ 부호 주의</div>
+    <p>음수야! 인력이니까 당연히 V < 0. 전자가 핵 가까이 있을수록(r 작을수록) V가 더 음수가 돼 → 더 낮은 에너지 → 더 안정.</p>
+  </div>
+
+  <h3>Hamiltonian 전체</h3>
+  <p>전자 운동에너지 + 핵 운동에너지 + 쿨롱 퍼텐셜:</p>
+  <div class="math-block">$$\hat{H} = -\frac{\hbar^2}{2m_e}\nabla_e^2 - \frac{\hbar^2}{2m_N}\nabla_N^2 - \frac{Ze^2}{4\pi\varepsilon_0 r}$$</div>
+
+  <h2>Reduced Mass — 두 입자 → 한 입자로</h2>
+
+  <div class="box box-blue">
+    <div class="box-title">📌 왜 환산질량이 필요하냐?</div>
+    <p>전자와 핵 두 입자의 운동에너지를 질량중심(CM) 운동 + 상대 운동으로 분리하면:</p>
+    <div class="math-block">$$\frac{p_1^2}{2m_1} + \frac{p_2^2}{2m_2} = \frac{1}{2}m\left(\frac{dX}{dt}\right)^2 + \frac{1}{2}\mu\left(\frac{dx}{dt}\right)^2$$</div>
+    <p>왼쪽은 두 입자 각각, 오른쪽은 CM 운동 + 상대 운동으로 분리된 거야. CM 운동은 그냥 자유입자라 무시 가능 → <strong>상대 운동 하나만</strong> 남아!</p>
+  </div>
+
+  <div class="math-block">$$\frac{1}{\mu} = \frac{1}{m_e} + \frac{1}{m_N} \quad \Rightarrow \quad \mu = \frac{m_e m_N}{m_e + m_N}$$</div>
+
+  <p>핵이 전자보다 훨씬 무거우니까 (<em>m_N ≫ m_e</em>):</p>
+  <div class="math-block">$$\frac{1}{\mu} \approx \frac{1}{m_e} \quad \Rightarrow \quad \mu \approx m_e$$</div>
+
+  <div class="box box-amber">
+    <div class="box-title">🔗 7E·7F와의 연결</div>
+    <p>환산질량은 7E(조화진동자 이원자분자)와 7F(회전운동 이원자분자)에서 이미 썼던 거야. 거기선 핵-핵 두 입자계였고, 여기선 전자-핵 두 입자계인 것만 달라. 논리는 완전히 동일!</p>
+  </div>
+
+  <h3>최종 Schrödinger 방정식</h3>
+  <p>변수분리 후 CM 운동 제거하면 <strong>수소꼴 원자의 Schrödinger 방정식</strong>이 남아:</p>
+  <div class="math-block">$$-\frac{\hbar^2}{2\mu}\nabla^2\psi - \frac{Ze^2}{4\pi\varepsilon_0 r}\psi = E\psi$$</div>
+  <div class="box box-green">
+    <div class="box-title">✅ E의 의미</div>
+    <p>여기서 E는 핵 위치가 고정된 상태에서의 <strong>상대 좌표 에너지</strong>야. 실질적으로 전자의 에너지.</p>
+  </div>
+</div>
+
+<!-- ===== TAB 3: 변수분리 ===== -->
+<div class="tab-pane" id="tab-separation">
+  <h2>각도와 Radial 운동 분리</h2>
+
+  <p>V(r)이 r에만 의존 (centrosymmetric) → 변수분리 가능!</p>
+  <div class="math-block">$$\psi(r,\theta,\phi) = R(r) \cdot Y(\theta,\phi)$$</div>
+
+  <h3>구면좌표 Laplacian 대입</h3>
+  <div class="math-block">$$\nabla^2 = \frac{\partial^2}{\partial r^2} + \frac{2}{r}\frac{\partial}{\partial r} + \frac{1}{r^2}\Lambda^2$$</div>
+
+  <p>대입 후 r²/RY 를 곱해서 정리하면:</p>
+  <div class="math-block">$$-\frac{\hbar^2}{2\mu R}\left(r^2\frac{d^2R}{dr^2} + 2r\frac{dR}{dr}\right) + Vr^2 - \frac{\hbar^2}{2\mu Y}\Lambda^2 Y = Er^2$$</div>
+
+  <p>7F에서 이미 구한 결과 <strong>Λ²Y = −l(l+1)Y</strong> 를 대입하면 θ,φ가 사라져!</p>
+
+  <h3>u(r) = rR(r) 치환</h3>
+  <div class="box box-blue">
+    <div class="box-title">📌 왜 이 치환을 하냐?</div>
+    <p>r에 대한 방정식에서 r²d²R/dr² + 2r·dR/dr 이 복잡하게 얽혀있어. u = rR로 놓으면 이게 r·d²u/dr²로 깔끔하게 정리돼 → <strong>1D Schrödinger 방정식 형태</strong>로 단순화!</p>
+  </div>
+
+  <div class="math-block">$$-\frac{\hbar^2}{2\mu}\frac{d^2u}{dr^2} + V_{\text{eff}}\, u = Eu$$</div>
+
+  <div class="box box-purple">
+    <div class="box-title">🔢 유효 퍼텐셜</div>
+    <div class="math-block">$$V_{\text{eff}}(r) = -\frac{Ze^2}{4\pi\varepsilon_0 r} + \frac{l(l+1)\hbar^2}{2\mu r^2}$$</div>
+    <p>쿨롱 인력(음수) + 원심력 항(양수) 두 개로 구성.</p>
+  </div>
+
+  <h2>원심력 항이 왜 생기나?</h2>
+
+  <h3>고전역학에서 먼저</h3>
+  <p>원운동하는 물체의 총 에너지를 동경 방향 + 접선 방향으로 분리하면:</p>
+  <div class="math-block">$$E = \frac{1}{2}\mu\dot{r}^2 + \frac{J^2}{2\mu r^2} + V(r) = \frac{1}{2}\mu\dot{r}^2 + V_{\text{eff}}(r)$$</div>
+  <p>J²/2μr² 항은 사실 <strong>접선 운동에너지인데, r만의 방정식으로 만들기 위해 퍼텐셜 쪽으로 넘긴 것</strong>이야. "원심력 항"이라고 부르는 이유는 r을 키우는 방향으로 작용하기 때문.</p>
+
+  <h3>QM에서는 J² → l(l+1)ℏ²</h3>
+  <p>7F에서 배운 것: l²ψ = l(l+1)ℏ² · ψ. 그래서:</p>
+  <div class="math-block">$$\frac{J^2}{2\mu r^2} \xrightarrow{\text{QM}} \frac{l(l+1)\hbar^2}{2\mu r^2}$$</div>
+
+  <h3>V_eff 그래프 해석</h3>
+  <div class="compare">
+    <div class="compare-card">
+      <h4>l = 0 (s 오비탈)</h4>
+      <p>원심력 항 = 0</p>
+      <p>V_eff = 쿨롱 항만</p>
+      <p>r→0 으로 갈수록 −∞까지 내려감</p>
+      <p><strong>전자가 핵 바로 옆까지 접근 가능 → ψ(0) ≠ 0</strong></p>
+    </div>
+    <div class="compare-card">
+      <h4>l ≠ 0 (p, d, ...)</h4>
+      <p>원심력 항이 r→0 에서 +∞로 발산</p>
+      <p>r=0 근처에 장벽 생김</p>
+      <p><strong>전자가 핵에 아예 못 가까이 감 → ψ(0) = 0</strong></p>
+      <p>행성이 태양으로 안 떨어지는 것과 같은 원리!</p>
+    </div>
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-title">🔗 7F 회전운동과의 연결</div>
+    <p>Sphere 문제에서 Λ²Y = −l(l+1)Y 라는 고유값 방정식이 나왔잖아. 그게 여기서 그대로 쓰여서 각도 방정식을 날려버리는 거야. 7F를 끝냈기 때문에 8장의 절반은 이미 풀린 셈이야!</p>
+  </div>
+</div>
+
+<!-- ===== TAB 4: RADIAL WF ===== -->
+<div class="tab-pane" id="tab-radial">
+  <h2>Radial Wavefunction 풀기</h2>
+
+  <h3>최종 형태 — 세 부분의 곱</h3>
+  <div class="math-block">$$R_{n,l}(r) = N_{n,l} \cdot \rho^l \cdot L_{n-l-1}^{2l+1}(\rho) \cdot e^{-\rho/2}$$</div>
+  <div class="math-block">$$\rho = \frac{2Zr}{na}, \quad a = \frac{m_e}{\mu}a_0 \approx a_0, \quad a_0 = \frac{4\pi\varepsilon_0\hbar^2}{m_e e^2} = 52.9 \text{ pm}$$</div>
+
+  <p>a₀ = Bohr 반지름. n마다 ρ 정의가 달라지니까 항상 n 대입 확인!</p>
+
+  <div class="box box-blue">
+    <div class="box-title">① ρˡ — 핵 근처 거동 (r→0)</div>
+    <p>l=0이면 ρ⁰=1 → 핵에서 유한값 (s 오비탈이 핵에서 0 안 됨)</p>
+    <p>l≥1이면 r=0에서 0 → 원심력 장벽 반영 (p,d,...는 핵 근처에서 0)</p>
+  </div>
+
+  <div class="box box-purple">
+    <div class="box-title">② L — 연관 라게르 다항식 (Laguerre Polynomial)</div>
+    <p>HO에서 Hermite 다항식이 나왔던 것처럼, 여기선 Laguerre 다항식이 나와. 둘 다 <strong>급수해가 발산하지 않도록 급수를 절단(truncate)</strong>해서 생기는 다항식이야. 구조가 완전히 같아!</p>
+    <div class="math-block">$$L_n^{(\alpha)}(x) = \frac{x^{-\alpha}e^x}{n!}\frac{d^n}{dx^n}\left(e^{-x}x^{n+\alpha}\right)$$</div>
+    <p>다항식 차수 = n−l−1 = <strong>radial node 수</strong></p>
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-title">③ e^{−ρ/2} — 원거리 감쇠 (r→∞)</div>
+    <p>r이 커질수록 지수적으로 감쇠 → ψ가 무한대에서 0으로 수렴 (물리적 경계조건 충족)</p>
+  </div>
+
+  <h2>n이 왜 양자수가 되냐 — 급수 절단</h2>
+
+  <div class="box box-red">
+    <div class="box-title">⚡ 핵심 메커니즘 — HO와 완전히 동일한 구조!</div>
+    <p>동경 방정식을 급수해로 풀면 r→∞에서 발산할 수 있어. 발산하지 않으려면 급수가 반드시 <strong>유한 항에서 끊겨야(truncate)</strong> 해.</p>
+    <p>절단 조건: n−l−1 ≥ 0 → <strong>n ≥ l+1</strong></p>
+    <p>→ n은 양의 정수 (1, 2, 3, ...)</p>
+    <p>→ 주어진 n에서 l = 0, 1, ..., n−1</p>
+    <p>HO에서 "v가 정수여야 급수 절단" ↔ 여기서 "n이 정수여야 급수 절단" — 완전히 같은 논리!</p>
+  </div>
+
+  <h2>에너지 양자화</h2>
+  <div class="math-block">$$E_n = -\frac{\mu e^4}{32\pi^2\varepsilon_0^2\hbar^2} \cdot \frac{Z^2}{n^2} = -\frac{hcZ^2\tilde{R}_N}{n^2}$$</div>
+  <div class="math-block">$$\tilde{R}_N = \frac{\mu}{m_e}\tilde{R}_\infty, \qquad \tilde{R}_\infty = \frac{m_e e^4}{8\varepsilon_0^2 h^3 c}$$</div>
+
+  <p>수소(Z=1, n=1)에서 E₁ = <strong>−13.6 eV</strong></p>
+
+  <h3>Bound State vs Continuum</h3>
+  <table>
+    <tr><th>상태</th><th>에너지</th><th>전자 상태</th><th>에너지 허용값</th></tr>
+    <tr><td><strong>Bound state</strong></td><td>E < 0</td><td>핵에 묶임</td><td>불연속 (양자화)</td></tr>
+    <tr><td><strong>Continuum</strong></td><td>E ≥ 0</td><td>자유전자</td><td>연속적</td></tr>
+  </table>
+
+  <div class="box box-blue">
+    <div class="box-title">📌 E=0 기준점의 의미</div>
+    <p>전자와 핵이 무한히 멀리 떨어져서 정지해 있는 상태를 E=0으로 정의했어. Bound state는 그보다 에너지가 낮아서(E<0) 스스로 탈출 못해. 이온화 에너지 I = hcR̃_H = 13.6 eV를 줘야 탈출 가능.</p>
+    <p>연속 영역(E≥0)에서 자유전자는 양쪽 경계조건을 동시에 만족시킬 필요가 없어서 에너지가 연속이 돼. 양자화는 <strong>"묶힌 상태"의 특징</strong>이야.</p>
+  </div>
+
+  <h3>Radial WF 표</h3>
+  <table>
+    <tr><th>n</th><th>l</th><th>Radial node 수 (n−l−1)</th><th>R_{n,l} 특징</th></tr>
+    <tr><td>1</td><td>0</td><td>0</td><td>순수 지수 감쇠</td></tr>
+    <tr><td>2</td><td>0</td><td>1</td><td>(2−ρ)e^{−ρ/2} → 노드 1개</td></tr>
+    <tr><td>2</td><td>1</td><td>0</td><td>ρe^{−ρ/2} → 노드 없음</td></tr>
+    <tr><td>3</td><td>0</td><td>2</td><td>2차 다항식 × e^{−ρ/2}</td></tr>
+    <tr><td>3</td><td>1</td><td>1</td><td>1차 다항식 × e^{−ρ/2}</td></tr>
+    <tr><td>3</td><td>2</td><td>0</td><td>ρ²e^{−ρ/2}</td></tr>
+  </table>
+
+  <h3>HO ↔ 수소원자 비교</h3>
+  <table>
+    <tr><th>항목</th><th>조화진동자 (7E)</th><th>수소원자 (8A)</th></tr>
+    <tr><td>다항식</td><td>Hermite H_v(y)</td><td>Laguerre L_{n-l-1}^{2l+1}(ρ)</td></tr>
+    <tr><td>무차원 변수</td><td>y = x/α</td><td>ρ = 2Zr/na</td></tr>
+    <tr><td>양자화 조건</td><td>급수 절단 → v = 0,1,2,...</td><td>급수 절단 → n = 1,2,3,...</td></tr>
+    <tr><td>원거리 감쇠</td><td>e^{−y²/2}</td><td>e^{−ρ/2}</td></tr>
+    <tr><td>ZPE</td><td>½ℏω ≠ 0</td><td>E₁ = −13.6 eV ≠ 0</td></tr>
+  </table>
+</div>
+
+<!-- ===== TAB 5: 양자수 & SHELL ===== -->
+<div class="tab-pane" id="tab-qnumbers">
+  <h2>양자수 4종류</h2>
+
+  <p>ψ_{n,l,m_l} = R_{n,l}(r) × Y_{l,m_l}(θ,φ) 를 완전히 특정하는 숫자들이야.</p>
+
+  <table>
+    <tr><th>양자수</th><th>이름</th><th>범위</th><th>결정하는 것</th><th>연산자</th></tr>
+    <tr><td><strong>n</strong></td><td>주양자수 (principal)</td><td>1, 2, 3, ...</td><td>에너지 E_n</td><td>Ĥ</td></tr>
+    <tr><td><strong>l</strong></td><td>방위각 (azimuthal)</td><td>0 ~ n−1</td><td>각운동량 크기 √(l(l+1))ℏ</td><td>l²</td></tr>
+    <tr><td><strong>m_l</strong></td><td>자기 (magnetic)</td><td>−l ~ +l</td><td>각운동량 z성분 m_l ℏ</td><td>l_z</td></tr>
+    <tr><td><strong>m_s</strong></td><td>스핀 (spin)</td><td>±1/2</td><td>스핀 z성분</td><td>Ŝ_z</td></tr>
+  </table>
+
+  <div class="box box-blue">
+    <div class="box-title">📌 연산자 고유값 확인</div>
+    <p>\(\hat{l}^2\psi = \hbar^2 l(l+1)\psi\) → l²은 R에 안 걸리고 Y에만 작용, 7F 결과 바로 적용</p>
+    <p>\(\hat{l}_z\psi = m_l\hbar\psi\) → l_z도 마찬가지로 Y에만 작용</p>
+  </div>
+
+  <h2>Shell과 Subshell — 어떻게 나오냐?</h2>
+
+  <div class="box box-amber">
+    <div class="box-title">🔑 Shell이 인위적 분류가 아닌 이유</div>
+    <p>E_n = −hcZ²R̃_N/n² — 에너지가 <strong>n만으로 결정</strong>되고 l, m_l에 무관해 (수소 특유!). 그래서 n이 같은 오비탈들의 에너지가 전부 같아. 에너지가 같은 오비탈들이 자연스럽게 묶인 게 Shell이야.</p>
+  </div>
+
+  <table>
+    <tr><th>n</th><th>Shell 이름</th><th>l 가능값</th><th>Subshell</th><th>총 오비탈 수 (n²)</th></tr>
+    <tr><td>1</td><td>K</td><td>0</td><td>1s</td><td>1</td></tr>
+    <tr><td>2</td><td>L</td><td>0, 1</td><td>2s, 2p</td><td>4</td></tr>
+    <tr><td>3</td><td>M</td><td>0, 1, 2</td><td>3s, 3p, 3d</td><td>9</td></tr>
+    <tr><td>4</td><td>N</td><td>0, 1, 2, 3</td><td>4s, 4p, 4d, 4f</td><td>16</td></tr>
+  </table>
+
+  <h3>n²-fold 縮退 유도</h3>
+  <p>주어진 n에서 l=0,1,...,n−1이고, 각 l마다 m_l이 (2l+1)개:</p>
+  <div class="math-block">$$\sum_{l=0}^{n-1}(2l+1) = 1 + 3 + 5 + \cdots + (2n-1) = n^2$$</div>
+
+  <div class="box box-red">
+    <div class="box-title">⚠️ n²-fold 縮退는 수소 특유!</div>
+    <p>E_n이 l에 무관하게 n만으로 결정되기 때문. 다전자 원자에서는 l에 따라 에너지가 달라져서 이 추가 縮退가 깨져. 3s < 3p < 3d 순서가 되는 거야.</p>
+  </div>
+
+  <h3>Subshell별 오비탈 수 → 일반화학 연결</h3>
+  <table>
+    <tr><th>l</th><th>이름</th><th>m_l 개수 (=오비탈 수)</th><th>전자 최대 수 (×2)</th></tr>
+    <tr><td>0</td><td>s</td><td>1</td><td>2</td></tr>
+    <tr><td>1</td><td>p</td><td>3</td><td>6</td></tr>
+    <tr><td>2</td><td>d</td><td>5</td><td>10</td></tr>
+    <tr><td>3</td><td>f</td><td>7</td><td>14</td></tr>
+  </table>
+  <p>일반화학에서 외웠던 "s에 2개, p에 6개"가 여기서 나온 거야. 오비탈 수 × 스핀 2(m_s = ±1/2).</p>
+
+  <h3>Ionization Energy</h3>
+  <div class="math-block">$$I = hc\tilde{R}_H\left(\frac{1}{n_1^2} - \frac{1}{\infty^2}\right) = hc\tilde{R}_H = 13.6 \text{ eV}$$</div>
+  <p>n₁=1, n₂=∞로 놓은 거야. ν̃를 1/n²에 대해 플롯하면 y절편에서 I/hcn₁²을 읽을 수 있고, 기울기 = −R̃_H. 실험 스펙트럼 선 위치만 측정해도 이온화 에너지와 Rydberg 상수를 동시에 얻는 거야!</p>
+</div>
+
+<!-- ===== TAB 6: s ORBITAL ===== -->
+<div class="tab-pane" id="tab-sorb">
+  <h2>s Orbital — n=1, l=0, m_l=0</h2>
+
+  <h3>1s 파동함수 만들기</h3>
+  <p>표에서 R_{1,0}과 Y_{0,0} 곱하면:</p>
+  <div class="math-block">$$\psi_{1s} = R_{1,0} \times Y_{0,0} = 2\left(\frac{Z}{a}\right)^{3/2}e^{-\rho/2} \times \left(\frac{1}{4\pi}\right)^{1/2}$$</div>
+  <p>ρ = 2Zr/na = 2r/a (n=1, Z=1) 대입하면:</p>
+  <div class="math-block">$$\psi_{1s} = \left(\frac{1}{\pi a^3}\right)^{1/2} e^{-r/a}$$</div>
+
+  <div class="box box-blue">
+    <div class="box-title">📌 왜 구형(sphere)인가?</div>
+    <p>ψ에 θ, φ가 아예 없어. Y_{0,0} = (1/4π)^{1/2} = 상수이기 때문이야. 방향에 무관하게 r만의 함수 → 어느 방향으로 잘라도 같은 모양 → <strong>완전한 구형 대칭</strong>.</p>
+  </div>
+
+  <h3>오비탈 표현 방법 두 가지</h3>
+  <div class="compare">
+    <div class="compare-card">
+      <h4>|ψ|² 표현</h4>
+      <p>전자 밀도를 음영으로 나타냄. 핵 근처일수록 진함. 연속적인 확률밀도를 표현.</p>
+    </div>
+    <div class="compare-card">
+      <h4>Boundary Surface 표현</h4>
+      <p>전자를 <strong>90% 확률</strong>로 발견할 수 있는 공간의 경계면. 우리가 흔히 보는 오비탈 그림이 이거야.</p>
+    </div>
+  </div>
+
+  <h3>에너지와 파동함수 모양 — 왜 그 모양이냐?</h3>
+  <p>ψ가 핵 가까이 집중되면: 퍼텐셜에너지 낮음 BUT 곡률 커 → 운동에너지 높음 (7B: 곡률 ∝ 운동에너지)</p>
+  <p>ψ가 멀리 퍼지면: 운동에너지 낮음 BUT 퍼텐셜에너지 높음</p>
+  <p><strong>바닥 상태 1s = 두 에너지 합이 최소가 되는 절충점!</strong></p>
+
+  <h2>Radial Distribution Function P(r)</h2>
+
+  <h3>왜 P(r) = r²R(r)²인가?</h3>
+  <div class="box box-blue">
+    <div class="box-title">📌 직관부터</div>
+    <p>우리가 알고 싶은 건 "핵에서 거리 r인 구각 전체에서 전자를 찾을 확률"이야. 특정 방향이 아니라 거리만!</p>
+    <p>구각의 부피 = 4πr²dr. s 오비탈처럼 각도 의존성 없으면: P(r)dr = |ψ|² × 4πr²dr</p>
+    <p>일반적으로는 θ,φ로 적분해야 하는데, Y 정규화 조건 ∫|Y|²sinθ dθ dφ = 1 이니까 각도 부분이 사라져서:</p>
+    <div class="math-block">$$P(r) = r^2 R(r)^2$$</div>
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-title">⚡ P(r)의 물리적 해석 3가지</div>
+    <p><strong>P(0) = 0</strong> — r=0에서 r²=0. 핵 위치의 |ψ|²는 0이 아니지만, 구각의 <em>부피</em>가 0이라서 찾을 확률이 0.</p>
+    <p><strong>P(∞) = 0</strong> — e^{−ρ/2} 지수 감쇠가 r²을 이겨서 0으로 수렴.</p>
+    <p><strong>중간에 최대값 존재</strong> — r²의 증가 vs e^{−ρ/2}의 감소가 균형 잡히는 점.</p>
+  </div>
+
+  <h3>1s의 최대값 r* 구하기</h3>
+  <div class="math-block">$$P(r) = \frac{4Z^3}{a_0^3} r^2 e^{-2Zr/a_0}$$</div>
+  <div class="math-block">$$\frac{dP}{dr} = 0 \implies 2r - \frac{2Zr^2}{a_0} = 0 \implies r^* = \frac{a_0}{Z}$$</div>
+  <p>수소(Z=1)에서 <strong>r* = a₀ = 52.9 pm</strong> — Bohr 반지름!</p>
+
+  <div class="box box-green">
+    <div class="box-title">✅ Bohr 모델과의 연결</div>
+    <p>Bohr가 "전자가 이 궤도를 돈다"고 <em>가정</em>했던 그 반지름이, QM에서는 "전자를 가장 찾기 쉬운 거리"로 <strong>자연스럽게 유도</strong>돼. 가정이 결론이 된 거야!</p>
+  </div>
+
+  <h2>⟨r⟩ 계산 — 2s 평균 반지름</h2>
+  <p>기댓값 정의 + 구면좌표 부피요소:</p>
+  <div class="math-block">$$\langle r \rangle = \int_0^\infty \int_0^\pi \int_0^{2\pi} \psi^* r \psi \cdot r^2\sin\theta\, dr\, d\theta\, d\phi$$</div>
+  <p>Y 정규화 → 각도 적분 = 1 → r 적분만 남음:</p>
+  <div class="math-block">$$\langle r \rangle_{2s} = \int_0^\infty r^3 R_{2,0}^2\, dr$$</div>
+
+  <p>R_{2,0} = (1/8^{1/2})(Z/a)^{3/2}(2−ρ)e^{−ρ/2}, ρ=Zr/a 치환 후:</p>
+  <div class="math-block">$$\langle r \rangle = \frac{a}{8Z}\int_0^\infty \rho^3(2-\rho)^2 e^{-\rho}\,d\rho$$</div>
+
+  <p>(2−ρ)² = 4−4ρ+ρ² 전개 후 ∫₀^∞ ρⁿe^{−ρ}dρ = n! 적용:</p>
+  <div class="math-block">$$4\times 3! - 4\times 4! + 5! = 24 - 96 + 120 = 48$$</div>
+  <div class="math-block">$$\langle r \rangle_{2s} = \frac{a}{8Z} \times 48 = \frac{6a}{Z}$$</div>
+
+  <div class="box box-purple">
+    <div class="box-title">🔢 Γ함수/계승 공식</div>
+    <p>\(\displaystyle\int_0^\infty \rho^n e^{-\rho}\,d\rho = n!\) — 부분적분을 n번 반복하면 유도 가능. 시험에서 줄 수도 있고 아닐 수도 있으니 유도 흐름 이해해두기!</p>
+  </div>
+
+  <h3>Radial node 계산 (2s)</h3>
+  <p>R_{2,0} ∝ (2−ρ)e^{−ρ/2}. e^{−ρ/2}≠0이니까:</p>
+  <div class="math-block">$$2 - \rho = 0 \implies \rho = 2 \implies r = \frac{na}{Z} = 2a_0 \text{ (수소)}$$</div>
+  <p>Radial node 개수: n−l−1 = 2−0−1 = <strong>1개</strong> ✓</p>
+</div>
+
+<!-- ===== TAB 7: p ORBITAL ===== -->
+<div class="tab-pane" id="tab-porb">
+  <h2>p Orbital — n=2, l=1, m_l=0, ±1</h2>
+
+  <h3>m_l=0: ψ_{2p_z}</h3>
+  <div class="math-block">$$\psi_{2,1,0} = R_{2,1}(r)\,Y_{1,0}(\theta,\phi) = \frac{1}{4(2\pi)^{1/2}}\left(\frac{Z}{a_0}\right)^{5/2} r\cos\theta\, e^{-Zr/2a_0}$$</div>
+  <p><strong>r cosθ = z</strong> (구면좌표 → 직교좌표) 이니까:</p>
+  <div class="math-block">$$\psi_{2p_z} = z \cdot f(r)$$</div>
+  <p>z에 비례 → z축 방향 아령 모양. θ=0(z축)에서 최대, θ=90°(xy평면)에서 0 → xy평면이 nodal plane.</p>
+
+  <h3>m_l=±1: 복소수 문제 등장</h3>
+  <div class="math-block">$$\psi_{2,1,\pm1} \propto r\sin\theta\, e^{\pm i\phi}\, e^{-Zr/2a_0}$$</div>
+  <p>e^{±iφ}가 있어서 <strong>복소수 파동함수</strong>야. |ψ|²은 실수로 나오지만 ψ 자체가 복소수면 "어느 방향을 향하는지" 시각화하기 불편해.</p>
+
+  <h2>Linear Combination — 왜 쓰냐?</h2>
+
+  <div class="box box-blue">
+    <div class="box-title">📌 정당화 — 필기 핵심 논리</div>
+    <p>ψ₁, ψ₂가 같은 에너지 E의 고유함수이면:</p>
+    <div class="math-block">$$\hat{H}(c_1\psi_1 + c_2\psi_2) = c_1 E\psi_1 + c_2 E\psi_2 = E(c_1\psi_1 + c_2\psi_2)$$</div>
+    <p>→ 선형결합도 같은 E의 고유함수! 에너지 안 바뀌어.</p>
+    <p>ψ_{2,1,+1}과 ψ_{2,1,−1}이 둘 다 <strong>같은 에너지 E₂의 縮退 상태</strong>니까, 섞어도 여전히 E₂의 고유함수야.</p>
+  </div>
+
+  <h3>실수 오비탈 만들기</h3>
+  <div class="math-block">$$\psi_{2p_x} = \frac{1}{\sqrt{2}}(\psi_{2,1,+1} - \psi_{2,1,-1}) \propto r\sin\theta\cos\phi\cdot f(r) = x\cdot f(r)$$</div>
+  <div class="math-block">$$\psi_{2p_y} = \frac{i}{\sqrt{2}}(\psi_{2,1,+1} + \psi_{2,1,-1}) \propto r\sin\theta\sin\phi\cdot f(r) = y\cdot f(r)$$</div>
+
+  <p>오일러 공식: e^{+iφ} − e^{−iφ} = 2i sinφ, e^{+iφ} + e^{−iφ} = 2cosφ 로 복소수가 사라지는 거야!</p>
+
+  <div class="box box-green">
+    <div class="box-title">✅ 왜 x, y, z 방향인가?</div>
+    <p>구면좌표 → 직교좌표: x = r sinθ cosφ, y = r sinθ sinφ, z = r cosθ</p>
+    <p>각 파동함수가 x, y, z 좌표 그 자체에 비례하니까 그 축 방향으로 뻗은 아령이 나와. 일반화학에서 외웠던 p_x, p_y, p_z가 <strong>Schrödinger 방정식 해의 실수 선형결합</strong>이었던 거야!</p>
+  </div>
+
+  <div class="box box-red">
+    <div class="box-title">⚠️ p_x, p_y, p_z는 방정식의 직접 해가 아니야</div>
+    <p>직접 해는 m_l=0,±1인 복소수 함수야. p_x, p_y, p_z는 편의를 위해 실수로 변환한 거고, 에너지는 동일하게 유지돼.</p>
+  </div>
+
+  <h3>비교표</h3>
+  <table>
+    <tr><th>오비탈</th><th>m_l</th><th>복소/실수</th><th>ψ 형태</th><th>모양</th></tr>
+    <tr><td>2p_z</td><td>0</td><td>실수 (직접 해)</td><td>z·f(r)</td><td>z축 아령</td></tr>
+    <tr><td>2p_x</td><td>±1 조합</td><td>실수 (선형결합)</td><td>x·f(r)</td><td>x축 아령</td></tr>
+    <tr><td>2p_y</td><td>±1 조합</td><td>실수 (선형결합)</td><td>y·f(r)</td><td>y축 아령</td></tr>
+  </table>
+</div>
+
+<!-- ===== TAB 8: d ORBITAL ===== -->
+<div class="tab-pane" id="tab-dorb">
+  <h2>d Orbital — n=3, l=2, m_l=0, ±1, ±2</h2>
+
+  <p>p 오비탈과 완전히 같은 논리야. m_l=0,±1,±2 다섯 개의 복소수 해를 linear combination해서 실수 오비탈 5개를 만들어.</p>
+
+  <table>
+    <tr><th>실수 오비탈</th><th>파동함수 형태</th><th>모양</th><th>nodal plane</th></tr>
+    <tr><td>d_{xy}</td><td>xy·f(r)</td><td>xy평면 내 4엽</td><td>xz, yz 평면</td></tr>
+    <tr><td>d_{yz}</td><td>yz·f(r)</td><td>yz평면 내 4엽</td><td>xy, xz 평면</td></tr>
+    <tr><td>d_{zx}</td><td>zx·f(r)</td><td>zx평면 내 4엽</td><td>xy, yz 평면</td></tr>
+    <tr><td>d_{x²−y²}</td><td>½(x²−y²)·f(r)</td><td>x,y축 방향 4엽</td><td>x=y, x=−y 평면</td></tr>
+    <tr><td>d_{z²}</td><td>(3z²−r²)·f(r)</td><td>z축 아령 + xy 도넛</td><td>원뿔면</td></tr>
+  </table>
+
+  <div class="box box-amber">
+    <div class="box-title">🤔 왜 d_{z²}만 모양이 다른가?</div>
+    <p>d_{z²}는 사실 (2z²−x²−y²) = (3z²−r²)인데, 다른 네 개처럼 단순한 두 좌표의 곱 형태가 아니야. m_l=0을 그대로 쓴 결과고, 선형결합 방식이 나머지 4개와 달라서 독특한 모양이 나오는 거야.</p>
+  </div>
+
+  <h2>전체 오비탈 비교표</h2>
+  <table>
+    <tr><th>오비탈</th><th>l</th><th>m_l 수</th><th>개수</th><th>각도 node (=l)</th><th>radial node (n=lowest)</th><th>전체 node (n−1)</th></tr>
+    <tr><td>1s</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><td>2s</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+    <tr><td>2p</td><td>1</td><td>3</td><td>3</td><td>1</td><td>0</td><td>1</td></tr>
+    <tr><td>3s</td><td>0</td><td>1</td><td>1</td><td>0</td><td>2</td><td>2</td></tr>
+    <tr><td>3p</td><td>1</td><td>3</td><td>3</td><td>1</td><td>1</td><td>2</td></tr>
+    <tr><td>3d</td><td>2</td><td>5</td><td>5</td><td>2</td><td>0</td><td>2</td></tr>
+  </table>
+
+  <div class="box box-green">
+    <div class="box-title">✅ Node 세는 규칙 — 절대 헷갈리지 말 것</div>
+    <p><strong>각도 node 수 = l</strong> (평면 또는 원뿔면)</p>
+    <p><strong>radial node 수 = n−l−1</strong> (구각 모양, R(r)=0이 되는 r값)</p>
+    <p><strong>전체 node 수 = n−1</strong> (항상 성립!)</p>
+  </div>
+</div>
+
+<!-- ===== TAB 9: EXAM ===== -->
+<div class="tab-pane" id="tab-exam">
+  <h2>출제 예상 문제</h2>
+  <p>교수님 시험 스타일: 유도형 40% / 원리·설명형 30% / 계산형 30%</p>
+
+  <h3>🔴 유도형 (40%)</h3>
+
+  <details>
+    <summary>Q1. 환산질량(reduced mass)을 도입하는 이유와 유도 과정을 설명하라.</summary>
+    <div class="answer">
+      <div class="answer-label">ANSWER DIRECTION</div>
+      <p>두 입자계의 운동에너지 p₁²/2m₁ + p₂²/2m₂를 질량중심 좌표 X와 상대 좌표 x로 변환하면 ½m(dX/dt)² + ½μ(dx/dt)² 로 분리됨을 보여. 1/μ = 1/m₁ + 1/m₂ 정의. 쿨롱 퍼텐셜이 상대 좌표만의 함수이므로 CM 운동은 자유입자로 분리 → 내부 운동 방정식만 남음.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Q2. V_eff(r) = −Ze²/4πε₀r + l(l+1)ℏ²/2μr²에서 두 번째 항(원심력 항)의 출처를 설명하라.</summary>
+    <div class="answer">
+      <div class="answer-label">ANSWER DIRECTION</div>
+      <p>고전역학: 총 에너지를 동경 방향 운동에너지 + 접선 방향 운동에너지 + V(r)로 분리 → 접선 KE = J²/2μr²이 r 방정식에서 유효 퍼텐셜로 흡수됨. QM에서 J² → l(l+1)ℏ² (각운동량 연산자 고유값). l=0이면 0, l≥1이면 r=0 근처에 장벽 생성.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Q3. 주양자수 n이 양자화되는 수학적 이유를 Laguerre 다항식과 연결하여 설명하라.</summary>
+    <div class="answer">
+      <div class="answer-label">ANSWER DIRECTION</div>
+      <p>radial 방정식의 급수해에서 r→∞ 발산 금지 조건 → 급수 절단 필요 → n−l−1 ≥ 0인 정수 n만 허용. 조화진동자(Hermite 급수 절단)와 동일한 메커니즘. 절단된 다항식이 연관 Laguerre 다항식 L^{2l+1}_{n−l−1}.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Q4. 수소원자에서 n²-fold 縮退가 생기는 이유를 설명하라.</summary>
+    <div class="answer">
+      <div class="answer-label">ANSWER DIRECTION</div>
+      <p>E_n = −hcZ²R̃_N/n²이 n에만 의존하고 l, m_l에 무관 → 같은 n의 모든 오비탈이 같은 에너지. Σ(2l+1) = n² 계산. 다전자 원자에서는 l-dependent screening으로 이 추가 縮退가 깨짐.</p>
+    </div>
+  </details>
+
+  <h3>🟡 원리·설명형 (30%)</h3>
+
+  <details>
+    <summary>Q5. s 오비탈의 radial distribution function P(r)이 r=0에서 0이고 r=a₀에서 최대인 이유를 설명하라.</summary>
+    <div class="answer">
+      <div class="answer-label">ANSWER DIRECTION</div>
+      <p>P(0)=0: r²=0이라 구각 부피 = 4πr²dr = 0. |ψ(0)|² ≠ 0이어도 부피가 없으니 확률 없음. r*=a₀: r²의 증가(↑)와 e^{−2r/a₀}의 감소(↓) 경쟁. dP/dr=0에서 r*=a₀/Z.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Q6. p_x, p_y, p_z가 Schrödinger 방정식의 직접 해가 아닌 이유와 linear combination의 정당화를 설명하라.</summary>
+    <div class="answer">
+      <div class="answer-label">ANSWER DIRECTION</div>
+      <p>직접 해는 m_l=±1인 복소수 함수 e^{±iφ}. 같은 E의 고유함수 선형결합은 여전히 같은 E의 고유함수 (Ĥ(c₁ψ₁+c₂ψ₂)=E(c₁ψ₁+c₂ψ₂)). 오일러 공식으로 실수 변환 → p_x ∝ sinθcosφ = x/r, p_y ∝ sinθsinφ = y/r. 에너지 동일, 모양만 실수화.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Q7. l≠0인 오비탈에서 ψ(0)=0인 이유를 V_eff와 연결하여 설명하라.</summary>
+    <div class="answer">
+      <div class="answer-label">ANSWER DIRECTION</div>
+      <p>V_eff의 원심력 항 l(l+1)ℏ²/2μr²이 r→0에서 +∞로 발산 → 에너지 장벽 형성 → 전자가 핵 근처 접근 불가. Radial WF에서 ρˡ 인자가 r→0 에서 0이 됨 (l≥1). R_{n,l}(0) = 0.</p>
+    </div>
+  </details>
+
+  <h3>🔵 계산형 (30%)</h3>
+
+  <details>
+    <summary>Q8. 수소원자 2s 오비탈의 radial node 위치를 구하라.</summary>
+    <div class="answer">
+      <div class="answer-label">ANSWER DIRECTION</div>
+      <p>R_{2,0} ∝ (2−ρ)e^{−ρ/2}, ρ=Zr/a (n=2). e^{−ρ/2}≠0이므로 2−ρ=0 → ρ=2 → r=2a/Z = 2a₀ (Z=1). node 개수 확인: n−l−1 = 2−0−1 = 1개 ✓</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Q9. 중수소(²H) 바닥상태 에너지를 수소와 비교하여 구하라.</summary>
+    <div class="answer">
+      <div class="answer-label">ANSWER DIRECTION</div>
+      <p>μ_D = m_e × m_D/(m_e+m_D), m_D ≈ 3672 m_e → μ_D/m_e ≈ 0.999728. R̃_D = 0.999728 × R̃_∞ ≈ 109,647 cm⁻¹. E₁(D) = −hcR̃_D → 수소보다 약 30 cm⁻¹ 낮음 (isotope shift).</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Q10. n=3 shell에서 가능한 모든 subshell과 orbital 수를 구하고 n²임을 확인하라.</summary>
+    <div class="answer">
+      <div class="answer-label">ANSWER DIRECTION</div>
+      <p>l=0(3s): m_l=0 → 1개. l=1(3p): m_l=−1,0,+1 → 3개. l=2(3d): m_l=−2,−1,0,+1,+2 → 5개. 합계 = 9 = 3² ✓. Σ(2l+1) = 1+3+5 = 9.</p>
+    </div>
+  </details>
+</div>
+
+</div><!-- end content -->
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleTheme() {
+  const body = document.body;
+  const btn = document.querySelector('.theme-btn');
+  if (body.getAttribute('data-theme') === 'dark') {
+    body.setAttribute('data-theme', 'light');
+    btn.textContent = '🌙 다크';
+  } else {
+    body.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀️ 라이트';
+  }
+}
+
+// Scroll animations
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.box, table, .flow, .compare').forEach(el => {
+  el.classList.add('fade-in');
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

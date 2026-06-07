@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>14B — Interactions Between Molecules</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- MathJax 4 + STIX2 -->
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    tags: 'ams'
+  },
+  output: { font: 'mathjax-stix2' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/@mathjax/mathjax-stix2-font@4.0.0/tex-mml-chtml-mathjax-stix2.js"></script>
+
+<style>
+/* ===== CSS VARIABLES ===== */
+:root {
+  --header-bg: #1a3a2a;
+  --accent: #2d7a4a;
+  --accent-light: #3a9960;
+  --accent-hover: #48b875;
+
+  --bg: #f7f5f0;
+  --bg-card: #ffffff;
+  --bg-card2: #f0ede6;
+  --text: #1a1a18;
+  --text-muted: #5a5a52;
+  --text-light: #8a8a80;
+  --border: #ddd9d0;
+  --shadow: rgba(0,0,0,0.08);
+
+  --blue:   #1a4f8a;
+  --blue-bg: #e8f0fa;
+  --amber:  #8a5a00;
+  --amber-bg: #fff5e0;
+  --green:  #1a5c2a;
+  --green-bg: #e6f5ea;
+  --red:    #8a1a1a;
+  --red-bg: #faeaea;
+  --purple: #5a1a8a;
+  --purple-bg: #f0e8fa;
+}
+
+[data-theme="dark"] {
+  --bg: #12110e;
+  --bg-card: #1e1d18;
+  --bg-card2: #252420;
+  --text: #e8e6df;
+  --text-muted: #a8a89a;
+  --text-light: #6a6a60;
+  --border: #333328;
+  --shadow: rgba(0,0,0,0.3);
+
+  --blue-bg:   #0d1e38;
+  --amber-bg:  #2a1e00;
+  --green-bg:  #0a1e0e;
+  --red-bg:    #2a0a0a;
+  --purple-bg: #1a0a2a;
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.75;
+  font-size: 15px;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ===== HEADER ===== */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--header-bg);
+  color: #e8f5ee;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+}
+
+.header-left { display: flex; align-items: center; gap: 1rem; }
+.header-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #c8e8d4;
+}
+.header-sub {
+  font-size: 0.78rem;
+  color: #7ab898;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.theme-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  color: #c8e8d4;
+  cursor: pointer;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-family: 'IBM Plex Sans KR', sans-serif;
+  transition: background 0.2s;
+}
+.theme-btn:hover { background: rgba(255,255,255,0.2); }
+
+/* ===== TAB NAV ===== */
+.tab-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 12px 1.5rem;
+  background: var(--bg-card2);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 52px;
+  z-index: 90;
+}
+
+.tab-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.78rem;
+  font-family: 'IBM Plex Sans KR', sans-serif;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { border-color: var(--accent); color: var(--accent); }
+.tab-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  font-weight: 500;
+}
+
+/* ===== MAIN CONTENT ===== */
+.tab-content { display: none; padding: 2rem 1.5rem 4rem; max-width: 860px; margin: 0 auto; }
+.tab-content.active { display: block; }
+
+/* ===== TYPOGRAPHY ===== */
+h2 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.4rem;
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.4rem;
+  margin: 2rem 0 1rem;
+}
+h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 1.5rem 0 0.6rem;
+}
+h4 {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 1.2rem 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+p { margin-bottom: 0.8rem; }
+
+/* ===== COLOR BOXES ===== */
+.box {
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+  border-left: 4px solid;
+}
+.box-blue   { background: var(--blue-bg);   border-color: var(--blue);   color: var(--text); }
+.box-amber  { background: var(--amber-bg);  border-color: var(--amber);  color: var(--text); }
+.box-green  { background: var(--green-bg);  border-color: var(--green);  color: var(--text); }
+.box-red    { background: var(--red-bg);    border-color: var(--red);    color: var(--text); }
+.box-purple { background: var(--purple-bg); border-color: var(--purple); color: var(--text); }
+
+.box-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.4rem;
+  opacity: 0.7;
+}
+
+/* ===== TABLE ===== */
+.tbl-wrap { overflow-x: auto; margin: 1rem 0; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+th {
+  background: var(--accent);
+  color: white;
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 500;
+}
+td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--border);
+}
+tr:nth-child(even) td { background: var(--bg-card2); }
+tr:hover td { background: var(--green-bg); }
+
+/* ===== MATH DISPLAY ===== */
+.math-block {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+  text-align: center;
+}
+
+/* ===== DETAILS TOGGLE (exam questions) ===== */
+details {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 0.8rem 0;
+  overflow: hidden;
+}
+summary {
+  cursor: pointer;
+  padding: 0.8rem 1rem;
+  background: var(--bg-card2);
+  font-weight: 500;
+  font-size: 0.9rem;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s;
+}
+summary:hover { background: var(--green-bg); }
+summary::before { content: '▶'; font-size: 0.65rem; color: var(--accent); transition: transform 0.2s; }
+details[open] summary::before { transform: rotate(90deg); }
+.answer {
+  padding: 1rem 1.2rem;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+/* ===== CARD ===== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.2rem 1.4rem;
+  margin: 1rem 0;
+  box-shadow: 0 1px 4px var(--shadow);
+}
+
+/* ===== INTERACTION HIERARCHY VISUAL ===== */
+.hier-row {
+  display: grid;
+  grid-template-columns: 200px 90px auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+}
+.hier-row:last-child { border-bottom: none; }
+.hier-name { font-weight: 500; }
+.hier-r { font-family: 'IBM Plex Mono', monospace; color: var(--accent); font-size: 0.82rem; }
+.hier-bar-wrap { background: var(--bg-card2); border-radius: 4px; height: 14px; overflow: hidden; }
+.hier-bar { height: 100%; background: var(--accent); border-radius: 4px; opacity: 0.8; }
+
+/* ===== STORY TIMELINE (overview) ===== */
+.story-step {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+  align-items: flex-start;
+}
+.story-num {
+  min-width: 32px;
+  height: 32px;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.88rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.story-body h3 { margin-top: 0; }
+
+/* ===== FORMULA CHIP ===== */
+.chip {
+  display: inline-block;
+  background: var(--green-bg);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  padding: 1px 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--accent);
+  margin: 1px 2px;
+}
+
+/* ===== TAG ===== */
+.tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.tag-der  { background: #d4eaff; color: #0050a0; }
+.tag-con  { background: #d4f5e0; color: #005020; }
+.tag-calc { background: #fff0cc; color: #804000; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+/* ===== MOBILE ===== */
+@media (max-width: 600px) {
+  .tab-content { padding: 1.2rem 1rem 3rem; }
+  .hier-row { grid-template-columns: 1fr 70px; }
+  .hier-bar-wrap { display: none; }
+  header { padding: 0 1rem; }
+  .header-sub { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="header-left">
+    <div>
+      <div class="header-title">14B — Interactions Between Molecules</div>
+      <div class="header-sub">Atkins Physical Chemistry 12e · Focus 14B</div>
+    </div>
+  </div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙 다크</button>
+</header>
+
+<!-- ===== TAB NAV ===== -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('overview')">① 개요 · 스토리</button>
+  <button class="tab-btn" onclick="showTab('electrostatic')">② 정전기 상호작용</button>
+  <button class="tab-btn" onclick="showTab('dipole')">③ 쌍극자 상호작용</button>
+  <button class="tab-btn" onclick="showTab('keesom')">④ Keesom · 볼츠만</button>
+  <button class="tab-btn" onclick="showTab('vdw')">⑤ Debye · London · vdW</button>
+  <button class="tab-btn" onclick="showTab('hbond')">⑥ 수소결합 · 소수성</button>
+  <button class="tab-btn" onclick="showTab('potential')">⑦ 총합 포텐셜</button>
+  <button class="tab-btn" onclick="showTab('exam')">⑧ 출제 예상 문제</button>
+</nav>
+
+<!-- ==================== TAB 1: 개요 ==================== -->
+<section class="tab-content active" id="tab-overview">
+
+<h2>분자 간 상호작용의 스토리</h2>
+
+<div class="box box-blue">
+  <div class="box-label">핵심 질문</div>
+  분자들은 왜 서로 끌리는가? 그 힘의 세기는 거리와 어떻게 달라지는가?
+  이 질문에 답하는 것이 14B 전체의 목적이다.
+</div>
+
+<p>
+  14B는 단순히 공식을 나열하지 않는다. <strong>전하 → 쌍극자 → 유도 쌍극자 → 요동</strong>이라는 점점 더 미묘해지는 상호작용의 계층을 따라가는 이야기다.
+  거리 의존성이 1/r에서 1/r², 1/r³, 1/r⁶으로 변해가는 데는 뚜렷한 물리적 이유가 있다.
+</p>
+
+<h3>큰 그림: 왜 r 의존성이 계속 가팔라지나?</h3>
+<div class="box box-amber">
+  <div class="box-label">핵심 원리</div>
+  고차 multipole일수록 멀리서 보면 전하들이 점점 더 잘 상쇄된다.
+  이온은 멀리서도 전하가 보이지만, 쌍극자는 ±가 겹쳐 보이고, 쌍극자-쌍극자는 더 겹쳐 보인다.
+  상쇄될수록 장(field)이 더 빠르게 감소 → V(r) 의존성이 더 가팔라진다.
+</div>
+
+<div class="story-step">
+  <div class="story-num">1</div>
+  <div class="story-body">
+    <h3>부분 전하 → 이온-이온 (V ∝ 1/r)</h3>
+    <p>분자 속 원자들은 부분 전하를 갖는다. 가장 간단한 경우: 두 점전하 사이 쿨롱 에너지. 가장 강하고 가장 느리게 감소.</p>
+  </div>
+</div>
+
+<div class="story-step">
+  <div class="story-num">2</div>
+  <div class="story-body">
+    <h3>점 쌍극자 → 이온-쌍극자 (V ∝ 1/r²)</h3>
+    <p>쌍극자는 l ≪ r 조건에서 Taylor 전개 → leading term이 1/r²로 떨어진다. 멀리서 보면 ±전하가 겹쳐 보이기 시작.</p>
+  </div>
+</div>
+
+<div class="story-step">
+  <div class="story-num">3</div>
+  <div class="story-body">
+    <h3>쌍극자-쌍극자 고정 (V ∝ 1/r³)</h3>
+    <p>양쪽이 쌍극자. 4개 전하 상호작용, 1차항 소거 → leading term 1/r³. 방향 인자 f(θ) = 1−3cos²θ 등장.</p>
+  </div>
+</div>
+
+<div class="story-step">
+  <div class="story-num">4</div>
+  <div class="story-body">
+    <h3>자유 회전 평균 → 0, 그런데... Keesom (V ∝ 1/r⁶)</h3>
+    <p>균일 평균(uniform average)하면 ⟨V⟩ = 0. 그러나 실제로는 볼츠만 통계가 인력 배열을 선호한다 → Langevin function → ⟨V⟩ ≠ 0. 온도 의존성 1/T 등장.</p>
+  </div>
+</div>
+
+<div class="story-step">
+  <div class="story-num">5</div>
+  <div class="story-body">
+    <h3>유도 쌍극자 → Debye (V ∝ 1/r⁶)</h3>
+    <p>극성 분자가 옆 분자의 전자구름을 왜곡시킨다. 유도 쌍극자는 항상 인력 방향으로 생성 → 온도 무관, 회전 평균해도 0이 안 됨.</p>
+  </div>
+</div>
+
+<div class="story-step">
+  <div class="story-num">6</div>
+  <div class="story-body">
+    <h3>전자 요동 → London / 분산 (V ∝ 1/r⁶)</h3>
+    <p>쌍극자가 없어도 순간 요동 쌍극자의 상관이 인력을 만든다. 모든 분자에 존재, α가 클수록 강하다. van der Waals의 핵심.</p>
+  </div>
+</div>
+
+<div class="story-step">
+  <div class="story-num">7</div>
+  <div class="story-body">
+    <h3>수소결합 (~20 kJ/mol, MO 3중심 4전자)</h3>
+    <p>A−H···B. N, O, F가 주역. 단순 정전기를 넘어 MO 관점으로: antibonding이 비어 있어 에너지 낮춤. van der Waals보다 훨씬 강하다.</p>
+  </div>
+</div>
+
+<div class="story-step">
+  <div class="story-num">8</div>
+  <div class="story-body">
+    <h3>소수성 효과 — 힘이 아니라 엔트로피</h3>
+    <p>비극성 분자가 물에서 뭉치는 건 서로 끌려서가 아니다. 물의 엔트로피를 회복시키려는 엔트로피 지배 현상이다. ΔG = ΔH − TΔS에서 −TΔS항이 지배.</p>
+  </div>
+</div>
+
+<div class="story-step">
+  <div class="story-num">9</div>
+  <div class="story-body">
+    <h3>반발 + 인력 합산 → 포텐셜 우물 → Lennard-Jones</h3>
+    <p>Pauli 반발(e^{−r/ρ} 또는 근사적으로 1/r¹²)과 van der Waals 인력(-C₆/r⁶)이 합쳐져 포텐셜 우물을 만든다. 최솟값 = 평형 거리.</p>
+  </div>
+</div>
+
+<h3>전체 계층 요약</h3>
+<div class="tbl-wrap">
+<table>
+  <tr><th>상호작용</th><th>r 의존성</th><th>에너지 (kJ/mol)</th><th>특징</th></tr>
+  <tr><td>이온-이온</td><td>1/r</td><td>~250</td><td>이온 사이에만</td></tr>
+  <tr><td>수소결합</td><td>—</td><td>~20</td><td>방향성 강, MO 성격</td></tr>
+  <tr><td>이온-쌍극자</td><td>1/r²</td><td>~15</td><td></td></tr>
+  <tr><td>쌍극자-쌍극자 (고정)</td><td>1/r³</td><td>~2</td><td>방향 인자 f(θ)</td></tr>
+  <tr><td>Keesom (회전)</td><td>1/r⁶</td><td>~0.3</td><td>1/T 의존</td></tr>
+  <tr><td>Debye</td><td>1/r⁶</td><td></td><td>온도 무관</td></tr>
+  <tr><td>London</td><td>1/r⁶</td><td>~2</td><td>모든 분자, α² 의존</td></tr>
+  <tr><td>소수성</td><td>—</td><td></td><td>엔트로피 지배</td></tr>
+</table>
+</div>
+
+<div class="box box-green">
+  <div class="box-label">van der Waals = Keesom + Debye + London</div>
+  세 가지 모두 1/r⁶. 유체 상에서: \( V = -C_6/r^6 \)
+</div>
+
+</section>
+
+<!-- ==================== TAB 2: 정전기 ==================== -->
+<section class="tab-content" id="tab-electrostatic">
+
+<h2>① 정전기 상호작용</h2>
+
+<h3>출발점: 부분 전하</h3>
+<p>
+  분자 속 원자들은 이온이 아닌 <strong>부분 전하(partial charge) δ+/δ−</strong> 를 갖는다.
+  이 전자 밀도의 공간적 불균일에서 모든 분자 간 상호작용이 시작된다.
+</p>
+
+<div class="math-block">$$V = \frac{Q_1 Q_2}{4\pi\varepsilon r}$$</div>
+
+<div class="box box-blue">
+  <div class="box-label">정의</div>
+  ε: 두 전하 사이 매질의 유전율(permittivity). 진공: ε = ε₀. 물: ε = εᵣε₀ ≈ 78ε₀.
+  εᵣ가 클수록 쿨롱 상호작용이 약해져 이온 결합 해리가 잘 된다(NaCl → 물에 녹음).
+</div>
+
+<div class="box box-amber">
+  <div class="box-label">핵심</div>
+  V ∝ 1/r — 가장 느리게 감소, 가장 강한 상호작용. 이것이 모든 고차 상호작용의 기준점이다.
+</div>
+
+<h3>거리 의존성이 가팔라지는 이유 — 직관</h3>
+<div class="card">
+  <p><strong>이온(monopole, n=1):</strong> 멀리서도 전하가 보인다. V ∝ 1/r.</p>
+  <p><strong>쌍극자(dipole, n=2):</strong> 멀리서 +Q와 −Q가 겹쳐 보이기 시작한다. 상쇄가 일어나 V ∝ 1/r².</p>
+  <p><strong>쌍극자-쌍극자(n=2, m=2):</strong> 양쪽 다 상쇄. V ∝ 1/r^{n+m−1} = 1/r³.</p>
+  <p>일반 공식: \( V \propto 1/r^{n+m-1} \) (n-pole ↔ m-pole)</p>
+</div>
+
+</section>
+
+<!-- ==================== TAB 3: 쌍극자 상호작용 ==================== -->
+<section class="tab-content" id="tab-dipole">
+
+<h2>② 이온-쌍극자 및 쌍극자-쌍극자 (고정)</h2>
+
+<h3>Point dipole 정의</h3>
+<div class="box box-blue">
+  <div class="box-label">정의</div>
+  전하 간격 <em>l</em>이 관측 거리 <em>r</em>보다 훨씬 작은 쌍극자: <strong>l ≪ r</strong>.
+  이 조건이 Taylor 전개를 정당화한다.
+</div>
+
+<h3>이온-쌍극자: V ∝ 1/r²</h3>
+<p>쌍극자(+Q₁···−Q₁, 간격 l)와 점전하 Q₂가 거리 r에 있는 경우 (collinear 배열).</p>
+<div class="math-block">
+$$V = \frac{1}{4\pi\varepsilon_0}\left(-\frac{Q_1Q_2}{r-\frac{l}{2}}+\frac{Q_1Q_2}{r+\frac{l}{2}}\right)$$
+</div>
+
+<p>x ≡ l/2r, l ≪ r이므로 x ≪ 1. Taylor 전개:</p>
+<div class="math-block">
+$$\frac{1}{1+x}=1-x+x^2-\cdots \qquad \frac{1}{1-x}=1+x+x^2+\cdots$$
+</div>
+<p>1차항만 살아남고(−2x), μ₁ = Q₁l 대입:</p>
+<div class="math-block">
+$$\boxed{V = -\frac{\mu_1 Q_2}{4\pi\varepsilon_0 r^2}}$$
+</div>
+
+<div class="box box-green">
+  <div class="box-label">물리적 직관</div>
+  멀리서 보면 ±Q₁이 점점 겹쳐 보여 상쇄된다. 그래서 이온-이온(1/r)보다 한 차수 빠르게 감소.
+</div>
+
+<h3>쌍극자-쌍극자 (고정, head-to-tail): V ∝ 1/r³</h3>
+<p>두 쌍극자가 나란히 같은 방향(Arrangement 2). 4개 전하 쌍 에너지 합산 후 Taylor 전개.</p>
+<p>1차항이 완전 소거되고, <strong>2차항(2x²)</strong> 이 leading term으로 남는다:</p>
+<div class="math-block">
+$$\boxed{V = -\frac{\mu_1\mu_2}{2\pi\varepsilon_0 r^3}}$$
+</div>
+
+<h3>일반 벡터 표현</h3>
+<p>임의 방향의 두 쌍극자 μ₁, μ₂ (분리 벡터 <strong>r</strong>):</p>
+<div class="math-block">
+$$V = -\frac{1}{4\pi\varepsilon_0 r^3}\left\{\boldsymbol{\mu}_1\cdot\boldsymbol{\mu}_2 - \frac{3(\boldsymbol{\mu}_1\cdot\mathbf{r})(\boldsymbol{\mu}_2\cdot\mathbf{r})}{r^2}\right\}$$
+</div>
+
+<h3>고정 평행 쌍극자의 방향 인자</h3>
+<p>두 쌍극자가 평행하고 r에 대해 각도 θ를 이루는 경우:</p>
+<div class="math-block">
+$$V = \frac{\mu_1\mu_2 f(\theta)}{4\pi\varepsilon_0 r^3}, \qquad f(\theta) = 1 - 3\cos^2\theta$$
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <tr><th>θ</th><th>f(θ)</th><th>배열</th><th>V</th></tr>
+  <tr><td>0°</td><td>−2</td><td>head-to-tail (collinear)</td><td>인력 최대</td></tr>
+  <tr><td>90°</td><td>+1</td><td>side-by-side (수직)</td><td>척력</td></tr>
+  <tr><td>54.7°</td><td>0</td><td>magic angle</td><td>V = 0</td></tr>
+</table>
+</div>
+
+<h3>균일 평균 → ⟨V⟩ = 0</h3>
+<p>자유 회전하는 쌍극자를 볼츠만 가중 없이 균일 평균하면:</p>
+<div class="math-block">
+$$\langle V\rangle = -\frac{\mu_1\mu_2}{2\pi\varepsilon_0 r^3}\langle\cos\theta\rangle, \qquad \langle\cos\theta\rangle = \frac{1}{4\pi}\int_0^{2\pi}d\phi\int_0^{\pi}\cos\theta\sin\theta\,d\theta = 0$$
+</div>
+<div class="box box-red">
+  <div class="box-label">주의</div>
+  ⟨V⟩ = 0은 볼츠만 가중 없이 균일 평균했을 때만이다. 실제 분자는 에너지가 낮은 배열(인력)에 더 오래 머문다 → 다음 탭에서 Keesom으로 이어짐.
+</div>
+
+</section>
+
+<!-- ==================== TAB 4: Keesom ==================== -->
+<section class="tab-content" id="tab-keesom">
+
+<h2>③ Keesom Interaction — 볼츠만 통계 적용</h2>
+
+<h3>왜 ⟨V⟩ ≠ 0 인가?</h3>
+<p>분자들은 상호작용 에너지 V(θ)에 의존하기 때문에 완전히 자유롭게 회전하지 않는다.
+에너지가 낮은 배열(인력)에 통계적으로 더 오래 머문다 → <strong>볼츠만 가중 평균</strong>을 써야 한다.</p>
+
+<h3>볼츠만 가중 확률 원소</h3>
+<div class="math-block">
+$$dp = \frac{e^{-V(\theta)/kT}\sin\theta\,d\theta\,d\phi}{\int_0^{2\pi}\int_0^{\pi}e^{-V(\theta)/kT}\sin\theta\,d\theta\,d\phi}$$
+</div>
+
+<p>배열 5: μ₁ 고정, μ₂는 r에 대해 각도 θ로 자유 회전. 이 경우:</p>
+<div class="math-block">
+$$V(\theta) = -\frac{\mu_1\mu_2}{2\pi\varepsilon_0 r^3}\cos\theta$$
+</div>
+
+<h3>Langevin function 유도</h3>
+<p>a ≡ μ₁μ₂/(2πε₀r³kT)로 놓으면 e^{−V/kT} = e^{a cosθ}. cosθ = u 치환:</p>
+
+<div class="math-block">
+$$\text{분모: }\; 2\pi\int_{-1}^{1}e^{au}\,du = \frac{2\pi}{a}(e^a-e^{-a})$$
+$$\text{분자: }\; 2\pi\int_{-1}^{1}u e^{au}\,du = \frac{2\pi}{a}(e^a+e^{-a}) - \frac{2\pi}{a^2}(e^a-e^{-a})$$
+</div>
+
+<p>나누면:</p>
+<div class="math-block">
+$$\langle\cos\theta\rangle = \coth(a) - \frac{1}{a} \equiv L(a) \quad \text{(Langevin function)}$$
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <tr><th>극한</th><th>L(a) 값</th><th>의미</th></tr>
+  <tr><td>a ≫ 1 (저온/강한 장)</td><td>→ 1</td><td>모든 쌍극자 인력 방향으로 완전 정렬 (포화)</td></tr>
+  <tr><td>a ≪ 1 (고온/약한 장)</td><td>≈ a/3</td><td>Keesom 근사 성립 구간</td></tr>
+</table>
+</div>
+
+<h3>a ≪ 1 근사: Keesom 에너지</h3>
+<p>coth(a) = 1/a + a/3 − a³/45 + ··· 이므로 L(a) ≈ a/3. 대입:</p>
+<div class="math-block">
+$$\langle V\rangle \approx -\frac{\mu_1\mu_2}{2\pi\varepsilon_0 r^3}\cdot\frac{a}{3}$$
+$$\boxed{\langle V\rangle = -\frac{C}{r^6}, \qquad C = \frac{2\mu_1^2\mu_2^2}{3(4\pi\varepsilon_0)^2 kT}}$$
+</div>
+
+<div class="box box-green">
+  <div class="box-label">결론 — Keesom interaction 읽는 법</div>
+  <p><strong>V < 0:</strong> 항상 인력. 볼츠만 가중이 인력 배열을 선호.</p>
+  <p><strong>1/r⁶:</strong> (Boltzmann 1/r³) × (dipole-dipole 1/r³)</p>
+  <p><strong>1/T 비례:</strong> 온도 높으면 열운동이 정렬 방해 → Keesom 효과 약해짐.</p>
+</div>
+
+<h3>f(θ)의 구면 평균도 0임을 확인</h3>
+<p>평행 쌍극자가 같이 회전하는 경우, f(θ) = 1 − 3cos²θ의 구면 평균:</p>
+<div class="math-block">
+$$\langle f(\theta)\rangle = \frac{1}{2}\int_0^{\pi}(1-3\cos^2\theta)\sin\theta\,d\theta$$
+$$= \frac{1}{2}\left[\int_0^{\pi}\sin\theta\,d\theta - 3\int_0^{\pi}\cos^2\theta\sin\theta\,d\theta\right] = \frac{1}{2}(2 - 3\cdot\tfrac{2}{3}) = 0$$
+</div>
+
+</section>
+
+<!-- ==================== TAB 5: Debye / London / vdW ==================== -->
+<section class="tab-content" id="tab-vdw">
+
+<h2>④ Debye · London · van der Waals</h2>
+
+<h3>Debye Interaction (극성 ↔ 분극성)</h3>
+
+<div class="card">
+  <p><strong>메커니즘:</strong> 극성 분자 μ₁이 전기장을 만든다 → 옆 분자의 전자구름 왜곡 → 유도 쌍극자 μ₂* = α₂·𝓔 생성 → 영구·유도 쌍극자가 항상 인력 방향으로 정렬.</p>
+  <p><em>핵심 포인트:</em> μ₁이 어느 방향을 향하든 유도 쌍극자는 따라가므로 회전 평균을 내도 0이 되지 않는다.</p>
+</div>
+
+<div class="math-block">
+$$\boxed{V = -\frac{C}{r^6}, \qquad C = \frac{\mu_1^2\alpha_2'}{4\pi\varepsilon_0}}$$
+</div>
+
+<p>α₂′ = polarizability volume of molecule 2 (단위 m³, 14A에서의 α′ = α/4πε₀).</p>
+
+<div class="box box-blue">
+  <div class="box-label">1/r⁶ 출처</div>
+  영구 쌍극자의 장(field) ∝ 1/r³ → 유도 쌍극자 크기 ∝ 1/r³ → 상호작용 에너지 ∝ (1/r³)² = 1/r⁶.
+  온도 의존성 없음.
+</div>
+
+<h3>London Interaction (분산력, 모든 분자)</h3>
+
+<div class="card">
+  <p><strong>역설:</strong> Ar 같은 비극성 원자들도 서로 끌어당겨 액화된다. 영구 쌍극자가 없는데 어떻게?</p>
+  <p><strong>답:</strong> 전자 위치의 순간 요동(fluctuation) → 순간 쌍극자 → 인접 분자에 유도 쌍극자 → 두 쌍극자의 요동이 상관(correlated)되어 항상 인력 방향.</p>
+  <p><em>시간 평균하면 쌍극자 = 0이지만, 요동의 상관이 만드는 에너지는 0이 아니다.</em></p>
+</div>
+
+<div class="math-block">
+$$\boxed{V = -\frac{C}{r^6}, \qquad C = \frac{3}{2}\alpha_1'\alpha_2'\frac{I_1 I_2}{I_1+I_2}}$$
+</div>
+
+<p>London formula. I₁, I₂는 이온화 에너지.</p>
+
+<div class="box box-amber">
+  <div class="box-label">London이 커지는 조건</div>
+  <p>α′가 클수록 강하다 → 분자가 크고 전자가 많을수록 분산력 강함.</p>
+  <p>예: He(α′ 작음, ε = 11 kJ/mol) ≪ Xe(α′ 크다, ε = 236 kJ/mol)</p>
+  <p>HCl, HBr 같은 극성 분자도 London이 Keesom보다 클 수 있다!</p>
+</div>
+
+<h3>van der Waals 3총사 비교</h3>
+
+<div class="tbl-wrap">
+<table>
+  <tr><th>종류</th><th>조건</th><th>C 의존성</th><th>온도?</th></tr>
+  <tr><td><strong>Keesom</strong></td><td>극성 ↔ 극성 (회전)</td><td>μ₁²μ₂²/kT</td><td>∝ 1/T</td></tr>
+  <tr><td><strong>Debye</strong></td><td>극성 ↔ 분극성</td><td>μ₁²α₂′</td><td>없음</td></tr>
+  <tr><td><strong>London</strong></td><td>모든 분자</td><td>α₁′α₂′·I</td><td>없음</td></tr>
+</table>
+</div>
+
+<div class="math-block">
+$$V_\text{vdW} = -\frac{C_\text{Keesom}+C_\text{Debye}+C_\text{London}}{r^6} = -\frac{C_6}{r^6}$$
+</div>
+
+<div class="box box-green">
+  <div class="box-label">통일성</div>
+  세 가지 모두 <strong>1/r⁶</strong>. 구조: (쌍극자장 1/r³) × (유도 또는 볼츠만 가중 1/r³). 단위가 다른 같은 이야기.
+</div>
+
+<h3>Axilrod-Teller (3체 보정)</h3>
+<p>쌍별(pair-wise) 합산의 한계: 세 번째 원자가 끼면 보정이 필요하다.</p>
+<div class="math-block">
+$$V = -\frac{C_6}{r_{AB}^6}-\frac{C_6}{r_{BC}^6}-\frac{C_6}{r_{CA}^6}+\frac{C'}{(r_{AB}r_{BC}r_{CA})^3}$$
+</div>
+<p>마지막 항(+): 세 원자 삼각형 배열에서 쌍별 합산보다 약한 인력. 결정 구조·기체 비리얼 계수 계산에서 보정.</p>
+
+</section>
+
+<!-- ==================== TAB 6: 수소결합 / 소수성 ==================== -->
+<section class="tab-content" id="tab-hbond">
+
+<h2>⑤ 수소결합 · 소수성 상호작용</h2>
+
+<h3>수소결합 정의</h3>
+<div class="box box-blue">
+  <div class="box-label">정의</div>
+  A−H···B 형태의 인력. A와 B는 강한 전기음성도 원소, B는 비공유 전자쌍 보유.
+  관습적으로 <strong>N, O, F</strong>가 주역 (전기음성도 크고 lone pair 있음).
+  엄밀한 cut-off는 없으나 N, O, F가 가장 효과적.
+</div>
+
+<p>전형적 세기: <strong>~20 kJ/mol</strong> (H₂O 기준). van der Waals (~2 kJ/mol)보다 훨씬 강해 별도 카테고리.</p>
+
+<h3>생물학적 중요성</h3>
+<div class="card">
+  <p><strong>DNA 염기쌍:</strong> A=T (2개), G≡C (3개) — 수소결합이 이중나선을 유지.</p>
+  <p><strong>단백질 2차 구조:</strong> α-helix, β-sheet의 골격이 수소결합.</p>
+  <p><strong>FRET와 연결:</strong> 수소결합으로 유지되는 DNA/단백질 구조가 바뀌는 dynamics를 smFRET이 측정. (이남기 교수님 논문의 그 대상!)</p>
+</div>
+
+<h3>수소결합의 MO 해석 — 3중심 4전자 결합</h3>
+<p>세 원자 A, H, B의 원자궤도 선형결합 → MO 3개 생성:</p>
+
+<div class="math-block">
+$$\psi = c_1\chi_A + c_2\chi_H + c_3\chi_B$$
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <tr><th>MO</th><th>에너지</th><th>전자 수</th><th>역할</th></tr>
+  <tr><td>Bonding</td><td>낮음</td><td>2 (↑↓)</td><td>안정화</td></tr>
+  <tr><td>Nonbonding</td><td>중간</td><td>2 (↑↓)</td><td>거의 중립</td></tr>
+  <tr><td>Antibonding</td><td>높음</td><td><strong>0</strong></td><td>불안정화 기여 없음!</td></tr>
+</table>
+</div>
+
+<div class="box box-green">
+  <div class="box-label">왜 안정화되나</div>
+  Antibonding이 비어 있어 불안정화 기여가 없다. Nonbonding이 "almost nonbonding"이면 손해도 없다.
+  Bonding 궤도의 안정화만 남는다 → 에너지 낮춤 가능 (H₂O: ~20 kJ/mol).
+  단, "may be"(조건부) — nonbonding 궤도 에너지에 따라 안정화 정도가 달라진다.
+</div>
+
+<div class="box box-red">
+  <div class="box-label">정전기 모형 vs MO 모형</div>
+  단순 정전기(δ+H ↔ δ−B) 모형은 부분적으로 맞지만, MO 관점이 더 완전하다. 실제 수소결합은 두 성격이 혼재.
+</div>
+
+<h3>소수성 상호작용 — 힘이 아니라 엔트로피</h3>
+
+<div class="box box-amber">
+  <div class="box-label">핵심 포인트</div>
+  소수성은 분자 간 인력이 아니다. 물의 엔트로피를 회복시키려는 <strong>엔트로피 지배(entropy-driven)</strong> 현상이다.
+</div>
+
+<p>실험: CH₄(CCl₄) → CH₄(aq) at 298 K</p>
+
+<div class="tbl-wrap">
+<table>
+  <tr><th>열역학량</th><th>값</th><th>해석</th></tr>
+  <tr><td>ΔH</td><td>−10 kJ/mol</td><td>엔탈피는 물로 가는 게 유리!</td></tr>
+  <tr><td>−TΔS (298 K)</td><td>+22 kJ/mol</td><td>엔트로피 감소가 압도적</td></tr>
+  <tr><td>ΔG = ΔH − TΔS</td><td><strong>+12 kJ/mol</strong></td><td>비자발적 → 물을 싫어함</td></tr>
+</table>
+</div>
+
+<div class="card">
+  <p><strong>왜 ΔS가 그렇게 음수인가?</strong></p>
+  <p>비극성 분자가 물에 들어가면 주변 물 분자들이 수소결합을 최대한 유지하려고 <strong>질서정연한 cage(clathrate)</strong> 구조를 만든다. 물의 자유도 감소 → ΔS ≪ 0.</p>
+  <p><strong>비극성 분자들이 뭉치면:</strong> 노출 표면적 감소 → 갇히는 물 감소 → 물의 엔트로피 회복 → 자발적.</p>
+  <p>기름이 물에서 뭉치는 건 기름끼리 끌려서가 아니라, <em>물이 자유로워지고 싶어서 비극성 분자를 밀어 모으는 것</em>.</p>
+</div>
+
+<div class="box box-green">
+  <div class="box-label">생물학적 연결</div>
+  단백질 접힘(소수성 잔기가 내부로), 세포막 이중층 형성, 미셀 — 모두 소수성 효과가 구동력.
+  그리고 이 단백질 구조 변화를 smFRET(이남기 교수님 연구)으로 실시간 관찰한다.
+</div>
+
+</section>
+
+<!-- ==================== TAB 7: 총합 포텐셜 ==================== -->
+<section class="tab-content" id="tab-potential">
+
+<h2>⑥ 반발 + 인력 = 포텐셜 우물</h2>
+
+<h3>왜 반발항이 필요한가</h3>
+<p>
+  van der Waals 인력(−C₆/r⁶)만 있으면 r → 0에서 V → −∞. 분자들이 무한히 가까워질 것이다.
+  그러나 실제로는 전자 구름이 겹치면 <strong>Pauli 배타 원리</strong>에 의한 반발이 급격히 증가한다.
+  반발 + 인력의 합이 <strong>포텐셜 우물</strong>을 만들고, 여기서 평형 거리가 결정된다.
+</p>
+
+<h3>Hard-sphere potential</h3>
+<div class="math-block">
+$$V = \infty \text{ for } r \leq d, \qquad V = 0 \text{ for } r > d$$
+</div>
+<p>당구공 모형. 인력 없이 반발만. 단순하지만 충돌 단면적, 기체 성질 계산에 놀랍도록 유용하다.</p>
+
+<h3>Mie potential (일반형)</h3>
+<div class="math-block">
+$$V = \frac{C_n}{r^n} - \frac{C_m}{r^m}, \qquad n > m$$
+</div>
+<p>n > m이어야 단거리에서 반발항이 인력항보다 더 빠르게 상승하여 우물이 형성된다.</p>
+
+<h3>Lennard-Jones potential (12-6)</h3>
+<p>Mie의 특수 경우 n=12, m=6:</p>
+<div class="math-block">
+$$\boxed{V = 4\varepsilon\left[\left(\frac{r_0}{r}\right)^{12} - \left(\frac{r_0}{r}\right)^{6}\right]}$$
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <tr><th>파라미터</th><th>의미</th><th>비고</th></tr>
+  <tr><td>ε</td><td>포텐셜 우물 깊이(well depth)</td><td>상호작용 세기. 클수록 분산력 강함</td></tr>
+  <tr><td>r₀</td><td>LJ 파라미터</td><td>실제 최솟값은 r = 2^(1/6)r₀에서</td></tr>
+  <tr><td>2^(1/6)r₀</td><td>평형 거리</td><td>V_min = −ε</td></tr>
+</table>
+</div>
+
+<h4>최솟값 위치 유도 (dV/dr = 0)</h4>
+<div class="math-block">
+$$\frac{dV}{dr} = 4\varepsilon\left(-\frac{12r_0^{12}}{r^{13}}+\frac{6r_0^6}{r^7}\right) = 0$$
+$$\Rightarrow r^6 = 2r_0^6 \quad \Rightarrow \quad r_\text{min} = 2^{1/6}r_0 \approx 1.122\,r_0$$
+</div>
+
+<div class="box box-amber">
+  <div class="box-label">왜 n=12 인가? (솔직한 답)</div>
+  물리적 근거가 약하다. <strong>계산 편의</strong>: (r₀/r)⁶ = p로 놓으면 (r₀/r)¹² = p²로 제곱 한 번이면 된다.
+  실제 Pauli 반발의 물리는 지수함수형이 훨씬 정확하다.
+</div>
+
+<h3>exp-6 potential (Buckingham)</h3>
+<div class="math-block">
+$$V = A e^{-r/\rho} - \frac{C_6}{r^6}$$
+</div>
+
+<div class="box box-green">
+  <div class="box-label">왜 지수함수가 더 정확한가</div>
+  원자 파동함수는 큰 r에서 e^{−κr}로 감쇠한다 (수소원자 1s: e^{−r/a₀}). Pauli 반발은 전자 구름 overlap에서 오고, overlap ∝ e^{−κr}. 따라서 반발 에너지의 물리는 지수함수형이다.
+  1/r¹²는 이 지수함수의 조악한 편의 근사일 뿐이다.
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <tr><th>모형</th><th>반발항</th><th>인력항</th><th>특징</th></tr>
+  <tr><td>Hard-sphere</td><td>∞ (r≤d)</td><td>없음</td><td>가장 단순, 계산 빠름</td></tr>
+  <tr><td>Lennard-Jones</td><td>C₁₂/r¹²</td><td>−C₆/r⁶</td><td>편리, 널리 쓰임</td></tr>
+  <tr><td>Buckingham (exp-6)</td><td>Ae^{−r/ρ}</td><td>−C₆/r⁶</td><td>물리적으로 정확</td></tr>
+</table>
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <caption style="text-align:left; padding:6px 0; font-size:0.85rem; color:var(--text-muted);">Lennard-Jones parameters (ε, r₀)</caption>
+  <tr><th>분자</th><th>ε (kJ/mol)</th><th>r₀ (pm)</th></tr>
+  <tr><td>He</td><td>11</td><td>258</td></tr>
+  <tr><td>H₂</td><td>34</td><td>297</td></tr>
+  <tr><td>Ar</td><td>128</td><td>342</td></tr>
+  <tr><td>Xe</td><td>236</td><td>406</td></tr>
+  <tr><td>Cl₂</td><td>368</td><td>412</td></tr>
+  <tr><td>Br₂</td><td>536</td><td>427</td></tr>
+  <tr><td>C₆H₆</td><td>454</td><td>527</td></tr>
+</table>
+</div>
+
+</section>
+
+<!-- ==================== TAB 8: 출제 예상 문제 ==================== -->
+<section class="tab-content" id="tab-exam">
+
+<h2>출제 예상 문제</h2>
+
+<div class="box box-blue">
+  <div class="box-label">출제 비율</div>
+  유도형 40% · 원리·설명형 30% · 계산형 30%
+</div>
+
+<h3>유도형 <span class="tag tag-der">유도 40%</span></h3>
+
+<details>
+<summary>Q1. 점 쌍극자(μ₁)와 점전하(Q₂) 사이의 에너지가 V = −μ₁Q₂/(4πε₀r²)임을 유도하라.</summary>
+<div class="answer">
+<p><strong>셋업:</strong> 쌍극자 (+Q₁, −Q₁, 간격 l), 점전하 Q₂가 중심에서 거리 r.</p>
+<p><strong>쿨롱 합산:</strong></p>
+$$V = \frac{1}{4\pi\varepsilon_0}\left(-\frac{Q_1Q_2}{r-l/2}+\frac{Q_1Q_2}{r+l/2}\right) = \frac{Q_1Q_2}{4\pi\varepsilon_0 r}\left(-\frac{1}{1-x}+\frac{1}{1+x}\right)$$
+<p>x ≡ l/2r, l ≪ r이므로 x ≪ 1. Taylor 전개 후 1차항 보존:</p>
+$$-\frac{1}{1-x}+\frac{1}{1+x} = -(1+x+\cdots)+(1-x+\cdots) = -2x$$
+$$V \approx \frac{Q_1Q_2}{4\pi\varepsilon_0 r}(-2x) = -\frac{Q_1Q_2 l}{4\pi\varepsilon_0 r^2} = -\frac{\mu_1 Q_2}{4\pi\varepsilon_0 r^2}$$
+<p>(μ₁ = Q₁l 사용)</p>
+</div>
+</details>
+
+<details>
+<summary>Q2. 두 쌍극자(나란히 head-to-tail 배열)의 상호작용 에너지가 V = −μ₁μ₂/(2πε₀r³)임을 유도하라.</summary>
+<div class="answer">
+<p><strong>셋업:</strong> 4개 전하 쌍의 쿨롱 에너지 합산.</p>
+$$V = \frac{1}{4\pi\varepsilon_0}\left(-\frac{Q_1Q_2}{r+l}+\frac{Q_1Q_2}{r}+\frac{Q_1Q_2}{r}-\frac{Q_1Q_2}{r-l}\right)$$
+$$= -\frac{Q_1Q_2}{4\pi\varepsilon_0 r}\left(\frac{1}{1+x}-2+\frac{1}{1-x}\right), \quad x=l/r$$
+<p>Taylor: 1/(1+x) + 1/(1−x) = 2 + 2x² + ···. 1차항 소거, 2차항(2x²)이 leading term:</p>
+$$V \approx -\frac{Q_1Q_2}{4\pi\varepsilon_0 r}\cdot 2x^2 = -\frac{2Q_1Q_2 l^2}{4\pi\varepsilon_0 r^3} = -\frac{\mu_1\mu_2}{2\pi\varepsilon_0 r^3}$$
+</div>
+</details>
+
+<details>
+<summary>Q3. Keesom 상호작용 ⟨V⟩ = −C/r⁶ (C = 2μ₁²μ₂²/3(4πε₀)²kT) 유도 과정을 설명하라.</summary>
+<div class="answer">
+<p><strong>출발:</strong> V(θ) = −(μ₁μ₂/2πε₀r³)cosθ</p>
+<p><strong>볼츠만 가중 평균:</strong></p>
+$$\langle\cos\theta\rangle = \frac{\int_0^{2\pi}\int_0^{\pi}e^{a\cos\theta}\cos\theta\sin\theta\,d\theta\,d\phi}{\int_0^{2\pi}\int_0^{\pi}e^{a\cos\theta}\sin\theta\,d\theta\,d\phi}$$
+$$a \equiv \frac{\mu_1\mu_2}{2\pi\varepsilon_0 r^3 kT}$$
+<p><strong>cosθ = u 치환:</strong> 분모 = 2π(e^a−e^{−a})/a, 분자 = 2π[(e^a+e^{−a})/a − (e^a−e^{−a})/a²]</p>
+<p>⟨cosθ⟩ = coth(a) − 1/a ≡ L(a) (Langevin function)</p>
+<p><strong>a ≪ 1 근사:</strong> L(a) ≈ a/3 (coth 급수전개)</p>
+$$\langle V\rangle = -\frac{\mu_1\mu_2}{2\pi\varepsilon_0 r^3}\cdot\frac{a}{3} = -\frac{\mu_1^2\mu_2^2}{12\pi^2\varepsilon_0^2 r^6 kT} = -\frac{2\mu_1^2\mu_2^2}{3(4\pi\varepsilon_0)^2 kT r^6}$$
+</div>
+</details>
+
+<details>
+<summary>Q4. Lennard-Jones 포텐셜에서 평형 거리가 r = 2^(1/6)r₀임을 유도하라.</summary>
+<div class="answer">
+$$V = 4\varepsilon\left[\left(\frac{r_0}{r}\right)^{12}-\left(\frac{r_0}{r}\right)^6\right]$$
+<p>dV/dr = 0 조건:</p>
+$$4\varepsilon\left(-\frac{12r_0^{12}}{r^{13}}+\frac{6r_0^6}{r^7}\right) = 0$$
+$$12r_0^{12}/r^{13} = 6r_0^6/r^7 \quad\Rightarrow\quad r^6 = 2r_0^6 \quad\Rightarrow\quad r_\text{min} = 2^{1/6}r_0$$
+<p>이 때 V = 4ε[1/4 − 1/2] = −ε (우물 깊이가 정확히 −ε).</p>
+</div>
+</details>
+
+<h3>원리·설명형 <span class="tag tag-con">원리 30%</span></h3>
+
+<details>
+<summary>Q5. 자유 회전 쌍극자의 균일 평균이 0임에도 실제 Keesom 상호작용이 비零인 이유를 설명하라.</summary>
+<div class="answer">
+<p>균일 평균(uniform average)은 볼츠만 가중치를 무시하고 모든 방향을 동등하게 취급한다. cos θ는 0~π에서 +1→−1로 대칭 변화하므로 ⟨cosθ⟩ = 0.</p>
+<p>그러나 실제 분자는 상호작용 에너지 V(θ)에 따라 방향 확률이 다르다. V < 0인 인력 배열(cosθ > 0)에 e^{−V/kT} > 1 가중치가 붙어 통계적으로 더 선호된다. 볼츠만 가중 평균에서는 ⟨cosθ⟩ = L(a) ≈ a/3 ≠ 0이 되어 ⟨V⟩ < 0.</p>
+</div>
+</details>
+
+<details>
+<summary>Q6. Debye 상호작용이 Keesom과 달리 회전 평균해도 0이 되지 않는 이유를 설명하라.</summary>
+<div class="answer">
+<p>Keesom: 쌍극자 방향이 뒤집히면 인력↔척력이 바뀐다. 방향 무작위 → 평균 0 (볼츠만 보정 전).</p>
+<p>Debye: 극성 분자 μ₁이 어느 방향을 향하든, 그 장에 의해 유도되는 쌍극자 μ₂*는 항상 μ₁과 인력 방향으로 정렬된다. 즉 μ₁이 뒤집히면 μ₂*도 같이 뒤집혀 인력이 유지된다. 어떤 배열에서도 V < 0 → 회전 평균해도 ⟨V⟩ < 0.</p>
+</div>
+</details>
+
+<details>
+<summary>Q7. 소수성 효과가 엔탈피가 아닌 엔트로피에 의해 지배되는 이유를 설명하라.</summary>
+<div class="answer">
+<p>CH₄가 물에 들어가면: ΔH = −10 kJ/mol (엔탈피 유리), ΔS = −75 J/K·mol (엔트로피 크게 불리). ΔG = ΔH − TΔS = −10 + 22.4 = +12 kJ/mol > 0 (비자발).</p>
+<p>엔트로피 감소의 원인: 비극성 분자 주변 물 분자들이 수소결합을 최대한 유지하려 질서정연한 cage 구조를 형성 → 물의 자유도(무질서도) 감소 → ΔS ≪ 0.</p>
+<p>비극성 분자들이 뭉칠 때: 노출 표면적 감소 → 갇히는 물 분자 수 감소 → 물의 엔트로피 회복 → 자발적 응집. 따라서 소수성 뭉침은 비극성 분자 간 인력이 아니라 물의 엔트로피 회복이 구동력이다.</p>
+</div>
+</details>
+
+<details>
+<summary>Q8. London 분산력이 van der Waals 기여 중 보통 가장 큰 이유를 설명하라.</summary>
+<div class="answer">
+<p>London 분산력: C ∝ α₁′α₂′·I/(α₁′+α₂′)로 비극성 분자 포함 모든 분자 쌍에 존재. 분자가 크고 전자가 많을수록(α′ 클수록) 급격히 증가.</p>
+<p>Keesom: 극성 분자에만 존재, 온도에 반비례. 고온에서 약해짐.</p>
+<p>Debye: 극성 분자가 있어야 함.</p>
+<p>HCl 같은 극성 분자도 분극능이 충분히 크면 London이 Keesom을 초과한다. London은 "모든 분자에 보편적으로 존재하고 분자 크기와 함께 급격히 커지는" 특성 때문에 대부분의 경우 지배적이다.</p>
+</div>
+</details>
+
+<details>
+<summary>Q9. 수소결합을 MO 관점(3중심 4전자)에서 설명하라. 왜 안정화가 반드시 일어나지 않을 수 있는가?</summary>
+<div class="answer">
+<p>A, H, B의 원자궤도로부터 3개의 MO 생성: bonding, nonbonding, antibonding.</p>
+<p>4개 전자(A−H 결합 2 + B lone pair 2) → bonding 2개, nonbonding 2개 채움. Antibonding 비어 있음.</p>
+<p><strong>안정화 조건:</strong> Bonding 궤도 안정화 − nonbonding 에너지 변화 > 0이면 에너지 낮춤. Antibonding이 비어 있으므로 불안정화 기여 없음.</p>
+<p><strong>반드시가 아닌 이유:</strong> "almost nonbonding"이라는 표현처럼 nonbonding 궤도가 원래 lone pair보다 위로 올라가면 에너지 증가 기여가 생길 수 있다. 정확한 에너지는 A, H, B의 원자궤도 에너지와 overlap에 따라 결정된다.</p>
+</div>
+</details>
+
+<h3>계산형 <span class="tag tag-calc">계산 30%</span></h3>
+
+<details>
+<summary>Q10. 쌍극자 μ₁ = 2.0 D, 점전하 Q₂ = e, r = 0.50 nm일 때 이온-쌍극자 에너지를 계산하라.</summary>
+<div class="answer">
+<p>μ₁ = 2.0 × 3.33564×10⁻³⁰ C·m = 6.671×10⁻³⁰ C·m</p>
+<p>Q₂ = 1.602×10⁻¹⁹ C, r = 5.0×10⁻¹⁰ m</p>
+$$V = -\frac{\mu_1 Q_2}{4\pi\varepsilon_0 r^2} = -\frac{(6.671\times10^{-30})(1.602\times10^{-19})}{4\pi(8.854\times10^{-12})(5.0\times10^{-10})^2}$$
+$$= -\frac{1.069\times10^{-48}}{2.786\times10^{-30}} \approx -3.83\times10^{-19} \text{ J} \approx -231 \text{ kJ/mol}$$
+</div>
+</details>
+
+<details>
+<summary>Q11. Lennard-Jones 파라미터 ε = 128 kJ/mol, r₀ = 342 pm인 Ar에서 평형 거리와 이 거리에서의 V를 구하라.</summary>
+<div class="answer">
+$$r_\text{min} = 2^{1/6} r_0 = 2^{1/6} \times 342 \text{ pm} = 1.1225 \times 342 = 383.9 \text{ pm} \approx 384 \text{ pm}$$
+<p>이 거리에서 V = −ε = −128 kJ/mol (LJ 포텐셜 최솟값 정의상).</p>
+</div>
+</details>
+
+<details>
+<summary>Q12. 두 극성 분자 μ₁ = μ₂ = 1.5 D, r = 0.40 nm, T = 298 K. Keesom 상수 C를 계산하라.</summary>
+<div class="answer">
+<p>μ = 1.5 × 3.33564×10⁻³⁰ = 5.003×10⁻³⁰ C·m</p>
+$$C = \frac{2\mu_1^2\mu_2^2}{3(4\pi\varepsilon_0)^2 kT}$$
+<p>(4πε₀)² = (1.113×10⁻¹⁰)² = 1.238×10⁻²⁰ C²/(J·m)</p>
+<p>k = 1.381×10⁻²³ J/K, T = 298 K → kT = 4.115×10⁻²¹ J</p>
+$$C = \frac{2(5.003\times10^{-30})^4}{3(1.238\times10^{-20})(4.115\times10^{-21})} \approx 2.88\times10^{-77} \text{ J·m}^6$$
+$$\langle V\rangle = -C/r^6 = -2.88\times10^{-77}/(4.0\times10^{-10})^6 \approx -7.0\times10^{-21} \text{ J} \approx -4.2 \text{ kJ/mol}$$
+</div>
+</details>
+
+<details>
+<summary>Q13. f(θ) = 1 − 3cos²θ의 구면 평균 ⟨f(θ)⟩ = 0임을 적분으로 보여라.</summary>
+<div class="answer">
+$$\langle f\rangle = \frac{1}{4\pi}\int_0^{2\pi}d\phi\int_0^{\pi}(1-3\cos^2\theta)\sin\theta\,d\theta = \frac{1}{2}\int_0^{\pi}(1-3\cos^2\theta)\sin\theta\,d\theta$$
+$$\int_0^{\pi}\sin\theta\,d\theta = [-\cos\theta]_0^{\pi} = 2$$
+$$\int_0^{\pi}\cos^2\theta\sin\theta\,d\theta \xrightarrow{u=\cos\theta} \int_1^{-1}u^2(-du) = \int_{-1}^{1}u^2\,du = \frac{2}{3}$$
+$$\langle f\rangle = \frac{1}{2}\left(2 - 3\cdot\frac{2}{3}\right) = \frac{1}{2}(2-2) = 0 \quad \blacksquare$$
+</div>
+</details>
+
+</section>
+
+<!-- ===== JS ===== -->
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+  document.querySelector('.theme-btn').textContent = isDark ? '🌙 다크' : '☀️ 라이트';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7E — 조화진동자 (Harmonic Oscillator)</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet">
+
+<!-- MathJax 4 with STIX2 font (Cambria Math 느낌의 세리프 수학체) -->
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['$$', '$$']]
+  },
+  output: {
+    font: 'mathjax-stix2'
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/@mathjax/mathjax-stix2-font@4.0.0/tex-mml-chtml-mathjax-stix2.js"
+  onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js';s.defer=true;document.head.appendChild(s);"></script>
+
+<style>
+/* ===== CSS VARIABLES ===== */
+:root {
+  --bg: #f7f5f0;
+  --bg2: #eeebe3;
+  --bg3: #e4e0d6;
+  --surface: #ffffff;
+  --border: #d0cbbe;
+  --text: #1a1814;
+  --text2: #4a4640;
+  --text3: #7a746e;
+  --blue: #1a5f8a;
+  --blue-bg: #e8f2f9;
+  --amber: #8a5a1a;
+  --amber-bg: #fdf3e0;
+  --green: #2d6e3a;
+  --green-bg: #e6f4e9;
+  --red: #8a1a1a;
+  --red-bg: #fde8e8;
+  --purple: #5a1a8a;
+  --purple-bg: #f0e8fd;
+  --header-bg: #1a3a2a;
+  --header-text: #e8f4ee;
+  --tab-active: #1a3a2a;
+  --tab-hover: #2d5a3d;
+  --accent: #2d7a4a;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans KR', sans-serif;
+  --serif: 'Noto Serif KR', serif;
+}
+
+[data-theme="dark"] {
+  --bg: #12110e;
+  --bg2: #1a1916;
+  --bg3: #222018;
+  --surface: #1e1c18;
+  --border: #3a3830;
+  --text: #e8e4dc;
+  --text2: #b0aa9e;
+  --text3: #7a746e;
+  --blue: #6baed6;
+  --blue-bg: #0d2233;
+  --amber: #f0b040;
+  --amber-bg: #2a1f08;
+  --green: #74c98a;
+  --green-bg: #0d2213;
+  --red: #e07070;
+  --red-bg: #2a0d0d;
+  --purple: #c09ae8;
+  --purple-bg: #1a0d2a;
+  --header-bg: #0d1a12;
+  --header-text: #c8e8d4;
+  --tab-active: #2d5a3d;
+  --tab-hover: #1a3a2a;
+  --accent: #74c98a;
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.75;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ===== STICKY HEADER ===== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--header-bg);
+  color: var(--header-text);
+  padding: 0 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  border-bottom: 2px solid var(--accent);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+}
+
+.site-header h1 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--sans);
+  letter-spacing: 0.02em;
+  color: var(--header-text);
+}
+
+.site-header .subtitle {
+  font-size: 0.75rem;
+  color: var(--accent);
+  font-family: var(--mono);
+  margin-left: 0.75rem;
+  opacity: 0.9;
+}
+
+.theme-btn {
+  background: transparent;
+  border: 1.5px solid rgba(200,232,212,0.3);
+  color: var(--header-text);
+  padding: 5px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-family: var(--mono);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.theme-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); }
+
+/* ===== TAB NAV ===== */
+.tab-nav {
+  display: flex;
+  overflow-x: auto;
+  background: var(--bg2);
+  border-bottom: 2px solid var(--border);
+  padding: 0 0.5rem;
+  gap: 2px;
+  scrollbar-width: none;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  font-size: 0.8rem;
+  font-family: var(--sans);
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text3);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text); background: var(--bg3); }
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  background: var(--surface);
+  font-weight: 600;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main { max-width: 820px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ===== SECTION TITLE ===== */
+.section-title {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.section-title .icon {
+  font-size: 1.1rem;
+}
+
+h3 {
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 1.6rem 0 0.7rem;
+}
+
+p { margin-bottom: 0.85rem; color: var(--text2); }
+
+/* ===== BOXES ===== */
+.box {
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+  border-left: 4px solid;
+}
+.box-blue   { background: var(--blue-bg);   border-color: var(--blue);   }
+.box-amber  { background: var(--amber-bg);  border-color: var(--amber);  }
+.box-green  { background: var(--green-bg);  border-color: var(--green);  }
+.box-red    { background: var(--red-bg);    border-color: var(--red);    }
+.box-purple { background: var(--purple-bg); border-color: var(--purple); }
+
+.box-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-family: var(--mono);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+.box-blue .box-title   { color: var(--blue);   }
+.box-amber .box-title  { color: var(--amber);  }
+.box-green .box-title  { color: var(--green);  }
+.box-red .box-title    { color: var(--red);    }
+.box-purple .box-title { color: var(--purple); }
+
+.box p { color: var(--text); margin-bottom: 0.4rem; }
+.box p:last-child { margin-bottom: 0; }
+
+/* ===== MATH DISPLAY ===== */
+.math-block {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.4rem;
+  margin: 0.9rem 0;
+  overflow-x: auto;
+  text-align: center;
+}
+
+/* ===== TABLE ===== */
+.tbl-wrap { overflow-x: auto; margin: 1rem 0; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+th {
+  background: var(--bg3);
+  color: var(--text);
+  font-weight: 600;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+td {
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  color: var(--text2);
+}
+tr:nth-child(even) td { background: var(--bg2); }
+
+/* ===== STEP FLOW ===== */
+.steps { margin: 1rem 0; }
+.step {
+  display: flex;
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+  align-items: flex-start;
+}
+.step-num {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: var(--mono);
+  display: flex; align-items: center; justify-content: center;
+}
+.step-body { flex: 1; }
+.step-body strong { color: var(--text); }
+
+/* ===== FLOW ARROW ===== */
+.flow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  margin: 1rem 0;
+  padding-left: 0.5rem;
+}
+.flow-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--text2);
+}
+.flow-arrow {
+  color: var(--accent);
+  font-size: 1rem;
+  font-family: var(--mono);
+  margin-left: 0.2rem;
+}
+
+/* ===== DETAILS (시험 문제) ===== */
+details {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 0.9rem;
+  overflow: hidden;
+}
+summary {
+  background: var(--bg2);
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+summary::after { content: "▼"; font-size: 0.7rem; color: var(--text3); }
+details[open] summary::after { content: "▲"; }
+summary::-webkit-details-marker { display: none; }
+.details-body {
+  padding: 1rem 1.2rem;
+  background: var(--surface);
+  font-size: 0.88rem;
+  color: var(--text2);
+  line-height: 1.8;
+}
+.answer-tag {
+  display: inline-block;
+  background: var(--green-bg);
+  color: var(--green);
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: var(--mono);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+/* ===== COMPARE BADGE ===== */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+  margin: 1rem 0;
+}
+@media (max-width: 540px) { .compare-grid { grid-template-columns: 1fr; } }
+
+.compare-card {
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+}
+.compare-card h4 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  font-family: var(--mono);
+}
+.compare-card.pib h4  { color: var(--blue); }
+.compare-card.qho h4  { color: var(--amber); }
+
+/* ===== CODE ===== */
+code {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  background: var(--bg3);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--accent);
+}
+
+/* ===== INLINE HIGHLIGHT ===== */
+.hl-blue   { color: var(--blue);   font-weight: 600; }
+.hl-amber  { color: var(--amber);  font-weight: 600; }
+.hl-green  { color: var(--green);  font-weight: 600; }
+.hl-red    { color: var(--red);    font-weight: 600; }
+.hl-purple { color: var(--purple); font-weight: 600; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+
+<body data-theme="light">
+
+<!-- HEADER -->
+<header class="site-header">
+  <div style="display:flex;align-items:center;gap:0.3rem;flex-wrap:wrap">
+    <h1>7E — 조화진동자</h1>
+    <span class="subtitle">Vibrational Motion</span>
+  </div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙 다크모드</button>
+</header>
+
+<!-- TAB NAV -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('t0',this)">① 도입·세팅</button>
+  <button class="tab-btn" onclick="showTab('t1',this)">② 풀이 전개</button>
+  <button class="tab-btn" onclick="showTab('t2',this)">③ 에너지 양자화</button>
+  <button class="tab-btn" onclick="showTab('t3',this)">④ 파동함수·Hermite</button>
+  <button class="tab-btn" onclick="showTab('t4',this)">⑤ 환산질량·IR</button>
+  <button class="tab-btn" onclick="showTab('t5',this)">⑥ Expectation Value</button>
+  <button class="tab-btn" onclick="showTab('t6',this)">⑦ 터널링</button>
+  <button class="tab-btn" onclick="showTab('t7',this)">⑧ 출제예상문제</button>
+</nav>
+
+<main class="main">
+
+<!-- ===== TAB 0: 도입·세팅 ===== -->
+<div class="tab-panel active" id="t0">
+  <h2 class="section-title"><span class="icon">🌱</span>도입 — 왜 조화진동자인가?</h2>
+
+  <div class="box box-blue">
+    <div class="box-title">핵심 세팅</div>
+    <p>실제 분자에서 두 원자는 결합을 용수철처럼 진동한다. 퍼텐셜 에너지 \(V = \frac{1}{2}k_f x^2\) — 포물선 모양이 그 모델이다.</p>
+  </div>
+
+  <h3>퍼텐셜 에너지 3가지 비교</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th></th><th>중력</th><th>전기력</th><th>용수철 (★조화진동자)</th></tr></thead>
+      <tbody>
+        <tr><td>힘</td><td>\(F=\frac{GMm}{r^2}\)</td><td>\(F=-\frac{q_1q_2}{4\pi\varepsilon_0 r^2}\)</td><td>\(F=-k_f x\)</td></tr>
+        <tr><td>퍼텐셜</td><td>\(V=-\frac{GMm}{r}\)</td><td>\(V=\frac{q_1q_2}{4\pi\varepsilon_0 r}\)</td><td>\(V=\frac{1}{2}k_f x^2\)</td></tr>
+        <tr><td>형태</td><td>1/r 감소</td><td>1/r 감소</td><td><strong>포물선 (x² 비례)</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-title">핵심 관계식</div>
+    <p>힘은 퍼텐셜의 음의 기울기: \(\displaystyle F(x) = -\frac{dV(x)}{dx}\)</p>
+  </div>
+
+  <h3>PIB vs 조화진동자 — 결정적 차이</h3>
+  <div class="compare-grid">
+    <div class="compare-card pib">
+      <h4>PIB (입자 상자)</h4>
+      <p>퍼텐셜: 상자 안 \(V=0\), 벽 \(V=\infty\)</p>
+      <p>경계조건: \(\psi(0)=\psi(L)=0\) (딱 잘림)</p>
+      <p>슈뢰딩거: \(-\frac{\hbar^2}{2m}\psi'' = E\psi\)</p>
+    </div>
+    <div class="compare-card qho">
+      <h4>조화진동자</h4>
+      <p>퍼텐셜: \(V=\frac{1}{2}k_f x^2\) (포물선, 전 영역)</p>
+      <p>경계조건: \(\psi\to 0\) as \(x\to\pm\infty\)</p>
+      <p>슈뢰딩거: \(-\frac{\hbar^2}{2m}\psi'' + \frac{1}{2}k_f x^2\psi = E\psi\)</p>
+    </div>
+  </div>
+
+  <div class="box box-green">
+    <div class="box-title">직관 비유</div>
+    <p><strong>PIB:</strong> 감옥 방 안에 공 던지기 — 벽에서 튕김.</p>
+    <p><strong>조화진동자:</strong> 그릇 안에서 공 굴리기 — 중앙으로 항상 복원력.</p>
+  </div>
+
+  <h3>ω의 출처 — 고전역학</h3>
+  <p>용수철에 달린 질량 m 입자의 고전 운동 방정식:</p>
+  <div class="math-block">$$m\ddot{x} = -k_f x \quad\Rightarrow\quad x(t)=A\cos(\omega t+\phi),\quad \omega = \sqrt{\frac{k_f}{m}}$$</div>
+  <p>ω는 새로 정의한 게 아니라 <strong>고전 용수철 진동수</strong>. 퍼텐셜을 ω로 표현하면:</p>
+  <div class="math-block">$$V = \frac{1}{2}k_f x^2 = \frac{1}{2}m\omega^2 x^2$$</div>
+
+  <div class="box box-purple">
+    <div class="box-title">조화진동자 슈뢰딩거 방정식 (ω 표현)</div>
+    <div class="math-block" style="background:transparent;border:none;">$$-\frac{\hbar^2}{2m}\frac{d^2\psi}{dx^2} + \frac{1}{2}m\omega^2 x^2\psi = E\psi$$</div>
+  </div>
+</div>
+
+<!-- ===== TAB 1: 풀이 전개 ===== -->
+<div class="tab-panel" id="t1">
+  <h2 class="section-title"><span class="icon">📐</span>풀이 전개 — Power Series</h2>
+
+  <div class="box box-amber">
+    <div class="box-title">전체 흐름</div>
+    <div class="flow">
+      <div class="flow-item">슈뢰딩거 방정식 세팅</div>
+      <div class="flow-item"><span class="flow-arrow">↓</span> y = x/α 치환 → 무차원화</div>
+      <div class="flow-item"><span class="flow-arrow">↓</span> y→∞ 점근 거동 분석 → e^(−y²/2) 추출</div>
+      <div class="flow-item"><span class="flow-arrow">↓</span> ψ = u(y)e^(−y²/2) 대입 → Hermite 방정식</div>
+      <div class="flow-item"><span class="flow-arrow">↓</span> u(y) = Σaₙyⁿ 급수 전개 → 점화식</div>
+      <div class="flow-item"><span class="flow-arrow">↓</span> 발산 금지 → 급수 절단 → E 양자화</div>
+    </div>
+  </div>
+
+  <h3>1단계: 치환 — α의 의미</h3>
+  <div class="math-block">$$y = \frac{x}{\alpha} = \sqrt{\frac{m\omega}{\hbar}}\,x, \qquad \alpha = \sqrt{\frac{\hbar}{m\omega}} = \left(\frac{\hbar^2}{mk_f}\right)^{1/4}$$</div>
+
+  <div class="box box-blue">
+    <div class="box-title">왜 이 스케일?</div>
+    <p>운동에너지 항 \(\frac{\hbar^2}{2m}\cdot\frac{1}{x^2}\)과 퍼텐셜 항 \(\frac{1}{2}k_f x^2\)이 <strong>같아지는 위치 스케일</strong>이 α.</p>
+    <p>\(\frac{\hbar^2}{m} \sim k_f x^4 \;\Rightarrow\; x \sim \left(\frac{\hbar^2}{mk_f}\right)^{1/4} = \alpha\)</p>
+    <p>무차원화하면 물리 상수가 사라져서 순수한 수학 문제가 됨 → Hermite 방정식과 연결.</p>
+  </div>
+
+  <p>Chain rule으로 미분 치환:</p>
+  <div class="math-block">$$\frac{d}{dx} = \frac{1}{\alpha}\frac{d}{dy}, \qquad \frac{d^2}{dx^2} = \frac{1}{\alpha^2}\frac{d^2}{dy^2}$$</div>
+
+  <p>대입 후 ℏω/2 로 정규화하면:</p>
+  <div class="math-block">$$\boxed{\frac{d^2\psi}{dy^2} + \left(\frac{2E}{\hbar\omega} - y^2\right)\psi = 0}$$</div>
+
+  <h3>2단계: y→∞ 점근 거동</h3>
+  <p>y가 매우 크면 \(\frac{2E}{\hbar\omega}\)는 무시 가능:</p>
+  <div class="math-block">$$\frac{d^2\psi}{dy^2} \approx y^2\psi$$</div>
+  <p>\(\psi \sim e^{-y^2/2}\) 검증: \(\frac{d^2}{dy^2}e^{-y^2/2} = (y^2-1)e^{-y^2/2} \approx y^2 e^{-y^2/2}\;\checkmark\)</p>
+
+  <div class="box box-red">
+    <div class="box-title">왜 e^(+y²/2)는 버리나?</div>
+    <p>\(e^{+y^2/2}\)는 y→∞에서 발산 → 파동함수는 무한대에서 0이어야 하므로 물리적으로 불가.</p>
+  </div>
+
+  <h3>3단계: ψ = u(y)e^(−y²/2) 대입</h3>
+  <div class="math-block">$$\frac{d^2\psi}{dy^2} = \left(u'' - 2yu' + y^2u - u\right)e^{-y^2/2}$$</div>
+  <p>원래 방정식에 대입, \(e^{-y^2/2}\) 약분, \(y^2u\) 항 소거:</p>
+  <div class="math-block">$$\boxed{u'' - 2yu' + \left(\frac{2E}{\hbar\omega}-1\right)u = 0} \quad\text{← Hermite 방정식}$$</div>
+
+  <h3>4단계: Power Series 전개</h3>
+  <div class="math-block">$$u(y) = \sum_{n=0}^{\infty}a_n y^n, \quad f'' = \sum_{n=0}^{\infty}(n+2)(n+1)a_{n+2}y^n, \quad f' = \sum_{n=0}^{\infty}(n+1)a_{n+1}y^n$$</div>
+  <p>Hermite 방정식에 대입, \(y^n\) 계수 비교:</p>
+  <div class="math-block">$$\boxed{a_{n+2} = \frac{2n+1 - \dfrac{2E}{\hbar\omega}}{(n+1)(n+2)}\,a_n}$$</div>
+
+  <h3>5단계: 발산 금지 → 급수 절단</h3>
+  <div class="box box-red">
+    <div class="box-title">왜 급수를 끊어야 하나?</div>
+    <p>n→∞일 때 \(\frac{a_{n+2}}{a_n}\approx\frac{2}{n}\). 이는 \(e^{y^2} = \sum\frac{y^{2k}}{k!}\)의 계수비 \(\frac{b_{k+1}}{b_k}=\frac{1}{k}=\frac{2}{2k}=\frac{2}{n}\)와 동일.</p>
+    <p>급수가 무한히 계속되면 \(u(y)\sim e^{y^2}\) → \(\psi = ue^{-y^2/2}\sim e^{+y^2/2}\to\infty\) <strong>발산!</strong></p>
+  </div>
+
+  <p>n=v 에서 \(a_{v+2}=0\)이 되려면 <strong>분자=0</strong>:</p>
+  <div class="math-block">$$2v+1-\frac{2E}{\hbar\omega}=0 \quad\Rightarrow\quad \boxed{E_v = \left(v+\frac{1}{2}\right)\hbar\omega}$$</div>
+</div>
+
+<!-- ===== TAB 2: 에너지 양자화 ===== -->
+<div class="tab-panel" id="t2">
+  <h2 class="section-title"><span class="icon">⚡</span>에너지 양자화</h2>
+
+  <div class="box box-purple">
+    <div class="box-title">에너지 준위</div>
+    <div class="math-block" style="background:transparent;border:none;">$$E_v = \left(v+\frac{1}{2}\right)\hbar\omega, \quad v=0,1,2,\ldots, \quad \omega=\sqrt{\frac{k_f}{m}}$$</div>
+  </div>
+
+  <h3>PIB vs 조화진동자 — 에너지 간격</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th></th><th>PIB</th><th>조화진동자</th></tr></thead>
+      <tbody>
+        <tr><td>에너지 준위</td><td>\(E_n = \frac{n^2h^2}{8mL^2}\)</td><td>\(E_v=\left(v+\frac{1}{2}\right)\hbar\omega\)</td></tr>
+        <tr><td>간격</td><td>\(E_2-E_1 : E_3-E_2 = 3:5\) (점점 벌어짐)</td><td>\(E_{v+1}-E_v = \hbar\omega\) <strong>(항상 일정!)</strong></td></tr>
+        <tr><td>최솟값</td><td>n=1 (n=0이면 ψ≡0)</td><td>v=0 가능 (가우시안 살아있음)</td></tr>
+        <tr><td>ZPE</td><td>\(\frac{h^2}{8mL^2}\)</td><td>\(\frac{1}{2}\hbar\omega\)</td></tr>
+        <tr><td>양자화 원인</td><td>경계조건 ψ(0)=ψ(L)=0</td><td>발산 금지 → 급수 절단</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>간격이 일정한 이유</h3>
+  <div class="box box-blue">
+    <div class="box-title">직관</div>
+    <p>포물선 퍼텐셜은 올라갈수록 <strong>더 넓어지는</strong> 구조. 위로 갈수록 고전적 허용 영역이 넓어지는 효과와 퍼텐셜 기울기가 가파르지는 효과가 정확히 상쇄 → 간격 균등.</p>
+  </div>
+
+  <h3>ZPE (영점에너지)</h3>
+  <div class="math-block">$$E_0 = \frac{1}{2}\hbar\omega \neq 0$$</div>
+  <div class="box box-amber">
+    <div class="box-title">왜 ZPE가 0이 될 수 없나? — 불확정성 원리</div>
+    <p>만약 E=0이라면: 운동에너지=0 → p=0 확정, 퍼텐셜=0 → x=0 확정.</p>
+    <p>\(\Delta x = 0,\;\Delta p = 0 \;\Rightarrow\; \Delta x\cdot\Delta p = 0 < \frac{\hbar}{2}\) ← <strong>위반!</strong></p>
+    <p>그러므로 불확정성 원리가 최솟값 \(\frac{1}{2}\hbar\omega\)를 강제한다.</p>
+  </div>
+
+  <h3>실제 분자 — 간격이 일정하지 않은 이유</h3>
+  <div class="box box-red">
+    <div class="box-title">비조화성 (Anharmonicity)</div>
+    <p>조화진동자는 완벽한 포물선 가정. 실제 분자 퍼텐셜(Morse 퍼텐셜)은 높은 에너지에서 포물선보다 <strong>완만해짐</strong>.</p>
+    <p>완만한 벽 = 고전적 허용 영역 더 넓음 → 에너지 준위 간격 감소 → v 커질수록 간격 좁아짐 → 해리 에너지 D에서 수렴.</p>
+  </div>
+
+  <h3>대응 원리</h3>
+  <p>m↑, k_f↑ → ω↑ → ℏω↑이지만 거시적 물체에서는 에너지 간격이 총 에너지에 비해 무시할 만큼 작음 → 연속 에너지로 보임 → 고전역학과 일치.</p>
+</div>
+
+<!-- ===== TAB 3: 파동함수·Hermite ===== -->
+<div class="tab-panel" id="t3">
+  <h2 class="section-title"><span class="icon">〰️</span>파동함수 & Hermite 함수</h2>
+
+  <div class="box box-purple">
+    <div class="box-title">최종 파동함수</div>
+    <div class="math-block" style="background:transparent;border:none;">$$\psi_v(x) = N_v\,H_v(y)\,e^{-y^2/2}, \qquad y=\frac{x}{\alpha}=\sqrt{\frac{m\omega}{\hbar}}\,x$$</div>
+  </div>
+
+  <h3>Hermite 다항식 — Rodrigues 공식</h3>
+  <div class="math-block">$$H_n(x) = (-1)^n e^{x^2}\frac{d^n}{dx^n}e^{-x^2}$$</div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>v</th><th>\(H_v(y)\)</th><th>노드</th><th>홀짝성</th><th>\(\psi_v\) 특징</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>\(1\)</td><td>0개</td><td>우함수</td><td>순수 가우시안, 중앙 최대</td></tr>
+        <tr><td>1</td><td>\(2y\)</td><td>1개</td><td>기함수</td><td>x=0에서 노드, 양쪽 봉우리</td></tr>
+        <tr><td>2</td><td>\(4y^2-2\)</td><td>2개</td><td>우함수</td><td>봉우리 3개</td></tr>
+        <tr><td>3</td><td>\(8y^3-12y\)</td><td>3개</td><td>기함수</td><td>봉우리 4개</td></tr>
+        <tr><td>4</td><td>\(16y^4-48y^2+12\)</td><td>4개</td><td>우함수</td><td>봉우리 5개</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Hermite Function</h3>
+  <div class="math-block">$$h_n(x) = e^{-x^2/2}H_n(x)$$</div>
+  <p>이것이 미분방정식 \(\frac{d^2f}{dx^2} - x^2f + \lambda f = 0\)의 고유함수로, 조화진동자 슈뢰딩거 방정식과 본질적으로 같은 형태.</p>
+
+  <h3>가우시안의 역할 — "봉투"</h3>
+  <div class="box box-blue">
+    <div class="box-title">Hermite vs Gaussian 경쟁</div>
+    <p>\(H_v(y)\): v가 커질수록 \(x^v\)항이 커져서 <strong>퍼지려</strong> 함.</p>
+    <p>\(e^{-y^2/2}\): x→±∞에서 항상 0으로 <strong>눌러버림</strong>.</p>
+    <p>결과: v↑하면 파동함수가 더 넓은 범위로 spread되지만 반드시 0으로 수렴.</p>
+  </div>
+
+  <h3>선택 규칙 (Selection Rule)</h3>
+  <div class="math-block">$$\Delta v = \pm 1 \text{ (조화진동자)}, \quad \Delta v = \pm 1, \pm 2, \ldots \text{ (비조화: overtone)}$$</div>
+
+  <div class="box box-amber">
+    <div class="box-title">왜 Δv = ±1만 허용? — 홀짝성 논리</div>
+    <p>전이 확률 \(\propto \langle\psi_{v'}|x|\psi_v\rangle = \int\psi_{v'}\cdot x\cdot\psi_v\,dx\)</p>
+    <p>x는 기함수. 적분이 0이 아니려면 피적분함수가 <strong>우함수</strong>여야 함.</p>
+    <p>v=0→v=1: 우×기×기 = 우 → ≠0 <strong>허용</strong></p>
+    <p>v=0→v=2: 우×기×우 = 기 → =0 <strong>금지</strong> (완벽한 조화진동자에서)</p>
+    <p>실제 분자는 비조화성으로 v=0→v=2 (overtone) 약하게 허용.</p>
+  </div>
+
+  <h3>v↑에 따른 확률밀도 변화 — 대응 원리</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>v</th><th>확률 분포</th><th>고전과의 관계</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>중앙(x=0) 집중</td><td>고전과 반대 (고전은 turning point)</td></tr>
+        <tr><td>커질수록</td><td>가장자리 봉우리 강해짐</td><td>점점 고전 분포에 수렴</td></tr>
+        <tr><td>v→∞</td><td>turning point 근처 최대</td><td>대응 원리 — 고전 분포와 일치</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>정규화 상수</h3>
+  <div class="math-block">$$N_v = \frac{1}{\sqrt{\alpha}}\left(\frac{1}{2^v\,v!\,\sqrt{\pi}}\right)^{1/2}$$</div>
+  <p>Hermite 직교정규화 공식 \(\int_{-\infty}^{\infty}H_v^2 e^{-y^2}dy = 2^v v!\sqrt{\pi}\) 이용.</p>
+</div>
+
+<!-- ===== TAB 4: 환산질량·IR ===== -->
+<div class="tab-panel" id="t4">
+  <h2 class="section-title"><span class="icon">🔗</span>환산질량 & IR 분광법</h2>
+
+  <h3>왜 환산질량이 필요한가?</h3>
+  <div class="box box-blue">
+    <div class="box-title">문제 설정</div>
+    <p>A-B 이원자 분자에서 두 원자가 모두 움직임 → 변수 2개 (x₁, x₂) → 복잡.</p>
+    <p>질량중심 X와 상대좌표 x = x₁−x₂ 로 바꾸면 에너지가 두 부분으로 분리됨.</p>
+  </div>
+
+  <h3>유도: 두 입자 → 한 입자</h3>
+  <p><strong>새 좌표 정의:</strong></p>
+  <div class="math-block">$$m=m_1+m_2,\quad X=\frac{m_1}{m}x_1+\frac{m_2}{m}x_2,\quad x=x_1-x_2$$</div>
+
+  <p><strong>역변환:</strong></p>
+  <div class="math-block">$$x_1 = X+\frac{m_2}{m}x,\quad x_2 = X-\frac{m_1}{m}x$$</div>
+
+  <p><strong>운동에너지 계산 — 교차항 소거:</strong></p>
+  <div class="math-block">$$\frac{p_1^2}{2m_1}+\frac{p_2^2}{2m_2} = \frac{1}{2}m\left(\frac{dX}{dt}\right)^2 + \frac{1}{2}\mu\left(\frac{dx}{dt}\right)^2 = \frac{P^2}{2m}+\frac{p^2}{2\mu}$$</div>
+
+  <div class="box box-green">
+    <div class="box-title">전체 에너지 분리</div>
+    <div class="math-block" style="background:transparent;border:none;">$$E = \underbrace{\frac{P^2}{2m}}_{\text{질량중심 자유운동}} + \underbrace{\frac{p^2}{2\mu}+V(x)}_{\text{상대진동 = 조화진동자, 질량 }\mu}$$</div>
+    <p>진동만 관심 있으면 P²/2m 항 무시 → 질량 μ인 단일 입자 조화진동자!</p>
+  </div>
+
+  <div class="box box-purple">
+    <div class="box-title">환산질량</div>
+    <div class="math-block" style="background:transparent;border:none;">$$\mu = \frac{m_A m_B}{m_A+m_B}$$</div>
+    <p>\(m_A\gg m_B\)이면 \(\mu\to m_B\) — 무거운 쪽이 고정된 것처럼 행동.</p>
+  </div>
+
+  <p><strong>왜 퍼텐셜이 상대거리에만 의존하나?</strong> 공간 균일성 원리 — 분자가 우주 어디에 있든 결합 에너지는 같아야 함. 따라서 V = V(x₁−x₂) = V(x).</p>
+
+  <h3>HCl 예제</h3>
+  <div class="math-block">$$\mu = \frac{(1.0078\,m_u)(34.9688\,m_u)}{(1.0078+34.9688)\,m_u} = 0.9796\,m_u \approx m_H$$</div>
+  <div class="math-block">$$\omega = \left(\frac{k_f}{\mu}\right)^{1/2} = \left(\frac{516.3}{0.9796\times1.661\times10^{-27}}\right)^{1/2} = 5.634\times10^{14}\,\text{s}^{-1}$$</div>
+  <div class="math-block">$$\Delta E = \hbar\omega = 5.941\times10^{-20}\,\text{J} \quad\Rightarrow\quad \nu=90\,\text{THz},\quad\lambda=3.3\,\mu\text{m}\;\text{(IR!)}$$</div>
+
+  <h3>분자 에너지의 3층 구조</h3>
+  <div class="math-block">$$E_\text{tot} = E_\text{elec} + E_\text{vib} + E_\text{rot}$$</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>전이 종류</th><th>영역</th><th>파장/파수</th></tr></thead>
+      <tbody>
+        <tr><td>① Electronic (전자 오비탈 변화)</td><td>UV/Vis</td><td>200~800 nm</td></tr>
+        <tr><td>② Vibrational (같은 오비탈, v 변화)</td><td><strong>IR</strong></td><td>2.5~25 μm / 400~4000 cm⁻¹</td></tr>
+        <tr><td>③ Rotational (회전 양자수만 변화)</td><td>Microwave</td><td>~1 mm</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-title">파수 (wavenumber) ṽ 왜 쓰나?</div>
+    <p>\(\tilde{\nu} = \frac{1}{\lambda} = \frac{\nu}{c}\) (단위: cm⁻¹)</p>
+    <p>\(E = hc\tilde{\nu}\) → 파수가 에너지에 <strong>비례</strong>. 파장은 에너지에 반비례라 불편.</p>
+    <p>O-H ~3500 cm⁻¹ (k_f 크고 μ 작음), C=O ~1700 cm⁻¹, C-C ~1000 cm⁻¹ — 전부 \(\omega=\sqrt{k_f/\mu}\) 하나로 설명.</p>
+  </div>
+</div>
+
+<!-- ===== TAB 5: Expectation Value ===== -->
+<div class="tab-panel" id="t5">
+  <h2 class="section-title"><span class="icon">📊</span>Expectation Values</h2>
+
+  <div class="box box-blue">
+    <div class="box-title">왜 필요한가?</div>
+    <p>양자역학에서 입자의 위치는 확정 불가 (Born 해석). 여러 번 측정의 <strong>평균값</strong>을 이론적으로 예측하는 게 expectation value.</p>
+    <div class="math-block" style="background:transparent;border:none;">$$\langle\Omega\rangle = \int_{-\infty}^{\infty}\psi_v^*\hat{\Omega}\psi_v\,dx$$</div>
+  </div>
+
+  <h3>⟨x⟩ = 0 — 평균 변위</h3>
+  <div class="box box-green">
+    <div class="box-title">이유: 홀짝성</div>
+    <p>x는 기함수, \(|\psi_v|^2\)는 항상 우함수. 피적분함수 = 기함수 → \(\int_{-\infty}^{\infty}\text{기함수}\,dx = 0\)</p>
+    <p>물리적 의미: 진동하더라도 평균 위치는 항상 평형점 x=0.</p>
+  </div>
+
+  <h3>⟨x²⟩ ≠ 0 — 평균 제곱 변위</h3>
+  <div class="math-block">$$\langle x^2\rangle = \left(v+\frac{1}{2}\right)\frac{\hbar}{(mk_f)^{1/2}}$$</div>
+  <p>v↑ → ⟨x²⟩↑ → 파동함수가 더 넓게 퍼짐과 일치. 불확정성 \(\Delta x = \sqrt{\langle x^2\rangle}\).</p>
+
+  <h3>⟨V⟩ = ½Eᵥ — 평균 퍼텐셜에너지</h3>
+  <div class="math-block">$$\langle V\rangle = \frac{1}{2}k_f\langle x^2\rangle = \frac{1}{2}\left(v+\frac{1}{2}\right)\hbar\omega = \frac{1}{2}E_v$$</div>
+
+  <h3>⟨Eₖ⟩ = ½Eᵥ — 평균 운동에너지</h3>
+  <div class="math-block">$$\langle E_k\rangle = E_v - \langle V\rangle = E_v - \frac{1}{2}E_v = \frac{1}{2}E_v$$</div>
+
+  <div class="box box-amber">
+    <div class="box-title">비리알 정리 (Virial Theorem)</div>
+    <p>\(\langle E_k\rangle = \langle V\rangle = \frac{1}{2}E_v\) — 운동에너지와 퍼텐셜에너지가 항상 <strong>반반</strong>.</p>
+    <p>V∝x² 일 때만 성립. ZPE에 적용: \(E_0 = \frac{1}{2}\hbar\omega = \underbrace{\frac{1}{4}\hbar\omega}_{\langle E_k\rangle} + \underbrace{\frac{1}{4}\hbar\omega}_{\langle V\rangle}\)</p>
+  </div>
+
+  <h3>PIB vs 조화진동자 비교</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th></th><th>PIB</th><th>조화진동자</th></tr></thead>
+      <tbody>
+        <tr><td>\(\langle x\rangle\)</td><td>\(L/2\) (상자 중앙)</td><td>0 (평형점)</td></tr>
+        <tr><td>\(\langle p\rangle\)</td><td>0</td><td>0</td></tr>
+        <tr><td>\(\langle V\rangle\)</td><td>0 (내부 V=0)</td><td>\(\frac{1}{2}E_v\)</td></tr>
+        <tr><td>\(\langle E_k\rangle\)</td><td>\(E_n\) (전부)</td><td>\(\frac{1}{2}E_v\)</td></tr>
+        <tr><td>\(\Delta x\cdot\Delta p\)</td><td>\(\geq\frac{\hbar}{2}\) ✓</td><td>\(\geq\frac{\hbar}{2}\) ✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== TAB 6: 터널링 ===== -->
+<div class="tab-panel" id="t6">
+  <h2 class="section-title"><span class="icon">🚇</span>터널링 & 고전적 금지 영역</h2>
+
+  <h3>Classical Turning Point</h3>
+  <div class="math-block">$$E_v = V(x_{tp}) = \frac{1}{2}k_f x_{tp}^2 \quad\Rightarrow\quad x_{tp} = \sqrt{\frac{2E_v}{k_f}} = \left[\frac{(2v+1)\hbar}{(mk_f)^{1/2}}\right]^{1/2}$$</div>
+
+  <div class="box box-red">
+    <div class="box-title">고전 vs 양자</div>
+    <p><strong>고전:</strong> |x| > x_tp 이면 입자가 존재 불가 (에너지 부족).</p>
+    <p><strong>양자:</strong> ψ는 turning point 밖에서도 0이 아님 → <strong>터널링!</strong></p>
+    <p>v=0에서 터널링 확률 가장 높음. v→∞에서 고전 극한 수렴 (대응 원리).</p>
+  </div>
+
+  <h3>예제: v=1, 고전 금지 영역에서의 확률</h3>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Turning point 찾기</strong>
+        <div class="math-block">$$E_1 = \frac{3}{2}\hbar\omega = \frac{1}{2}k_f x_{tp}^2 \quad\Rightarrow\quad |y_{tp}| = \frac{x_{tp}}{\alpha} = \sqrt{3}$$</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>확률 적분 세팅</strong>
+        <p>금지 영역: y > √3 또는 y < −√3 (양쪽). |ψ₁|²는 우함수이므로:</p>
+        <div class="math-block">$$P = 2\int_{\sqrt{3}}^{\infty}|\psi_1|^2\,dy = \frac{4}{\sqrt{\pi}}\int_{\sqrt{3}}^{\infty}y^2 e^{-y^2}\,dy$$</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>부분적분 — y²e^(−y²) 처리</strong>
+        <p>u=y, dv=ye^(−y²)dy 로 놓으면:</p>
+        <div class="math-block">$$\int_z^{\infty}y^2 e^{-y^2}dy = \frac{z}{2}e^{-z^2}+\frac{\sqrt{\pi}}{4}(1-\text{erf}(z))$$</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>z=1.7 (≈√3) 대입, erf(1.7)=0.9838</strong>
+        <div class="math-block">$$P = \frac{4}{\sqrt{\pi}}\left(\frac{1.7}{2}e^{-2.89}+\frac{\sqrt{\pi}}{4}(1-0.9838)\right) \approx 0.123$$</div>
+        <div class="box box-green" style="margin-top:0.5rem">
+          <div class="box-title">결과</div>
+          <p><strong>약 12.3%</strong> — 고전적으로 금지된 영역에서 발견 확률.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>erf 함수 정의</h3>
+  <div class="math-block">$$\text{erf}(z) = 1 - \frac{2}{\sqrt{\pi}}\int_z^{\infty}e^{-y^2}\,dy$$</div>
+
+  <div class="box box-blue">
+    <div class="box-title">v별 터널링 확률 경향</div>
+    <p>v=0: ~16% (가장 높음 — turning point가 가장 가깝고 파동함수가 많이 침투)</p>
+    <p>v=1: ~12.3%</p>
+    <p>v→∞: →0% (대응 원리 — 고전 극한)</p>
+  </div>
+</div>
+
+<!-- ===== TAB 7: 출제예상문제 ===== -->
+<div class="tab-panel" id="t7">
+  <h2 class="section-title"><span class="icon">📝</span>출제 예상 문제</h2>
+  <p style="color:var(--text3);font-size:0.85rem;margin-bottom:1.2rem">시험 구성: 유도형 40% / 원리·설명형 30% / 계산형 30%</p>
+
+  <h3>유도형 (40%)</h3>
+
+  <details>
+    <summary>Q1. 조화진동자의 에너지 양자화 Eᵥ = (v+½)ℏω 를 유도하라.</summary>
+    <div class="details-body">
+      <span class="answer-tag">답 방향</span>
+      <p>① y = x/α 치환으로 슈뢰딩거 방정식 무차원화 → \(\psi'' + (\frac{2E}{\hbar\omega}-y^2)\psi=0\)</p>
+      <p>② y→∞ 점근 거동 → \(e^{-y^2/2}\) 추출, ψ = u(y)e^(−y²/2) 놓기</p>
+      <p>③ Hermite 방정식 \(u''-2yu'+(\frac{2E}{\hbar\omega}-1)u=0\) 도출</p>
+      <p>④ u = Σaₙyⁿ 전개 → 점화식 \(a_{n+2} = \frac{2n+1-2E/\hbar\omega}{(n+1)(n+2)}a_n\)</p>
+      <p>⑤ n→∞에서 비율 ~ 2/n = e^(y²) 계수비 → 발산 → 급수 절단 조건 → E = (v+½)ℏω</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Q2. 왜 무차원 변수 y = x/α 로 치환하는가? α의 물리적 의미는?</summary>
+    <div class="details-body">
+      <span class="answer-tag">답 방향</span>
+      <p>α는 운동에너지 항과 퍼텐셜 에너지 항이 같아지는 길이 스케일: \(\frac{\hbar^2}{m}\sim k_f x^4 \Rightarrow x\sim\alpha\)</p>
+      <p>치환 목적: 물리 상수 제거 → 순수 수학 문제(Hermite 방정식)로 변환.</p>
+      <p>\(\alpha = \sqrt{\hbar/m\omega} = (\hbar^2/mk_f)^{1/4}\)</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Q3. ZPE(영점에너지)가 0이 될 수 없는 이유를 불확정성 원리로 설명하라.</summary>
+    <div class="details-body">
+      <span class="answer-tag">답 방향</span>
+      <p>E=0이면 운동에너지=0 → p=0 확정, 퍼텐셜=0 → x=0 확정.</p>
+      <p>Δx=0, Δp=0 → ΔxΔp=0 < ℏ/2 → 불확정성 원리 위반.</p>
+      <p>따라서 최솟값 E₀ = ½ℏω가 필연적으로 존재.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Q4. 환산질량을 이용해 두 입자 진동 문제를 한 입자 문제로 변환하는 과정을 유도하라.</summary>
+    <div class="details-body">
+      <span class="answer-tag">답 방향</span>
+      <p>① 질량중심 X, 상대좌표 x = x₁−x₂ 정의</p>
+      <p>② x₁, x₂를 X, x로 역표현</p>
+      <p>③ 운동량 p₁, p₂ 계산 → 운동에너지 전개 시 교차항 소거 확인</p>
+      <p>④ E = P²/2m + p²/2μ + V(x) 분리, μ = m₁m₂/(m₁+m₂)</p>
+      <p>⑤ 퍼텐셜이 상대거리에만 의존하는 이유: 공간 균일성 원리</p>
+    </div>
+  </details>
+
+  <h3>원리·설명형 (30%)</h3>
+
+  <details>
+    <summary>Q5. 조화진동자에서 에너지 간격이 일정한 이유, 그리고 실제 분자에서는 일정하지 않은 이유.</summary>
+    <div class="details-body">
+      <span class="answer-tag">답 방향</span>
+      <p><strong>일정한 이유:</strong> 포물선 퍼텐셜에서 위로 갈수록 넓어지는 효과와 기울기 증가 효과가 정확히 상쇄. Eᵥ₊₁−Eᵥ = ℏω (v 무관).</p>
+      <p><strong>실제 분자:</strong> Morse 퍼텐셜은 높은 E에서 포물선보다 완만 → 허용 영역 더 넓음 → 간격 감소 → 해리 에너지 수렴.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Q6. 선택 규칙 Δv = ±1의 이유를 홀짝성으로 설명하라.</summary>
+    <div class="details-body">
+      <span class="answer-tag">답 방향</span>
+      <p>전이 확률 ∝ ⟨ψᵥ'|x|ψᵥ⟩. x는 기함수, |ψ|²는 우함수.</p>
+      <p>Δv=±1: 피적분함수 = 우함수 → ≠0 허용.</p>
+      <p>Δv=±2: 피적분함수 = 기함수 → =0 금지.</p>
+      <p>실제 비조화 분자에서는 overtone(Δv=±2,±3,...) 약하게 허용.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Q7. IR 분광법에서 결합 종류에 따라 흡수 파수가 다른 이유를 ω = √(k_f/μ)로 설명하라.</summary>
+    <div class="details-body">
+      <span class="answer-tag">답 방향</span>
+      <p>ΔE = ℏω = ℏ√(k_f/μ) → 흡수 파수 ṽ = ΔE/hc.</p>
+      <p>O-H: k_f 크고(강한 결합) μ 작음(H가 가벼움) → ω↑ → ~3500 cm⁻¹</p>
+      <p>C=O: k_f 크고 μ 중간 → ~1700 cm⁻¹</p>
+      <p>C-C: k_f 작고(단일결합) μ 큼 → ω↓ → ~1000 cm⁻¹</p>
+    </div>
+  </details>
+
+  <h3>계산형 (30%)</h3>
+
+  <details>
+    <summary>Q8. HCl (k_f=516.3 N/m, μ=0.9796 mᵤ)의 ω와 ΔE를 계산하고 해당 스펙트럼 영역을 밝혀라.</summary>
+    <div class="details-body">
+      <span class="answer-tag">답 방향</span>
+      <div class="math-block">$$\omega = \sqrt{\frac{516.3}{0.9796\times1.661\times10^{-27}}} = 5.634\times10^{14}\,\text{s}^{-1}$$</div>
+      <div class="math-block">$$\Delta E = \hbar\omega = 1.055\times10^{-34}\times5.634\times10^{14} = 5.94\times10^{-20}\,\text{J}$$</div>
+      <p>λ = c/ν = 3.3 μm → <strong>IR 영역</strong></p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Q9. v=1인 조화진동자가 고전적으로 금지된 영역에서 발견될 확률을 구하라. (erf(1.7)=0.9838)</summary>
+    <div class="details-body">
+      <span class="answer-tag">답 방향</span>
+      <p>① E₁ = 3ℏω/2, turning point: |y_tp| = √3 ≈ 1.7</p>
+      <p>② P = 2∫_{√3}^{∞}|ψ₁|²dy = (4/√π)∫_{√3}^{∞}y²e^(−y²)dy</p>
+      <p>③ 부분적분: ∫_z^∞ y²e^(−y²)dy = z/2 · e^(−z²) + √π/4 · (1−erf(z))</p>
+      <p>④ z=1.7 대입: P ≈ (4/√π)(0.850×0.0556 + 0.4431×0.0162) ≈ <strong>0.123 = 12.3%</strong></p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Q10. ⟨V⟩ = ½Eᵥ, ⟨Eₖ⟩ = ½Eᵥ 임을 논리적으로 설명하고, ZPE에 적용하라.</summary>
+    <div class="details-body">
+      <span class="answer-tag">답 방향</span>
+      <p>⟨V⟩ = ½k_f⟨x²⟩ = ½k_f(v+½)ℏ/(mk_f)^{1/2} = ½(v+½)ℏω = ½Eᵥ</p>
+      <p>⟨Eₖ⟩ = Eᵥ − ⟨V⟩ = Eᵥ − ½Eᵥ = ½Eᵥ (비리알 정리)</p>
+      <p>ZPE: E₀ = ½ℏω = ¼ℏω(⟨Eₖ⟩) + ¼ℏω(⟨V⟩) — 불확정성 원리의 정량적 결과.</p>
+    </div>
+  </details>
+</div>
+
+</main>
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function toggleTheme() {
+  const body = document.body;
+  const btn = document.querySelector('.theme-btn');
+  if (body.getAttribute('data-theme') === 'light') {
+    body.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀️ 라이트모드';
+  } else {
+    body.setAttribute('data-theme', 'light');
+    btn.textContent = '🌙 다크모드';
+  }
+}
+</script>
+
+</body>
+</html>

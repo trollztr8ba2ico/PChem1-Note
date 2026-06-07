@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>14A — Electric Properties of Molecules</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- MathJax 4 + STIX2 -->
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    tags: 'none'
+  },
+  output: { font: 'mathjax-stix2' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/@mathjax/mathjax-stix2-font@4.0.0/tex-mml-chtml-mathjax-stix2.js"></script>
+
+<style>
+/* ============================================================
+   CSS Variables
+   ============================================================ */
+:root {
+  --bg:            #f7f5f0;
+  --bg-card:       #ffffff;
+  --bg-card2:      #f0ede6;
+  --text:          #1a1a1a;
+  --text-muted:    #5a5650;
+  --text-faint:    #9a9590;
+  --header-bg:     #1a3a2a;
+  --header-text:   #e8f5ee;
+  --accent:        #2d7a4a;
+  --accent-light:  #e8f5ee;
+  --border:        #d8d4cc;
+  --border-light:  #ece9e2;
+
+  --blue:       #1e4a7a;
+  --blue-bg:    #eaf2fc;
+  --blue-border:#b8d4f0;
+  --amber:      #7a4a00;
+  --amber-bg:   #fdf3e0;
+  --amber-border:#e8c87a;
+  --green:      #1a4a2a;
+  --green-bg:   #e8f5ee;
+  --green-border:#8fcca8;
+  --red:        #7a1a1a;
+  --red-bg:     #fce8e8;
+  --red-border: #e8a0a0;
+  --purple:     #3a1a6a;
+  --purple-bg:  #f0eafc;
+  --purple-border:#c0a0e8;
+
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+  --font-body: 'IBM Plex Sans KR', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-serif: 'Noto Serif KR', serif;
+}
+
+[data-theme="dark"] {
+  --bg:           #12110e;
+  --bg-card:      #1e1d19;
+  --bg-card2:     #252420;
+  --text:         #e8e4dc;
+  --text-muted:   #a0998e;
+  --text-faint:   #6a6560;
+  --header-bg:    #0e2218;
+  --header-text:  #c8e8d8;
+  --accent:       #4aaa6a;
+  --accent-light: #1a3228;
+  --border:       #3a3830;
+  --border-light: #2a2820;
+
+  --blue:       #7ab0e8;
+  --blue-bg:    #0e1e30;
+  --blue-border:#1e3a58;
+  --amber:      #e8c060;
+  --amber-bg:   #201800;
+  --amber-border:#503800;
+  --green:      #70c890;
+  --green-bg:   #0a1e12;
+  --green-border:#1a4228;
+  --red:        #e87878;
+  --red-bg:     #200a0a;
+  --red-border: #501818;
+  --purple:     #c090e8;
+  --purple-bg:  #140a22;
+  --purple-border:#3a1a5a;
+}
+
+/* ============================================================
+   Reset & Base
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.75;
+  font-size: 15px;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+/* ============================================================
+   Header
+   ============================================================ */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--header-bg);
+  color: var(--header-text);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  background: var(--accent);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+
+.header-title {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--header-text);
+  opacity: 0.95;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-toggle {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.25);
+  color: var(--header-text);
+  cursor: pointer;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: var(--font-body);
+  transition: all 0.2s;
+}
+.theme-toggle:hover { background: rgba(255,255,255,0.1); }
+
+/* ============================================================
+   Tabs
+   ============================================================ */
+.tab-bar {
+  position: sticky;
+  top: 56px;
+  z-index: 90;
+  background: var(--bg-card);
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  gap: 0;
+  box-shadow: var(--shadow);
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 14px 20px 11px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text); background: var(--border-light); }
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+/* ============================================================
+   Main content
+   ============================================================ */
+main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ============================================================
+   Typography
+   ============================================================ */
+h2 {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 36px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+h2:first-child { margin-top: 0; }
+
+h3 {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 28px 0 12px;
+}
+
+p { margin-bottom: 14px; }
+p:last-child { margin-bottom: 0; }
+
+/* ============================================================
+   Color boxes
+   ============================================================ */
+.box {
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin: 18px 0;
+  border-left: 4px solid;
+}
+
+.box-blue   { background: var(--blue-bg);   border-color: var(--blue);   color: var(--text); }
+.box-amber  { background: var(--amber-bg);  border-color: var(--amber);  color: var(--text); }
+.box-green  { background: var(--green-bg);  border-color: var(--green);  color: var(--text); }
+.box-red    { background: var(--red-bg);    border-color: var(--red);    color: var(--text); }
+.box-purple { background: var(--purple-bg); border-color: var(--purple); color: var(--text); }
+
+.box-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.65;
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+}
+
+/* ============================================================
+   Equation display
+   ============================================================ */
+.eq {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  margin: 16px 0;
+  overflow-x: auto;
+  font-size: 1.05em;
+}
+
+.eq-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-faint);
+  text-align: right;
+  margin-top: 6px;
+}
+
+/* ============================================================
+   Table
+   ============================================================ */
+.tbl-wrap { overflow-x: auto; margin: 18px 0; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+th {
+  background: var(--header-bg);
+  color: var(--header-text);
+  padding: 10px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: top;
+}
+tr:nth-child(even) td { background: var(--bg-card2); }
+tr:last-child td { border-bottom: none; }
+
+/* ============================================================
+   Details (exam questions)
+   ============================================================ */
+details {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 12px 0;
+  background: var(--bg-card);
+  overflow: hidden;
+}
+
+summary {
+  cursor: pointer;
+  padding: 14px 18px;
+  font-weight: 600;
+  font-size: 14px;
+  list-style: none;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--bg-card2);
+  transition: background 0.15s;
+}
+summary::-webkit-details-marker { display: none; }
+summary:hover { background: var(--border-light); }
+summary::before {
+  content: '▶';
+  font-size: 10px;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 3px;
+  transition: transform 0.2s;
+}
+details[open] summary::before { transform: rotate(90deg); }
+
+.answer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.q-type {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.q-derive  { background: #e8c07a; color: #5a3800; }
+.q-concept { background: #a0c8e8; color: #0e2a48; }
+.q-calc    { background: #a8d8b0; color: #0e3018; }
+
+/* ============================================================
+   Comparison grid
+   ============================================================ */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 18px 0;
+}
+@media (max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
+
+.compare-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.compare-card h4 {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   Frequency diagram
+   ============================================================ */
+.freq-diagram {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin: 18px 0;
+  overflow-x: auto;
+}
+
+.freq-bar-wrap {
+  display: flex;
+  align-items: stretch;
+  height: 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.freq-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: #fff;
+  padding: 0 8px;
+  text-align: center;
+}
+
+.freq-labels {
+  display: flex;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-top: 8px;
+}
+
+/* ============================================================
+   Utility
+   ============================================================ */
+.mono { font-family: var(--font-mono); font-size: 0.9em; }
+.highlight { background: var(--amber-bg); padding: 1px 5px; border-radius: 3px; }
+.divider { border: none; border-top: 1px solid var(--border-light); margin: 28px 0; }
+
+/* ============================================================
+   Card
+   ============================================================ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 18px 0;
+  box-shadow: var(--shadow);
+}
+
+/* ============================================================
+   Mobile
+   ============================================================ */
+@media (max-width: 600px) {
+  main { padding: 20px 14px 60px; }
+  h2 { font-size: 19px; }
+  .header-title { display: none; }
+}
+</style>
+</head>
+
+<body data-theme="light">
+
+<!-- ===================== HEADER ===================== -->
+<header>
+  <div class="header-left">
+    <span class="header-badge">14A</span>
+    <span class="header-title">Electric Properties of Molecules</span>
+  </div>
+  <div class="header-right">
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 다크</button>
+  </div>
+</header>
+
+<!-- ===================== TAB BAR ===================== -->
+<nav class="tab-bar" role="tablist">
+  <button class="tab-btn active" onclick="switchTab(0)" role="tab">① 쌍극자 모멘트</button>
+  <button class="tab-btn" onclick="switchTab(1)" role="tab">② Multipoles</button>
+  <button class="tab-btn" onclick="switchTab(2)" role="tab">③ 분극능 α</button>
+  <button class="tab-btn" onclick="switchTab(3)" role="tab">④ Polarization P</button>
+  <button class="tab-btn" onclick="switchTab(4)" role="tab">⑤ Molar polarization</button>
+  <button class="tab-btn" onclick="switchTab(5)" role="tab">⑥ 출제 예상</button>
+</nav>
+
+<!-- ===================== MAIN ===================== -->
+<main>
+
+<!-- ========== TAB 1: 쌍극자 모멘트 ========== -->
+<section class="tab-panel active" id="tab-0">
+  <h2>Electric Dipole Moment — 전기 쌍극자 모멘트</h2>
+
+  <div class="box box-blue">
+    <div class="box-label">개념</div>
+    <strong>왜 이게 필요한가?</strong><br>
+    분자 간 상호작용(응집상 형성, 약물-수용체 결합)은 결국 분자의 전하 분포에서 나온다.
+    가장 단순한 전하 분포의 척도가 <strong>전기 쌍극자 모멘트 μ</strong>다.
+  </div>
+
+  <h3>정의</h3>
+  <p>+Q와 −Q의 두 전하가 거리 R만큼 떨어져 있을 때:</p>
+
+  <div class="eq">
+    $$\mu = QR$$
+    <div class="eq-label">Magnitude of the electric dipole moment [Definition]</div>
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-label">핵심</div>
+    <strong>방향:</strong> 음전하(−Q) → 양전하(+Q)로 향하는 벡터량<br>
+    <strong>SI 단위:</strong> C·m (쿨롱·미터)<br>
+    <strong>실용 단위:</strong> Debye (D), \(\;1\,\text{D} = 3.33564 \times 10^{-30}\,\text{C·m}\)
+  </div>
+
+  <p>왜 Debye 단위를 따로 쓰냐면, C·m 단위로 표기하면 분자 수준 쌍극자가 10⁻³⁰ 단위라 너무 불편하기 때문이다. 작은 분자들은 대략 1 D 수준이다.</p>
+
+  <div class="box box-purple">
+    <div class="box-label">단위 감각</div>
+    전자 하나(e = 1.602×10⁻¹⁹ C)가 100 pm 떨어져 있으면 μ ≈ 4.8 D.<br>
+    실제 분자에서 HCl ≈ 1.08 D → 전자 1개 전하의 약 <strong>22%</strong>만 분리된 효과.
+  </div>
+
+  <h3>Permanent vs Induced Dipole</h3>
+
+  <div class="compare-grid">
+    <div class="compare-card">
+      <h4>Permanent dipole</h4>
+      <ul style="padding-left:18px; font-size:14px; line-height:2;">
+        <li>전기음성도 차이로 인한 부분 전하</li>
+        <li>항상 존재 (전기장 불필요)</li>
+        <li>극성 분자 (polar molecule)</li>
+        <li>예: H₂O (1.85 D), HCl (1.08 D)</li>
+      </ul>
+    </div>
+    <div class="compare-card">
+      <h4>Induced dipole</h4>
+      <ul style="padding-left:18px; font-size:14px; line-height:2;">
+        <li>외부 전기장이 전자 구름을 왜곡</li>
+        <li>전기장 있을 때만 존재</li>
+        <li>비극성 분자에서도 생성</li>
+        <li>예: CCl₄, H₂ (μ = 0이지만 α≠0)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>대칭과 쌍극자 — 벡터 합산</h3>
+
+  <div class="box box-red">
+    <div class="box-label">주의</div>
+    "이종핵 결합이 있다 ≠ 극성 분자"<br>
+    분자 대칭이 개별 결합 쌍극자를 상쇄시킬 수 있다.
+    <br><br>
+    <strong>CO₂:</strong> O=C=O 선형 → 두 C=O 쌍극자 정반대 방향 → μ = 0<br>
+    <strong>O₃:</strong> 굽은 구조 → 상쇄 안 됨 → μ ≠ 0<br>
+    <strong>CCl₄:</strong> 정사면체 대칭 → 4개 결합 쌍극자 완전 상쇄 → μ = 0
+  </div>
+
+  <h3>벡터 합산 공식 — 다이클로로벤젠 이성질체</h3>
+  <p>두 쌍극자 μ₁, μ₂가 각도 θ를 이룰 때 합력:</p>
+
+  <div class="eq">
+    $$\mu_\text{res} \approx \left(\mu_1^2 + \mu_2^2 + 2\mu_1\mu_2\cos\theta\right)^{1/2}$$
+  </div>
+
+  <p>μ₁ = μ₂ = μ인 경우 (클로로벤젠 이성질체), 반각 공식 \(1+\cos\theta = 2\cos^2\tfrac{\theta}{2}\)를 쓰면:</p>
+
+  <div class="eq">
+    $$\mu_\text{res} \approx 2\mu\cos\tfrac{\theta}{2}$$
+    <div class="eq-label">같은 크기의 두 쌍극자일 때</div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>이성질체</th><th>θ (두 Cl 사이)</th><th>μ_res / μ₁</th><th>μ_calc (D)</th><th>μ_obs (D)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>para (b)</td><td>180°</td><td>2cos90° = <strong>0</strong></td><td>0</td><td>0</td></tr>
+        <tr><td>ortho (c)</td><td>60°</td><td>2cos30° = √3</td><td>2.7</td><td>2.25</td></tr>
+        <tr><td>meta (d)</td><td>120°</td><td>2cos60° = 1</td><td>1.6</td><td>1.48</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box box-green">
+    <div class="box-label">결론</div>
+    ortho/meta 비율: cos30°/cos60° = (√3/2)/(1/2) = <strong>√3 ≈ 1.73</strong><br>
+    실험값: 2.25/1.48 ≈ 1.52 — 벤젠 고리 자체 전자 분포를 무시한 근사이므로 완벽하지 않다.
+  </div>
+
+  <h3>다원자 분자의 일반화</h3>
+  <p>원자가 여러 개일 때 각 방향 성분을 따로 합산:</p>
+
+  <div class="eq">
+    $$\mu_x = \sum_J Q_J x_J \qquad \mu = \left(\mu_x^2 + \mu_y^2 + \mu_z^2\right)^{1/2}$$
+    <div class="eq-label">General form — Molecular dipole moment</div>
+  </div>
+</section>
+
+
+<!-- ========== TAB 2: Multipoles ========== -->
+<section class="tab-panel" id="tab-1">
+  <h2>Multipoles — 쌍극자를 넘어서</h2>
+
+  <div class="box box-blue">
+    <div class="box-label">동기</div>
+    CCl₄처럼 dipole = 0인 분자는 어떻게 전기적으로 특징짓나?<br>
+    → 더 고차 모멘트(quadrupole, octupole)가 필요하다.
+  </div>
+
+  <h3>계층 구조</h3>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>이름</th><th>n</th><th>조건</th><th>예시</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Monopole</strong></td>
+          <td>1</td>
+          <td>점전하</td>
+          <td>Na⁺, Cl⁻</td>
+        </tr>
+        <tr>
+          <td><strong>Dipole</strong></td>
+          <td>2</td>
+          <td>알짜 전하 = 0, dipole ≠ 0</td>
+          <td>HCl, H₂O</td>
+        </tr>
+        <tr>
+          <td><strong>Quadrupole</strong></td>
+          <td>3</td>
+          <td>알짜 전하 = 0, dipole = 0, quadrupole ≠ 0</td>
+          <td>CO₂, H₂</td>
+        </tr>
+        <tr>
+          <td><strong>Octupole</strong></td>
+          <td>4</td>
+          <td>위 전부 0, octupole ≠ 0</td>
+          <td>CH₄ (정사면체)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-label">핵심 정의</div>
+    <strong>n-pole</strong>: "n-pole moment는 있지만 그보다 낮은 차수 moment는 없는" 전하 배열.<br><br>
+    CH₄: H(δ+), C(δ−)로 이종 원소 결합이 있지만, 정사면체 대칭으로 dipole = 0, quadrupole = 0
+    → 최저차 moment는 <strong>octupole</strong>이다.
+  </div>
+
+  <h3>왜 중요한가 — 거리 의존성</h3>
+
+  <div class="box box-purple">
+    <div class="box-label">수식</div>
+    고차 multipole일수록 상호작용이 거리에 따라 더 빠르게 감쇠한다:<br><br>
+    <ul style="padding-left:20px; line-height:2.2; font-family: var(--font-mono); font-size:13px;">
+      <li>monopole–monopole: \(\propto 1/r\)</li>
+      <li>monopole–dipole: \(\propto 1/r^2\)</li>
+      <li>dipole–dipole: \(\propto 1/r^3\)</li>
+      <li>dipole–quadrupole: \(\propto 1/r^4\)</li>
+    </ul>
+  </div>
+
+  <div class="box box-green">
+    <div class="box-label">결론</div>
+    CCl₄처럼 완전히 대칭인 분자라도 quadrupole, octupole moment를 통해 다른 분자와 상호작용한다.
+    다만 그 상호작용은 짧은 거리에서만 유의미하다.
+  </div>
+</section>
+
+
+<!-- ========== TAB 3: 분극능 α ========== -->
+<section class="tab-panel" id="tab-2">
+  <h2>Polarizabilities — 분극능 α</h2>
+
+  <div class="box box-blue">
+    <div class="box-label">직관</div>
+    전자 구름은 핵에 묶여 있지만 완벽하게 고정된 건 아니다.
+    외부 전기장 ε이 걸리면 전자 구름이 한쪽으로 쏠리면서 <strong>유도 쌍극자</strong>가 생성된다.
+    α는 "이 변형이 얼마나 잘 일어나냐"의 척도다.
+  </div>
+
+  <h3>정의</h3>
+
+  <div class="eq">
+    $$\mu^* = \alpha \mathcal{E}$$
+    <div class="eq-label">Polarizability [Definition] — 선형 근사</div>
+  </div>
+
+  <p>강한 전기장에서는 고차 항이 중요해진다:</p>
+
+  <div class="eq">
+    $$\mu^* = \alpha\mathcal{E} + \tfrac{1}{2}\beta\mathcal{E}^2 + \cdots$$
+    <div class="eq-label">Hyperpolarizability β 포함 — 비선형 광학에서 중요</div>
+  </div>
+
+  <h3>Polarizability volume α′</h3>
+  <p>SI 단위의 α가 불편하므로 체적 단위로 표현:</p>
+
+  <div class="eq">
+    $$\alpha' = \frac{\alpha}{4\pi\varepsilon_0}$$
+    <div class="eq-label">Polarizability volume [Definition]</div>
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-label">핵심</div>
+    α′의 단위: m³. 수치는 10⁻³⁰ m³ ≈ 1 Å³ — <strong>실제 분자 부피와 비슷한 크기!</strong><br>
+    직관: 전자 구름이 크게 퍼진 분자일수록 잘 변형된다 → α′ ∝ 분자 크기.
+  </div>
+
+  <h3>교수님 Q&A — HOMO-LUMO gap과 레이저 흡수</h3>
+
+  <div class="card">
+    <strong>Q1. HOMO-LUMO gap과 α의 관계는?</strong>
+    <div class="box box-purple" style="margin-top:12px;">
+      <div class="box-label">양자역학적 설명 (2차 섭동이론)</div>
+      외부 전기장은 바닥 상태 오비탈에 들뜬 상태 오비탈 성격을 섞어 넣는 효과를 낸다.
+      에너지 분모가 작을수록 더 잘 섞인다:
+      $$\alpha \propto \frac{1}{E_\text{LUMO} - E_\text{HOMO}}$$
+      <strong>→ HOMO-LUMO gap이 작을수록 α가 크다.</strong>
+    </div>
+    예: 공액 π계가 길어질수록 gap ↓ → α ↑ (벤젠 &lt; 나프탈렌 &lt; 안트라센)
+  </div>
+
+  <div class="card">
+    <strong>Q2. α가 커질수록 흡수하는 레이저 파장은?</strong>
+    <div class="box box-green" style="margin-top:12px;">
+      α ↑ → HOMO-LUMO gap ↓ → 전자 전이에 필요한 에너지 ↓<br>
+      \(E = hc/\lambda\) → E ↓이면 λ ↑<br><br>
+      <strong>→ α가 클수록 더 긴 파장(낮은 에너지)의 빛을 흡수한다. (적색편이)</strong>
+    </div>
+    β-카로틴(당근 색소)이 주황색으로 보이는 이유: 공액 이중결합이 11개 → gap 작음 → 가시광 흡수.
+  </div>
+
+  <div class="card">
+    <strong>Q3. 벤젠의 α는 어느 방향으로 더 큰가?</strong>
+    <div class="box box-amber" style="margin-top:12px;">
+      벤젠은 평면 육각형. π 전자가 고리를 따라 비편재화(delocalized)되어 있다.<br><br>
+      <strong>면 내(in-plane) α &gt; 면 수직(out-of-plane) α</strong><br><br>
+      이유: 면 내에서는 π 전자가 고리 전체를 따라 자유롭게 이동하여 전기장에 반응 가능.
+      수직 방향은 전자가 움직일 수 있는 공간이 제한적이다.
+    </div>
+    → 벤젠은 <strong>이방성 분극능(anisotropic polarizability)</strong>을 가진다.<br>
+    Raman 분광의 depolarization ratio로 측정 가능.
+  </div>
+
+  <h3>대표적인 값 (Table 16A.1 / 14A)</h3>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>분자</th><th>μ / D</th><th>α′ / (10⁻³⁰ m³)</th><th>특징</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>CCl₄</td><td>0</td><td>10.5</td><td>비극성, 큰 분자 → α′ 큼</td></tr>
+        <tr><td>H₂</td><td>0</td><td>0.819</td><td>비극성, 작은 분자 → α′ 작음</td></tr>
+        <tr><td>H₂O</td><td>1.85</td><td>1.48</td><td>극성, 작은 분자</td></tr>
+        <tr><td>HCl</td><td>1.08</td><td>2.63</td><td>극성</td></tr>
+        <tr><td>HI</td><td>0.42</td><td>5.45</td><td>I가 크고 전자 많음 → α′ 큼</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ========== TAB 4: Polarization ========== -->
+<section class="tab-panel" id="tab-3">
+  <h2>Polarization — 거시적 분극</h2>
+
+  <div class="box box-blue">
+    <div class="box-label">스케일 전환</div>
+    μ, α는 분자 <em>하나</em>의 성질. <strong>P (polarization)</strong>는 샘플 전체의 전기 쌍극자 모멘트 밀도다.
+  </div>
+
+  <h3>정의</h3>
+
+  <div class="eq">
+    $$P = \langle\mu\rangle \mathcal{N}$$
+    <div class="eq-label">Polarization [Definition] — 𝒩: number density</div>
+  </div>
+
+  <h3>외부 전기장에 따른 ⟨μ⟩ 변화</h3>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>조건</th><th>⟨μ_z⟩</th><th>이유</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>전기장 없음</td>
+          <td>\(\langle\mu\rangle = 0\)</td>
+          <td>열운동으로 분자 방향이 완전 랜덤 → 평균 상쇄</td>
+        </tr>
+        <tr>
+          <td>약한 전기장</td>
+          <td>\(\langle\mu_z\rangle = \dfrac{\mu^2\mathcal{E}}{3kT}\)</td>
+          <td>Boltzmann 통계 + Taylor 전개 (με ≪ kT 극한)</td>
+        </tr>
+        <tr>
+          <td>강한 전기장</td>
+          <td>\(\langle\mu_z\rangle = \mu\)</td>
+          <td>모든 분자 완전 정렬 → 포화(saturation)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box box-purple">
+    <div class="box-label">약한 전기장 식 유도 배경</div>
+    Boltzmann 분포에서 방향 θ를 가질 확률 ∝ \(e^{\mu\mathcal{E}\cos\theta / kT}\).<br>
+    \(\mu\mathcal{E} \ll kT\)인 약한 장 한계에서 지수 함수를 Taylor 전개하면<br>
+    \(\langle\cos\theta\rangle \approx \mu\mathcal{E}/3kT\)가 나온다.<br>
+    → <strong>μ²/kT</strong>: 쌍극자가 클수록, 온도가 낮을수록 정렬이 잘 됨.
+  </div>
+
+  <h3>주파수에 따른 Polarization 성분 분리</h3>
+
+  <p>외부 전기장의 주파수가 올라가면 분극에 기여하는 성분이 하나씩 꺼진다:</p>
+
+  <div class="freq-diagram">
+    <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px; font-family:var(--font-mono);">주파수 증가 →</div>
+    <div class="freq-bar-wrap">
+      <div class="freq-seg" style="background:#2d7a4a; flex:3;">Orientation<br><span style="font-size:9px; opacity:0.85;">microwave</span></div>
+      <div class="freq-seg" style="background:#4a7a2d; flex:2;">Ionic/Nuclear<br><span style="font-size:9px; opacity:0.85;">IR</span></div>
+      <div class="freq-seg" style="background:#7a6a1a; flex:2;">Electronic<br><span style="font-size:9px; opacity:0.85;">visible/UV</span></div>
+      <div class="freq-seg" style="background:#555; flex:1; font-size:10px;">없음</div>
+    </div>
+    <div style="font-size:12px; color:var(--text-muted); margin-top:10px; line-height:1.8;">
+      ↑ 저주파: 세 성분 모두 기여<br>
+      ↑ 마이크로파 이상: Orientation 꺼짐 (분자 회전 못 따라감)<br>
+      ↑ IR 이상: Ionic/Nuclear 꺼짐 (핵 진동 못 따라감)<br>
+      ↑ 가시/UV: Electronic만 남음 (전자는 빠르게 따라감)
+    </div>
+  </div>
+
+  <div class="compare-grid">
+    <div class="compare-card">
+      <h4>Orientation polarization</h4>
+      <ul style="padding-left:16px; font-size:13px; line-height:2;">
+        <li>Permanent dipole이 전기장 방향으로 <strong>회전·정렬</strong></li>
+        <li>분자 전체가 돌아야 함 → 느림</li>
+        <li>저주파(마이크로파)까지만 기여</li>
+        <li>기여: μ²/3kT 항</li>
+      </ul>
+    </div>
+    <div class="compare-card">
+      <h4>Distortion polarization</h4>
+      <ul style="padding-left:16px; font-size:13px; line-height:2;">
+        <li>전기장이 전자 구름/핵 위치를 <strong>물리적으로 변형</strong></li>
+        <li>Electronic: 매우 빠름 → 가시광까지 기여</li>
+        <li>Ionic/nuclear: 중간 속도 → IR까지 기여</li>
+        <li>기여: α 항</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="box box-green">
+    <div class="box-label">결론</div>
+    용액에서 P가 작아지는 이유: 주위 분자들의 충돌과 점성이 분자 회전(orientation)을 방해하기 때문이다.
+    고주파에서는 orientation 기여가 사라지고 distortion(전자)만 남는다.
+  </div>
+</section>
+
+
+<!-- ========== TAB 5: Molar polarization ========== -->
+<section class="tab-panel" id="tab-4">
+  <h2>Molar Polarization & Relative Permittivity</h2>
+
+  <h3>상대 유전율 εᵣ — 왜 중요한가</h3>
+
+  <p>진공에서의 쿨롱 퍼텐셜:</p>
+  <div class="eq">$$V = \frac{Q_1 Q_2}{4\pi\varepsilon_0 r}$$</div>
+
+  <p>매질 속에서:</p>
+  <div class="eq">$$V = \frac{Q_1 Q_2}{4\pi\varepsilon r} = \frac{Q_1 Q_2}{4\pi\varepsilon_0\varepsilon_r r}$$</div>
+
+  <div class="eq">
+    $$\varepsilon_r = \frac{\varepsilon}{\varepsilon_0}$$
+    <div class="eq-label">Relative permittivity (유전상수) [Definition]</div>
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-label">핵심</div>
+    εᵣ의 물리적 의미: 매질 속 분자들이 분극되면서 외부 전기장을 부분적으로 상쇄 → 쿨롱 상호작용이 εᵣ배 약해진다.<br><br>
+    <strong>물(H₂O): εᵣ = 78 @ 25°C</strong><br>
+    → 이온 간 쿨롱 상호작용이 진공 대비 <strong>78분의 1</strong>로 약해짐<br>
+    → NaCl이 물에 쉽게 해리되는 물리적 이유!
+  </div>
+
+  <h3>Molar Polarization P_m</h3>
+
+  <div class="eq">
+    $$P_m = \frac{N_A}{3\varepsilon_0}\left(\alpha + \frac{\mu^2}{3kT}\right)$$
+    <div class="eq-label">Molar polarization [Definition]</div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>항</th><th>물리적 의미</th><th>온도 의존성</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>\(N_A\alpha / 3\varepsilon_0\)</td>
+          <td>전자 구름 변형(distortion) 기여</td>
+          <td>온도 무관</td>
+        </tr>
+        <tr>
+          <td>\(N_A\mu^2 / 9\varepsilon_0 kT\)</td>
+          <td>Permanent dipole 정렬(orientation) 기여</td>
+          <td>∝ 1/T</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Debye 방정식 — εᵣ ↔ P_m 연결</h3>
+
+  <div class="eq">
+    $$\frac{\varepsilon_r - 1}{\varepsilon_r + 2} = \frac{\rho P_m}{M}$$
+    <div class="eq-label">Debye equation</div>
+  </div>
+
+  <div class="box box-blue">
+    <div class="box-label">실험적 쓸모 — μ와 α를 동시에 뽑는 법</div>
+    P_m 정의를 대입하면:
+    $$P_m = \underbrace{\frac{N_A\alpha}{3\varepsilon_0}}_{\text{y절편}} + \underbrace{\frac{N_A\mu^2}{9\varepsilon_0 k}}_{\text{기울기}} \cdot \frac{1}{T}$$
+    <br>
+    <strong>전략:</strong> 온도를 여러 개 바꾸며 εᵣ 측정 → P_m 계산 → P_m vs 1/T 직선 그래프<br>
+    → <strong>기울기</strong>에서 μ 추출, <strong>y절편</strong>에서 α 추출
+  </div>
+
+  <h3>Clausius-Mossotti 방정식 — 비극성 분자용</h3>
+
+  <p>μ = 0이면 orientation 항이 사라진다:</p>
+
+  <div class="eq">
+    $$\frac{\varepsilon_r - 1}{\varepsilon_r + 2} = \frac{\rho N_A \alpha}{3M\varepsilon_0}$$
+    <div class="eq-label">Clausius-Mossotti equation (μ = 0인 경우)</div>
+  </div>
+
+  <div class="box box-green">
+    <div class="box-label">결론 — 두 방정식 비교</div>
+    <div class="tbl-wrap" style="margin-top:10px;">
+      <table>
+        <thead>
+          <tr><th>방정식</th><th>적용 대상</th><th>구하는 것</th><th>필요한 측정</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Debye</strong></td>
+            <td>극성 분자</td>
+            <td>μ + α 동시에</td>
+            <td>εᵣ를 여러 온도에서 측정</td>
+          </tr>
+          <tr>
+            <td><strong>Clausius-Mossotti</strong></td>
+            <td>비극성 분자 (μ=0)</td>
+            <td>α만</td>
+            <td>εᵣ 한 번만 측정</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    핵심: "<strong>εᵣ을 재면 분자 내부 전기 성질을 알 수 있다</strong>"
+  </div>
+</section>
+
+
+<!-- ========== TAB 6: 출제 예상 ========== -->
+<section class="tab-panel" id="tab-5">
+  <h2>출제 예상 문제</h2>
+
+  <div class="box box-amber">
+    <div class="box-label">출제 경향</div>
+    유도형 40% / 원리·설명형 30% / 계산형 30%
+  </div>
+
+  <h3>🔵 유도형 (40%)</h3>
+
+  <details>
+    <summary>
+      <span class="q-type q-derive">유도</span>
+      같은 크기 μ₁ = μ₂ = μ인 두 쌍극자가 각도 θ를 이룰 때, 합성 쌍극자 μ_res = 2μcos(θ/2)임을 유도하라.
+    </summary>
+    <div class="answer">
+      일반 벡터 합성:
+      $$\mu_\text{res} = \left(\mu_1^2 + \mu_2^2 + 2\mu_1\mu_2\cos\theta\right)^{1/2}$$
+      μ₁ = μ₂ = μ 대입:
+      $$= \mu\left(2 + 2\cos\theta\right)^{1/2} = \mu\left(2(1+\cos\theta)\right)^{1/2}$$
+      반각 공식 \(1 + \cos\theta = 2\cos^2(\theta/2)\) 적용:
+      $$= \mu\left(4\cos^2\tfrac{\theta}{2}\right)^{1/2} = 2\mu\cos\tfrac{\theta}{2}$$
+    </div>
+  </details>
+
+  <details>
+    <summary>
+      <span class="q-type q-derive">유도</span>
+      약한 전기장 하에서 극성 분자의 평균 쌍극자 모멘트가 ⟨μ_z⟩ = μ²ε/3kT가 됨을 설명하라.
+    </summary>
+    <div class="answer">
+      방향 θ를 가질 Boltzmann 확률:
+      $$w(\theta) \propto e^{\mu\mathcal{E}\cos\theta / kT}$$
+      약한 장 \(\mu\mathcal{E} \ll kT\) 한계에서 Taylor 전개:
+      $$e^x \approx 1 + x \qquad (x = \mu\mathcal{E}\cos\theta/kT \ll 1)$$
+      구면 평균:
+      $$\langle\cos\theta\rangle = \frac{\int_0^\pi \cos\theta \cdot (1 + \frac{\mu\mathcal{E}\cos\theta}{kT})\sin\theta\, d\theta}{\int_0^\pi (1 + \frac{\mu\mathcal{E}\cos\theta}{kT})\sin\theta\, d\theta}$$
+      \(\int_0^\pi \cos\theta\sin\theta\,d\theta = 0\), \(\int_0^\pi \cos^2\theta\sin\theta\,d\theta = 2/3\), \(\int_0^\pi \sin\theta\,d\theta = 2\) 이용:
+      $$\langle\cos\theta\rangle = \frac{\mu\mathcal{E}/kT \cdot 2/3}{2} = \frac{\mu\mathcal{E}}{3kT}$$
+      따라서 \(\langle\mu_z\rangle = \mu\langle\cos\theta\rangle = \dfrac{\mu^2\mathcal{E}}{3kT}\).
+    </div>
+  </details>
+
+  <details>
+    <summary>
+      <span class="q-type q-derive">유도</span>
+      Debye 방정식에서 P_m vs 1/T 그래프의 기울기와 절편으로부터 μ와 α를 어떻게 구하는지 유도하라.
+    </summary>
+    <div class="answer">
+      Debye 방정식:
+      $$\frac{\varepsilon_r-1}{\varepsilon_r+2} = \frac{\rho P_m}{M}$$
+      따라서 측정으로부터:
+      $$P_m = \frac{M}{\rho}\cdot\frac{\varepsilon_r-1}{\varepsilon_r+2}$$
+      Molar polarization 정의 대입:
+      $$P_m = \frac{N_A}{3\varepsilon_0}\left(\alpha + \frac{\mu^2}{3kT}\right) = \frac{N_A\alpha}{3\varepsilon_0} + \frac{N_A\mu^2}{9\varepsilon_0 k}\cdot\frac{1}{T}$$
+      P_m vs 1/T 직선에서:
+      <ul style="padding-left:20px; margin-top:8px; line-height:2.2;">
+        <li>기울기 \(= \dfrac{N_A\mu^2}{9\varepsilon_0 k}\) → \(\mu = \sqrt{\dfrac{9\varepsilon_0 k \times \text{slope}}{N_A}}\)</li>
+        <li>y절편 \(= \dfrac{N_A\alpha}{3\varepsilon_0}\) → \(\alpha = \dfrac{3\varepsilon_0 \times \text{intercept}}{N_A}\)</li>
+      </ul>
+    </div>
+  </details>
+
+  <h3>🟡 원리·설명형 (30%)</h3>
+
+  <details>
+    <summary>
+      <span class="q-type q-concept">설명</span>
+      CO₂는 이종핵 원자를 포함하지만 전기 쌍극자 모멘트가 0이다. 이유를 설명하라.
+    </summary>
+    <div class="answer">
+      CO₂는 O=C=O 선형 구조다. C=O 결합의 쌍극자는 각각 C→O 방향이지만 두 결합이 정반대 방향을 향하므로 벡터 합이 완벽하게 상쇄된다.<br><br>
+      <strong>핵심:</strong> 극성 분자의 조건은 "이종핵 결합이 있다"가 아니라 "결합 쌍극자들의 벡터 합이 0이 아니다"이다.
+    </div>
+  </details>
+
+  <details>
+    <summary>
+      <span class="q-type q-concept">설명</span>
+      HOMO-LUMO gap이 작은 분자일수록 분극능 α가 크고, 더 긴 파장의 빛을 흡수하는 이유를 설명하라.
+    </summary>
+    <div class="answer">
+      <strong>α와 HOMO-LUMO gap:</strong><br>
+      2차 섭동이론에 의하면, 외부 전기장은 바닥 상태에 들뜬 상태 성격을 혼합시킨다. 혼합 정도는 에너지 분모(gap)에 반비례하므로:
+      $$\alpha \propto \frac{1}{E_\text{LUMO} - E_\text{HOMO}}$$
+      gap이 작을수록 전자 구름이 더 쉽게 변형 → α 큼.<br><br>
+      <strong>흡수 파장:</strong><br>
+      gap이 작다 = 전자 전이에 필요한 에너지가 작다. \(E=hc/\lambda\)에서 E가 작으면 λ가 크다. 따라서 α가 클수록 더 긴 파장을 흡수한다.
+    </div>
+  </details>
+
+  <details>
+    <summary>
+      <span class="q-type q-concept">설명</span>
+      고주파 전기장에서 물(H₂O)의 유효 분극이 줄어드는 이유를 orientation polarization과 distortion polarization을 구분하여 설명하라.
+    </summary>
+    <div class="answer">
+      <strong>Orientation polarization:</strong> H₂O의 permanent dipole이 전기장 방향으로 회전·정렬되는 기여. 분자 전체가 회전해야 하므로 느리다. 마이크로파 이상의 주파수에서는 분자가 전기장 방향 변화를 따라가지 못해 이 기여가 사라진다.<br><br>
+      <strong>Distortion polarization:</strong> 전기장이 전자 구름 및 핵 위치를 변형시키는 기여. 전자는 매우 빠르게 반응하여 가시광/UV 주파수까지 따라갈 수 있다. 핵(ionic) 진동은 IR 주파수까지 따라간다.<br><br>
+      따라서 고주파에서는 orientation 기여가 꺼지고 전자적 distortion 기여만 남아 전체 P가 감소한다.
+    </div>
+  </details>
+
+  <details>
+    <summary>
+      <span class="q-type q-concept">설명</span>
+      물의 상대 유전율(εᵣ = 78)이 NaCl 해리에 미치는 영향을 설명하라.
+    </summary>
+    <div class="answer">
+      진공에서 두 이온 간 쿨롱 에너지:
+      $$V = \frac{Q_1 Q_2}{4\pi\varepsilon_0 r}$$
+      물 속에서는:
+      $$V_\text{water} = \frac{Q_1 Q_2}{4\pi\varepsilon_0\varepsilon_r r} = \frac{V}{78}$$
+      Na⁺와 Cl⁻ 사이의 인력이 진공 대비 <strong>78분의 1</strong>로 약해진다. 이 약해진 인력이 열운동(kT)에 의해 쉽게 극복되므로 NaCl이 물에서 자발적으로 해리된다.
+    </div>
+  </details>
+
+  <h3>🟢 계산형 (30%)</h3>
+
+  <details>
+    <summary>
+      <span class="q-type q-calc">계산</span>
+      ortho-dichlorobenzene(μ_obs = 2.25 D)과 meta-dichlorobenzene(μ_obs = 1.48 D)의 비율이 √3에 가까움을 보여라. 클로로벤젠의 μ₁ = 1.57 D를 이용하라.
+    </summary>
+    <div class="answer">
+      공식 \(\mu_\text{res} = 2\mu_1\cos(\theta/2)\) 이용:<br><br>
+      <strong>Ortho</strong> (θ = 60°): \(\mu_\text{calc} = 2\times1.57\times\cos30° = 3.14\times\frac{\sqrt{3}}{2} \approx 2.72\) D<br>
+      <strong>Meta</strong> (θ = 120°): \(\mu_\text{calc} = 2\times1.57\times\cos60° = 3.14\times0.5 = 1.57\) D<br><br>
+      계산값 비율: \(2.72/1.57 = \sqrt{3} \approx 1.73\)<br>
+      실험값 비율: \(2.25/1.48 \approx 1.52\)<br><br>
+      계산값과 실험값이 비슷하지만 완전히 일치하지 않는 이유: 벤젠 고리 자체의 전자 분포 및 Cl 원자의 인접 효과를 무시한 근사이기 때문이다.
+    </div>
+  </details>
+
+  <details>
+    <summary>
+      <span class="q-type q-calc">계산</span>
+      H₂O의 분극능 부피 α′ = 1.48×10⁻³⁰ m³일 때, 1.0×10⁵ V m⁻¹의 전기장에서 유도 쌍극자 모멘트 μ*를 μD 단위로 구하라.
+    </summary>
+    <div class="answer">
+      \(\mu^* = \alpha\mathcal{E} = 4\pi\varepsilon_0\alpha'\mathcal{E}\) (\(\alpha = 4\pi\varepsilon_0\alpha'\)이므로)
+      $$\mu^* = 4\pi\times(8.854\times10^{-12}\,\text{J}^{-1}\text{C}^2\text{m}^{-1})\times(1.48\times10^{-30}\,\text{m}^3)\times(1.0\times10^5\,\text{V\,m}^{-1})$$
+      단위: J⁻¹C²m⁻¹ × m³ × Jm⁻¹C⁻¹ = C·m
+      $$= 31.6\times10^{-35}\,\text{C·m} = 4.9\times10^{-6}\,\text{D} = 4.9\,\mu\text{D}$$
+      영구 쌍극자(1.85 D)에 비해 극히 작다 → 일상적인 전기장에서 유도 쌍극자는 무시할 수 있다.
+    </div>
+  </details>
+
+  <details>
+    <summary>
+      <span class="q-type q-calc">계산</span>
+      아마이드 기에서 N(−0.36e, 132 pm, 0), C(+0.45e, 0, 0), O(+0.18e, 182 pm, −87 pm), O(−0.38e, −62 pm, 107 pm) 좌표(pm)가 주어질 때 μ_x와 μ_y를 C·m로 구하라.
+    </summary>
+    <div class="answer">
+      \(\mu_x = \sum_J Q_J x_J\) 계산:<br>
+      $$\mu_x = (-0.36e)(132) + (+0.45e)(0) + (+0.18e)(182) + (-0.38e)(-62)\quad [\text{단위: }e\cdot\text{pm}]$$
+      $$= -47.5 + 0 + 32.8 + 23.6 = 8.8\,e\cdot\text{pm}$$
+      $$= 8.8\times(1.602\times10^{-19}\,\text{C})\times(10^{-12}\,\text{m}) = 1.4\times10^{-30}\,\text{C·m}$$
+      <br>
+      \(\mu_y = \sum_J Q_J y_J\):<br>
+      $$\mu_y = (-0.36e)(0) + (+0.45e)(0) + (+0.18e)(-87) + (-0.38e)(107)$$
+      $$= 0 + 0 - 15.7 - 40.7 = -56\,e\cdot\text{pm} = -19.0\times10^{-30}\,\text{C·m}$$
+    </div>
+  </details>
+
+</section>
+
+</main>
+
+<script>
+/* ============================================================
+   Tab switching
+   ============================================================ */
+function switchTab(idx) {
+  document.querySelectorAll('.tab-panel').forEach((p, i) => {
+    p.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === idx);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ============================================================
+   Theme toggle
+   ============================================================ */
+function toggleTheme() {
+  const body = document.body;
+  const isDark = body.getAttribute('data-theme') === 'dark';
+  body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.querySelector('.theme-toggle').textContent = isDark ? '🌙 다크' : '☀️ 라이트';
+}
+</script>
+
+</body>
+</html>

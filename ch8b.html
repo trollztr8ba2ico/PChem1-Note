@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8B — Many-Electron Atoms</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['$$', '$$']],
+    tags: 'ams'
+  },
+  output: { font: 'mathjax-stix2' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/@mathjax/mathjax-stix2-font@4.0.0/tex-mml-chtml-mathjax-stix2.js"></script>
+
+<style>
+/* ===== CSS VARIABLES ===== */
+:root {
+  --bg: #f7f5f0;
+  --bg2: #efecea;
+  --surface: #ffffff;
+  --surface2: #f2f0eb;
+  --border: #d8d4cc;
+  --text: #1a1a18;
+  --text2: #4a4a44;
+  --text3: #7a7a72;
+  --header-bg: #1a3a2a;
+  --accent: #2d7a4a;
+  --accent2: #1f5c36;
+  --accent-light: #e8f5ee;
+
+  --blue: #1e5799;
+  --blue-bg: #eff4fc;
+  --blue-border: #b8d0f0;
+  --amber: #92600a;
+  --amber-bg: #fef8ec;
+  --amber-border: #f0d898;
+  --green: #1a5c32;
+  --green-bg: #edf7f1;
+  --green-border: #a8d8ba;
+  --red: #8b1a1a;
+  --red-bg: #fdf0f0;
+  --red-border: #f0b8b8;
+  --purple: #4a1a7a;
+  --purple-bg: #f4f0fb;
+  --purple-border: #c8a8f0;
+
+  --font-body: 'IBM Plex Sans KR', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-serif: 'Noto Serif KR', serif;
+
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+[data-theme="dark"] {
+  --bg: #12110e;
+  --bg2: #1a1916;
+  --surface: #222018;
+  --surface2: #2a2820;
+  --border: #3a3830;
+  --text: #e8e4dc;
+  --text2: #b0aa9e;
+  --text3: #6a6660;
+  --accent-light: #1a2e22;
+  --blue-bg: #0e1e36;
+  --blue-border: #2a4870;
+  --amber-bg: #2a1e08;
+  --amber-border: #6a4820;
+  --green-bg: #0e2018;
+  --green-border: #2a5038;
+  --red-bg: #220e0e;
+  --red-border: #5a2020;
+  --purple-bg: #180e28;
+  --purple-border: #4a2878;
+  --surface: #1e1c16;
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.75;
+  font-size: 15px;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Paper texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ===== HEADER ===== */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--header-bg);
+  color: #fff;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+.header-title {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  opacity: 0.95;
+}
+
+.header-sub {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  margin-left: 0.75rem;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.theme-btn {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: var(--font-body);
+}
+.theme-btn:hover { background: rgba(255,255,255,0.22); }
+
+/* ===== FLOW BANNER ===== */
+.flow-banner {
+  background: linear-gradient(135deg, var(--header-bg), var(--accent2));
+  color: #fff;
+  padding: 1.2rem 2rem;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  position: relative;
+  overflow: hidden;
+}
+.flow-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.015) 20px, rgba(255,255,255,0.015) 40px);
+}
+.flow-banner-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.flow-step {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+.flow-arrow { opacity: 0.6; font-size: 0.9rem; }
+.flow-label {
+  font-size: 0.7rem;
+  opacity: 0.6;
+  margin-right: 0.3rem;
+}
+
+/* ===== TAB NAVIGATION ===== */
+.tab-nav {
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: sticky;
+  top: 52px;
+  z-index: 90;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  flex-shrink: 0;
+  padding: 0.85rem 1.3rem;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text3);
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--accent); }
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+/* ===== MAIN CONTENT ===== */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== SECTION TITLES ===== */
+h2 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent2);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--accent);
+}
+
+h3 {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 1.8rem 0 0.8rem;
+}
+
+h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 1.2rem 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+p { margin-bottom: 0.9rem; color: var(--text2); }
+p:last-child { margin-bottom: 0; }
+
+/* ===== COLOR BOXES ===== */
+.box {
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+  border-left: 4px solid;
+}
+.box-blue { background: var(--blue-bg); border-color: var(--blue); color: var(--blue); }
+.box-blue p { color: var(--blue); }
+.box-amber { background: var(--amber-bg); border-color: var(--amber); color: var(--amber); }
+.box-amber p { color: var(--amber); }
+.box-green { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+.box-green p { color: var(--green); }
+.box-red { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+.box-red p { color: var(--red); }
+.box-purple { background: var(--purple-bg); border-color: var(--purple); color: var(--purple); }
+.box-purple p { color: var(--purple); }
+
+.box-title {
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+  opacity: 0.8;
+}
+
+/* ===== FORMULA DISPLAY ===== */
+.formula-block {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.formula-label {
+  font-size: 0.75rem;
+  color: var(--text3);
+  font-family: var(--font-mono);
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+/* ===== COMPARE TABLE ===== */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.88rem;
+}
+.compare-table th {
+  background: var(--header-bg);
+  color: #fff;
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+  font-weight: 500;
+}
+.compare-table td {
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+  vertical-align: top;
+}
+.compare-table tr:nth-child(even) td { background: var(--surface2); }
+.compare-table tr:hover td { background: var(--accent-light); }
+
+/* ===== FLOW DIAGRAM ===== */
+.flow-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin: 1.5rem 0;
+}
+.flow-node {
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.6rem 1.4rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--accent2);
+  text-align: center;
+  min-width: 220px;
+  box-shadow: var(--shadow);
+}
+.flow-node.highlight {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent2);
+}
+.flow-node.sub {
+  border-color: var(--border);
+  color: var(--text2);
+  font-size: 0.82rem;
+  background: var(--surface2);
+}
+.flow-down {
+  font-size: 1.2rem;
+  color: var(--accent);
+  line-height: 1.2;
+  opacity: 0.7;
+}
+.flow-reason {
+  font-size: 0.75rem;
+  color: var(--text3);
+  font-style: italic;
+  margin: 0.1rem 0;
+}
+
+/* ===== ORBITAL BOX DIAGRAMS ===== */
+.orbital-diagram {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+  margin: 0.8rem 0;
+  flex-wrap: wrap;
+}
+.orbital-label {
+  font-size: 0.78rem;
+  color: var(--text3);
+  font-family: var(--font-mono);
+  margin-bottom: 0.3rem;
+  text-align: center;
+}
+.orbital-group { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
+.orb-boxes { display: flex; gap: 3px; }
+.orb-box {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  position: relative;
+}
+.orb-box.filled-up::after { content: '↑'; color: var(--accent2); font-size: 1.1rem; }
+.orb-box.filled-down::after { content: '↓'; color: var(--blue); font-size: 1.1rem; }
+.orb-box.filled-both::after { content: '↑↓'; color: var(--accent2); font-size: 0.7rem; }
+.energy-axis {
+  width: 3px;
+  background: linear-gradient(to top, var(--accent), transparent);
+  border-radius: 2px;
+  align-self: stretch;
+  min-height: 60px;
+  margin-right: 0.5rem;
+  opacity: 0.4;
+}
+
+/* ===== SPIN NOTATION ===== */
+.spin-pair { display: inline-flex; gap: 0.2rem; align-items: center; }
+.spin-up { color: var(--accent2); font-weight: 600; }
+.spin-down { color: var(--blue); font-weight: 600; }
+
+/* ===== HIGHLIGHT INLINE ===== */
+.hl { background: var(--amber-bg); padding: 0 0.2rem; border-radius: 3px; font-weight: 500; }
+.hl-green { background: var(--green-bg); padding: 0 0.2rem; border-radius: 3px; }
+.code { font-family: var(--font-mono); font-size: 0.88rem; background: var(--surface2); padding: 0.1rem 0.35rem; border-radius: 4px; }
+
+/* ===== DETAILS / TOGGLE ===== */
+details {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 0.8rem 0;
+  overflow: hidden;
+}
+summary {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  user-select: none;
+}
+summary::before { content: '▶'; font-size: 0.7rem; color: var(--accent); transition: transform 0.2s; }
+details[open] summary::before { transform: rotate(90deg); }
+.details-body {
+  padding: 0.8rem 1rem 1rem;
+  border-top: 1px solid var(--border);
+}
+.answer-tag {
+  display: inline-block;
+  background: var(--green-bg);
+  color: var(--green);
+  border: 1px solid var(--green-border);
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* ===== MINI BADGE ===== */
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.badge-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.badge-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+.badge-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+.badge-red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+.badge-purple { background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple-border); }
+
+/* ===== IE TREND SIMPLE TABLE ===== */
+.ie-trend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.8rem;
+  margin: 1rem 0;
+}
+.ie-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+  font-size: 0.85rem;
+}
+.ie-card-title {
+  font-weight: 600;
+  color: var(--accent2);
+  margin-bottom: 0.4rem;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ===== DIVIDER ===== */
+.divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border), transparent);
+  margin: 2rem 0;
+}
+
+/* ===== SCROLL ANIMATION ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  main { padding: 1.2rem 1rem 3rem; }
+  .tab-btn { padding: 0.75rem 0.9rem; font-size: 0.78rem; }
+  h2 { font-size: 1.25rem; }
+  .flow-banner-inner { gap: 0.3rem; }
+}
+</style>
+</head>
+<body data-theme="light">
+
+<header>
+  <div style="display:flex;align-items:center;gap:0.5rem;">
+    <span class="header-title">8B — Many-Electron Atoms</span>
+    <span class="header-sub">Atkins' Physical Chemistry 12th ed.</span>
+  </div>
+  <div class="header-right">
+    <button class="theme-btn" onclick="toggleTheme()">🌙 다크</button>
+  </div>
+</header>
+
+<!-- Flow Banner -->
+<div class="flow-banner">
+  <div class="flow-banner-inner">
+    <span class="flow-label">큰 흐름:</span>
+    <span class="flow-step">전자-전자 반발</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">Orbital Approx.</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">Spin + Pauli</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">Slater Det.</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">Screening/Penetration</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">Aufbau + Hund</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">Hartree-Fock</span>
+  </div>
+</div>
+
+<!-- Tab Navigation -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('tab-why')">① 왜 어려운가</button>
+  <button class="tab-btn" onclick="showTab('tab-spin')">② Spin</button>
+  <button class="tab-btn" onclick="showTab('tab-pauli')">③ Pauli 원리</button>
+  <button class="tab-btn" onclick="showTab('tab-slater')">④ Slater Det.</button>
+  <button class="tab-btn" onclick="showTab('tab-screen')">⑤ Screening/Penetration</button>
+  <button class="tab-btn" onclick="showTab('tab-aufbau')">⑥ Aufbau + Hund</button>
+  <button class="tab-btn" onclick="showTab('tab-ie')">⑦ IE / EA</button>
+  <button class="tab-btn" onclick="showTab('tab-hf')">⑧ Hartree-Fock</button>
+  <button class="tab-btn" onclick="showTab('tab-exam')">📝 예상문제</button>
+</nav>
+
+<!-- ===================== TAB 1: 왜 어려운가 ===================== -->
+<div id="tab-why" class="tab-content active">
+<main>
+  <h2>왜 다전자 원자는 exact solution이 없나?</h2>
+
+  <div class="box box-blue reveal">
+    <div class="box-title">📌 핵심 문제</div>
+    <p>수소꼴(1전자계)은 Schrödinger 방정식을 exact하게 풀 수 있었다. 전자가 2개만 돼도 풀 수 없는 이유는 딱 하나 — <strong>전자-전자 반발 항</strong>이 생기기 때문이다.</p>
+  </div>
+
+  <h3>헬륨의 Hamiltonian</h3>
+  <p>헬륨(Z=2, 전자 2개)의 Hamiltonian을 써보면:</p>
+
+  <div class="formula-block reveal">
+    <div class="formula-label">Helium Hamiltonian</div>
+    $$\hat{H} = \underbrace{-\frac{\hbar^2}{2m_e}\nabla_1^2 - \frac{2e^2}{4\pi\varepsilon_0 r_1}}_{\hat{H}_1} + \underbrace{-\frac{\hbar^2}{2m_e}\nabla_2^2 - \frac{2e^2}{4\pi\varepsilon_0 r_2}}_{\hat{H}_2} + \underbrace{\frac{e^2}{4\pi\varepsilon_0 r_{12}}}_{\text{문제의 항}}$$
+  </div>
+
+  <div class="box box-red reveal">
+    <div class="box-title">⚠️ 왜 변수분리가 안 되나</div>
+    <p>\(r_{12} = |\mathbf{r}_1 - \mathbf{r}_2|\) — 이 거리는 전자1과 전자2의 좌표가 <strong>함께 얽혀있다.</strong> 이 항 때문에 \(\Psi(\mathbf{r}_1, \mathbf{r}_2) = \psi(\mathbf{r}_1)\psi(\mathbf{r}_2)\)처럼 분리가 불가능하다.</p>
+  </div>
+
+  <h3>Orbital Approximation — 첫 번째 근사</h3>
+  <p>해결책: <strong>각 전자가 나머지 전자들의 평균 장(mean field) 속에서 독립적으로 움직인다</strong>고 가정한다.</p>
+
+  <div class="formula-block reveal">
+    <div class="formula-label">Orbital Approximation</div>
+    $$\Psi(\mathbf{r}_1, \mathbf{r}_2, \ldots) \approx \psi(\mathbf{r}_1)\psi(\mathbf{r}_2)\cdots$$
+  </div>
+
+  <div class="box box-green reveal">
+    <div class="box-title">✅ 검증</div>
+    <p>\(\hat{H} = \hat{H}_1 + \hat{H}_2\)로 근사하면 (전자-전자 반발 항 제거),</p>
+    $$\hat{H}\Psi = (\hat{H}_1+\hat{H}_2)\psi(1)\psi(2) = E_1\psi(1)\psi(2) + \psi(1)E_2\psi(2) = (E_1+E_2)\Psi$$
+    <p>→ <strong>전체 에너지 = 각 전자 에너지의 합</strong>이 성립한다. (전자-전자 반발 항을 무시했을 때)</p>
+  </div>
+
+  <h3>헬륨에 적용 — Z_eff 도입</h3>
+  <p>두 전자가 모두 1s 오비탈에 있을 때, 한 전자가 다른 전자를 가려주는 효과를 <strong>Z_eff</strong>로 흡수:</p>
+
+  <div class="formula-block reveal">
+    $$\Psi(\mathbf{r}_1, \mathbf{r}_2) = \frac{Z_\text{eff}^3}{\pi a_0^3}\, e^{-Z_\text{eff}(r_1+r_2)/a_0}$$
+  </div>
+
+  <p>실험적으로 He의 \(Z_\text{eff} \approx 1.69\) (실제 Z=2보다 작음 — 다른 전자가 가려주니까).</p>
+
+  <div class="box box-amber reveal">
+    <div class="box-title">💡 Orbital Approximation의 의미</div>
+    <p>이 근사 덕분에 원자의 전자 구조를 <strong>전자 배치(configuration)</strong>로 기술할 수 있게 된다. 예: 산소 → 1s² 2s² 2p⁴</p>
+  </div>
+
+  <div class="flow-diagram reveal">
+    <div class="flow-node">수소꼴: exact solution ✓</div>
+    <div class="flow-down">↓</div>
+    <div class="flow-reason">전자-전자 반발 \(e^2/4\pi\varepsilon_0 r_{12}\) 등장</div>
+    <div class="flow-node">다전자계: 변수분리 불가</div>
+    <div class="flow-down">↓</div>
+    <div class="flow-reason">근사: 평균 장(mean field) 가정</div>
+    <div class="flow-node highlight">Orbital Approximation: \(\Psi \approx \psi_1\psi_2\cdots\)</div>
+    <div class="flow-down">↓</div>
+    <div class="flow-reason">다음 문제: 파동함수가 Pauli 원리를 만족하는가?</div>
+    <div class="flow-node">Spin + Pauli Principle → 다음 탭</div>
+  </div>
+
+</main>
+</div>
+
+<!-- ===================== TAB 2: SPIN ===================== -->
+<div id="tab-spin" class="tab-content">
+<main>
+  <h2>Spin — 네 번째 양자수</h2>
+
+  <div class="box box-blue reveal">
+    <div class="box-title">📌 왜 여기서 스핀이 나오나?</div>
+    <p>다전자 원자에서 전자를 완전히 기술하려면 공간 좌표만으론 부족하다. 전자를 구별하는 데 스핀 양자수(m_s)가 필요하고, 이게 Pauli 배타원리의 핵심이 된다.</p>
+  </div>
+
+  <h3>Stern-Gerlach 실험 (1922)</h3>
+  <p>비균일 자기장(magnetic field gradient)을 통과시킨 Ag 원자 빔이 <strong>딱 2줄</strong>로 갈라졌다. 고전역학은 연속적인 퍼짐을 예측했지만.</p>
+
+  <div class="formula-block reveal">
+    <div class="formula-label">Stern-Gerlach — 힘의 원리</div>
+    $$V = -\boldsymbol{\mu}\cdot\mathbf{B} = -\mu_z B_z, \qquad \mu_z = \gamma_e \hbar m_s$$
+    $$F(z) = -\frac{dV}{dz} = \gamma_e \hbar m_s \frac{dB_z}{dz}$$
+  </div>
+
+  <p>Ag(5s¹) 빔 → 2줄 분리 → 2s+1 = 2 → <strong>s = 1/2</strong></p>
+
+  <div class="box box-purple reveal">
+    <div class="box-title">수식 정리</div>
+    <table class="compare-table">
+      <tr><th>기호</th><th>의미</th><th>값</th></tr>
+      <tr><td>\(s\)</td><td>스핀 양자수</td><td>1/2 (전자 고유값)</td></tr>
+      <tr><td>\(m_s\)</td><td>스핀 자기 양자수</td><td>+1/2 (α, ↑) 또는 −1/2 (β, ↓)</td></tr>
+      <tr><td>\(\{s(s+1)\}^{1/2}\hbar\)</td><td>스핀 각운동량 크기</td><td>\(\frac{\sqrt{3}}{2}\hbar\)</td></tr>
+      <tr><td>\(m_s\hbar\)</td><td>z방향 성분</td><td>\(\pm\frac{1}{2}\hbar\)</td></tr>
+    </table>
+  </div>
+
+  <h3>스핀은 어디서 나오나?</h3>
+  <div class="box box-amber reveal">
+    <div class="box-title">⭐ 중요</div>
+    <p>비상대론적 Schrödinger 방정식에서는 스핀이 자연스럽게 등장하지 않는다. <strong>Dirac이 상대론적 양자역학(Dirac equation)에서 이론적으로 유도</strong>했다 — s=1/2는 상대론적 효과의 잔재다.</p>
+  </div>
+
+  <h3>Fermion vs Boson</h3>
+  <table class="compare-table reveal">
+    <tr><th></th><th>Fermion</th><th>Boson</th></tr>
+    <tr><td>스핀</td><td>반정수 (1/2, 3/2, ...)</td><td>정수 (0, 1, 2, ...)</td></tr>
+    <tr><td>예시</td><td>전자, 양성자, 중성자</td><td>광자(γ), 중간자</td></tr>
+    <tr><td>파동함수</td><td><strong>반대칭</strong> (Pauli 원리)</td><td>대칭 (무한 점유 가능)</td></tr>
+    <tr><td>응용</td><td>원자 전자 배치, 화학</td><td>레이저, BEC</td></tr>
+  </table>
+
+  <div class="box box-green reveal">
+    <div class="box-title">🌌 우주론적 한 줄</div>
+    <p><em>"Matter is an assembly of fermions held together by forces conveyed by bosons."</em><br>
+    물질 = 페르미온 집합, 힘 = 보손(광자, 글루온 등)이 전달.</p>
+  </div>
+
+</main>
+</div>
+
+<!-- ===================== TAB 3: PAULI ===================== -->
+<div id="tab-pauli" class="tab-content">
+<main>
+  <h2>Pauli Principle & Exclusion Principle</h2>
+
+  <div class="box box-amber reveal">
+    <div class="box-title">💡 Pauli Principle (더 근본적인 버전)</div>
+    <p><strong>두 동일한 페르미온의 라벨을 교환하면 전체 파동함수의 부호가 바뀐다.</strong></p>
+    $$\Psi(q_1,\ldots,q_i,\ldots,q_j,\ldots) = -\Psi(q_1,\ldots,q_j,\ldots,q_i,\ldots)$$
+    <p>여기서 \(q_i\)는 전자 i의 공간좌표 + 스핀 전체.</p>
+  </div>
+
+  <h3>배타원리는 Pauli 원리에서 자동으로 나온다</h3>
+  <p>만약 두 전자가 완전히 동일한 상태라면 (\(q_i = q_j\)):</p>
+
+  <div class="formula-block reveal">
+    $$\Psi(\ldots, q_i, \ldots, q_i, \ldots) = -\Psi(\ldots, q_i, \ldots, q_i, \ldots)$$
+    $$\therefore\; 2\Psi = 0 \;\Rightarrow\; \Psi = 0$$
+  </div>
+
+  <div class="box box-red reveal">
+    <div class="box-title">🎯 핵심</div>
+    <p>파동함수가 0 = <strong>그 상태가 물리적으로 존재하지 않는다.</strong> "같은 n, l, m_l, m_s 금지"는 공리가 아니라 반대칭 조건에서 <em>자동으로</em> 유도되는 결과다.</p>
+  </div>
+
+  <hr class="divider">
+  <h3>왜 공간(ψ)과 스핀(α/β)을 따로 써야 하나?</h3>
+
+  <div class="box box-blue reveal">
+    <div class="box-title">📌 전자 기술의 두 층위</div>
+    <p>8A에서 쓴 \(\psi(\mathbf{r})\)는 <strong>공간 좌표만</strong> 담은 함수다. 전자의 스핀은 r, θ, φ로 표현이 안 되는 별도의 자유도다. 그래서:</p>
+    <p style="text-align:center; font-weight:600; font-size:1.05rem;">전자 하나의 완전한 기술 = \(\psi(\mathbf{r})\) × \(\alpha\) 또는 \(\psi(\mathbf{r})\) × \(\beta\)</p>
+    <p>이를 <strong>spin-orbital</strong>이라 한다.</p>
+  </div>
+
+  <h3>Two-Electron System 구성</h3>
+  <p>두 전자가 같은 오비탈 ψ에 있을 때 (He 바닥상태):</p>
+  <p><strong>Step 1.</strong> 공간 부분 ψ(1)ψ(2)는 고정. 스핀 조합 4가지:</p>
+
+  <table class="compare-table reveal">
+    <tr><th>스핀 조합</th><th>1↔2 교환 후</th><th>대칭성</th><th>허용?</th></tr>
+    <tr><td>α(1)α(2)</td><td>α(2)α(1) = α(1)α(2)</td><td>대칭</td><td>❌</td></tr>
+    <tr><td>β(1)β(2)</td><td>β(2)β(1) = β(1)β(2)</td><td>대칭</td><td>❌</td></tr>
+    <tr><td>\(\sigma_+(1,2) = \frac{1}{\sqrt{2}}[\alpha(1)\beta(2)+\beta(1)\alpha(2)]\)</td><td>σ₊(2,1) = σ₊(1,2)</td><td>대칭</td><td>❌</td></tr>
+    <tr><td>\(\sigma_-(1,2) = \frac{1}{\sqrt{2}}[\alpha(1)\beta(2)-\beta(1)\alpha(2)]\)</td><td>σ₋(2,1) = −σ₋(1,2)</td><td><strong>반대칭</strong></td><td><strong>✅</strong></td></tr>
+  </table>
+
+  <p><strong>공간 부분이 대칭</strong>이므로 전체 Ψ를 반대칭으로 만들려면 <strong>스핀 부분이 반대칭</strong>이어야 한다 → σ₋만 허용.</p>
+
+  <div class="formula-block reveal">
+    <div class="formula-label">같은 오비탈 — 유일하게 허용되는 파동함수</div>
+    $$\Psi = \psi(1)\psi(2)\cdot\sigma_-(1,2) = \frac{1}{\sqrt{2}}\psi(1)\psi(2)[\alpha(1)\beta(2)-\beta(1)\alpha(2)]$$
+  </div>
+
+  <div class="box box-green reveal">
+    <div class="box-title">✅ 결론: 배타원리의 수식적 근거</div>
+    <p>같은 오비탈에 전자 2개가 들어가면 <strong>반드시 스핀이 반대(↑↓)</strong>여야 한다 — 이건 규칙이 아니라 반대칭 조건의 수학적 필연이다.</p>
+  </div>
+
+  <h3>Pauli 배타원리 (실용 버전)</h3>
+  <div class="box box-blue reveal">
+    <div class="box-title">Pauli Exclusion Principle</div>
+    <p><strong>한 오비탈에 최대 2개 전자, 그 2개는 반드시 스핀이 반대(↑↓)여야 한다.</strong></p>
+    <p>짝지어진(↑↓) 전자의 순 스핀 각운동량 = 0 (서로 상쇄).</p>
+    <p>이 원리는 전자뿐 아니라 모든 동일 페르미온 쌍(양성자, ³⁵Cl 핵 등)에 적용된다.</p>
+  </div>
+
+</main>
+</div>
+
+<!-- ===================== TAB 4: SLATER ===================== -->
+<div id="tab-slater" class="tab-content">
+<main>
+  <h2>Slater Determinant</h2>
+
+  <p>두 전자계의 반대칭 파동함수를 N개 전자로 일반화하는 방법이다.</p>
+
+  <h3>He 바닥상태에서 출발</h3>
+  <div class="formula-block reveal">
+    $$\Psi(1,2) = \frac{1}{\sqrt{2}}\psi(1)\psi(2)[\alpha(1)\beta(2)-\beta(1)\alpha(2)]$$
+    $$= \frac{1}{\sqrt{2}}[\psi(1)\alpha(1)\cdot\psi(2)\beta(2) - \psi(1)\beta(1)\cdot\psi(2)\alpha(2)]$$
+    $$= \frac{1}{\sqrt{2}}\begin{vmatrix}\psi(1)\alpha(1) & \psi(2)\alpha(2)\\ \psi(1)\beta(1) & \psi(2)\beta(2)\end{vmatrix}$$
+  </div>
+
+  <div class="box box-blue reveal">
+    <div class="box-title">📌 Spin-Orbital</div>
+    <p>\(\psi(i)\alpha(i)\)처럼 공간 오비탈 × 스핀 함수를 묶은 것을 <strong>spin-orbital</strong>이라 한다.</p>
+  </div>
+
+  <h3>N전자로 일반화 — Slater Determinant</h3>
+  <div class="formula-block reveal">
+    <div class="formula-label">N×N Slater Determinant</div>
+    $$\Psi(1,2,\ldots,N) = \frac{1}{(N!)^{1/2}}
+    \begin{vmatrix}
+    \psi_a(1)\alpha(1) & \psi_a(2)\alpha(2) & \cdots & \psi_a(N)\alpha(N)\\
+    \psi_a(1)\beta(1) & \psi_a(2)\beta(2) & \cdots & \psi_a(N)\beta(N)\\
+    \psi_b(1)\alpha(1) & \psi_b(2)\alpha(2) & \cdots & \psi_b(N)\alpha(N)\\
+    \vdots & \vdots & & \vdots \\
+    \psi_z(1)\beta(1) & \psi_z(2)\beta(2) & \cdots & \psi_z(N)\beta(N)
+    \end{vmatrix}$$
+  </div>
+
+  <div class="box box-green reveal">
+    <div class="box-title">왜 행렬식을 쓰나?</div>
+    <p>행렬식의 두 성질이 Pauli 원리와 정확히 대응한다:</p>
+    <p>① <strong>두 열 교환 → 부호 반전</strong> ↔ 두 전자 교환 → Ψ 부호 반전 (반대칭 자동 보장)</p>
+    <p>② <strong>두 열이 같으면 행렬식 = 0</strong> ↔ 두 전자가 동일 상태 → Ψ = 0 (배타원리 자동 내포)</p>
+    <p>N! 항 = N개 전자를 N개 spin-orbital에 배치하는 모든 순열의 반대칭 조합.</p>
+  </div>
+
+  <hr class="divider">
+
+  <h3>들뜬상태 He — Singlet vs Triplet</h3>
+  <p>전자 하나는 1s, 하나는 2s인 경우 — 공간 부분이 두 종류 가능하다:</p>
+
+  <table class="compare-table reveal">
+    <tr><th></th><th>Singlet (S=0)</th><th>Triplet (S=1)</th></tr>
+    <tr><td>공간 부분</td><td>\(\frac{1}{\sqrt{2}}[1s(1)2s(2)+1s(2)2s(1)]\) <span class="badge badge-blue">대칭</span></td><td>\(\frac{1}{\sqrt{2}}[1s(1)2s(2)-1s(2)2s(1)]\) <span class="badge badge-red">반대칭</span></td></tr>
+    <tr><td>스핀 부분</td><td>\(\sigma_-\) <span class="badge badge-red">반대칭</span></td><td>α(1)α(2), σ₊, β(1)β(2) — 3가지 <span class="badge badge-blue">대칭</span></td></tr>
+    <tr><td>전체 Ψ</td><td>반대칭 ✅</td><td>반대칭 ✅</td></tr>
+    <tr><td>에너지</td><td>더 높음</td><td><strong>더 낮음</strong> (Hund's rule 예고)</td></tr>
+  </table>
+
+  <h3>Spin Correlation — Triplet이 왜 더 안정한가</h3>
+  <div class="box box-amber reveal">
+    <div class="box-title">⭐ 핵심 — 스핀이 에너지에 영향을 준다</div>
+    <p>Triplet의 공간 파동함수(Ψ₋)에서 r₁ = r₂ (두 전자가 같은 위치)이면:</p>
+    $$\Psi_- = \frac{1}{\sqrt{2}}[1s(r)2s(r) - 1s(r)2s(r)] = 0$$
+    <p><strong>같은 위치에서 확률 = 0</strong> → 두 전자가 서로 피한다 → 쿨롱 반발 감소 → <strong>에너지 낮음</strong></p>
+    <p>이것이 <strong>exchange energy (교환 에너지)</strong>다. 평행 스핀(σ₊) 전자들은 같은 위치에 있을 수 없어서 반발이 자동으로 줄어든다.</p>
+  </div>
+
+</main>
+</div>
+
+<!-- ===================== TAB 5: SCREENING/PENETRATION ===================== -->
+<div id="tab-screen" class="tab-content">
+<main>
+  <h2>Screening & Penetration</h2>
+
+  <div class="box box-blue reveal">
+    <div class="box-title">📌 왜 이게 중요한가?</div>
+    <p>수소꼴에서는 같은 n이면 l이 달라도 에너지가 같았다 (n²-fold 縮退). 다전자 원자에서는 <strong>이 縮退가 깨진다.</strong> 그 이유가 Screening과 Penetration이다.</p>
+  </div>
+
+  <h3>Shielding (차폐)</h3>
+  <p>바깥 전자는 핵 전체 전하 Z를 못 느낀다. 안쪽 전자들이 가려주니까.</p>
+  <ul style="color:var(--text2); padding-left:1.5rem; margin:0.5rem 0;">
+    <li>반지름 r <strong>안쪽</strong> 전자들 → 핵 전하 차폐 (점전하처럼 작용)</li>
+    <li>반지름 r <strong>바깥쪽</strong> 전자들 → 알짜 힘 없음 (shell theorem)</li>
+  </ul>
+
+  <div class="formula-block reveal">
+    $$Z_\text{eff} = Z - \sigma$$
+    <p style="font-size:0.82rem; color:var(--text3); margin-top:0.5rem;">\(\sigma\) = shielding constant (차폐 상수)</p>
+  </div>
+
+  <table class="compare-table reveal">
+    <tr><th>원소</th><th>Z</th><th>오비탈</th><th>Z_eff</th><th>해석</th></tr>
+    <tr><td>He</td><td>2</td><td>1s</td><td>1.69</td><td>나머지 1s 전자가 약간 가려줌</td></tr>
+    <tr><td rowspan="3">C</td><td rowspan="3">6</td><td>1s</td><td>5.67</td><td>가장 안쪽 → 거의 안 가려짐</td></tr>
+    <tr><td>2s</td><td>3.22</td><td>1s 2개가 많이 가려줌</td></tr>
+    <tr><td>2p</td><td>3.14</td><td>2s보다 조금 더 가려짐 ← 핵심!</td></tr>
+  </table>
+
+  <hr class="divider">
+
+  <h3>Penetration (침투)</h3>
+  <p>RDF 그래프에서 3s와 3p를 비교하면 핵 근처(r ≈ 0 부근)에 <strong>3s만 작은 bump</strong>가 있다.</p>
+
+  <div class="box box-amber reveal">
+    <div class="box-title">⭐ Penetration의 효과</div>
+    <p>s 오비탈은 핵 아주 가까이까지 <strong>침투(penetrate)</strong>할 수 있다. 그 순간 안쪽 전자들의 가림막 안쪽으로 들어가 → 핵전하를 고스란히 느낌 → Z_eff 증가 → 에너지 감소.</p>
+    <p>침투 능력: <strong>s > p > d > f</strong></p>
+  </div>
+
+  <h3>탄소의 역설 — 2s vs 2p</h3>
+  <div class="box box-red reveal">
+    <div class="box-title">⚠️ 직관과 반대!</div>
+    <p>C에서 2s의 평균 반지름(99 pm) > 2p의 평균 반지름(84 pm). 2s가 평균적으로 더 멀리 있다.</p>
+    <p>근데 2s 에너지가 더 낮다 (더 안정). 왜?</p>
+    <p>→ 2s에는 핵 아주 가까이의 <strong>작은 bump</strong>가 있다. 평균은 멀어도 가끔씩 핵에 아주 가까이 침투 → Z_eff를 크게 느끼는 순간이 전체 에너지를 낮춰버린다.</p>
+    <p><strong>"평균 위치"가 아니라 "핵 근처 확률"이 에너지를 결정한다.</strong></p>
+  </div>
+
+  <h3>결론: 에너지 순서</h3>
+  <div class="box box-green reveal">
+    <div class="box-title">✅ 다전자 원자에서 같은 주껍질(n) 내 에너지 순서</div>
+    <p style="text-align:center; font-size:1.15rem; font-weight:600;">s &lt; p &lt; d &lt; f</p>
+    <p>→ 수소꼴의 n²-fold 縮退가 깨진다. 개별 subshell은 여전히 縮退 (m_l 방향). 이게 Aufbau 원리의 토대.</p>
+  </div>
+
+</main>
+</div>
+
+<!-- ===================== TAB 6: AUFBAU + HUND ===================== -->
+<div id="tab-aufbau" class="tab-content">
+<main>
+  <h2>Aufbau Principle & Hund's Rule</h2>
+
+  <h3>Aufbau (쌓음) 원리</h3>
+  <div class="box box-blue reveal">
+    <div class="box-title">Building-Up Principle</div>
+    <p>맨 핵(bare nucleus)에 전자를 하나씩 넣어가되, <strong>에너지 낮은 오비탈부터</strong> 채운다. (Pauli 배타원리 준수)</p>
+  </div>
+
+  <p>채우는 순서:</p>
+  <div class="formula-block reveal" style="text-align:left; font-family:var(--font-mono); font-size:0.95rem;">
+    1s → 2s → 2p → 3s → 3p → <span style="color:var(--accent); font-weight:600;">4s → 3d</span> → 4p → 5s → 4d → 5p → 6s → ...
+  </div>
+
+  <div class="box box-amber reveal">
+    <div class="box-title">⭐ 4s &lt; 3d 이유</div>
+    <p>4s는 침투 효과로 3d보다 에너지가 낮다 → 채울 때 4s 먼저.</p>
+    <p>하지만 <strong>이온화할 때는 4s가 먼저 빠진다</strong> — 다전자 환경에서 3d가 4s보다 핵에 가깝고, 전자가 줄어들면 3d가 더 안정해지기 때문이다.</p>
+    <p>예: V²⁺ = [Ar]3d³ (Sc = [Ar]4s²3d¹에서 4s 2개 먼저 제거)</p>
+  </div>
+
+  <h3>전이금속 전자 배치 예외</h3>
+  <table class="compare-table reveal">
+    <tr><th>원소</th><th>예상</th><th>실제</th><th>이유</th></tr>
+    <tr><td>Cr (Z=24)</td><td>[Ar]4s²3d⁴</td><td><strong>[Ar]4s¹3d⁵</strong></td><td>d⁵ 반채움 — exchange energy 최대화</td></tr>
+    <tr><td>Cu (Z=29)</td><td>[Ar]4s²3d⁹</td><td><strong>[Ar]4s¹3d¹⁰</strong></td><td>d¹⁰ 완전채움 — 구형 대칭, 안정</td></tr>
+  </table>
+
+  <div class="box box-red reveal">
+    <div class="box-title">⚠️ 주의 — Orbital picture는 근사</div>
+    <p>4s와 3d는 에너지가 매우 비슷해서, 전자-전자 반발이 조금만 바뀌어도 에너지 순서가 바뀐다. <strong>전자 배치 자체가 오비탈 에너지를 바꾼다</strong> — 고정된 에너지 레벨에 전자를 채우는 게 아니다!</p>
+  </div>
+
+  <hr class="divider">
+
+  <h3>Hund's Rule (훈트의 규칙)</h3>
+  <div class="box box-blue reveal">
+    <div class="box-title">Hund's Maximum Multiplicity Rule</div>
+    <p><strong>바닥상태에서 짝 안 지은(unpaired) 전자 수가 최대가 되도록 배치한다.</strong></p>
+    <p>→ 같은 subshell의 여러 오비탈에 전자를 넣을 때, 하나씩 먼저 채우고(모두 같은 스핀) 그 다음에 짝을 짓는다.</p>
+  </div>
+
+  <h4>예시: N과 O의 2p 배치</h4>
+
+  <div class="reveal">
+    <p><strong>N (Z=7)</strong>: [He]2s² <span class="badge badge-green">2p³ — 완전 unpaired</span></p>
+    <div class="orbital-diagram">
+      <div class="orbital-group">
+        <div class="orbital-label">2px</div>
+        <div class="orb-boxes"><div class="orb-box filled-up"></div></div>
+      </div>
+      <div class="orbital-group">
+        <div class="orbital-label">2py</div>
+        <div class="orb-boxes"><div class="orb-box filled-up"></div></div>
+      </div>
+      <div class="orbital-group">
+        <div class="orbital-label">2pz</div>
+        <div class="orb-boxes"><div class="orb-box filled-up"></div></div>
+      </div>
+    </div>
+
+    <p style="margin-top:1rem;"><strong>O (Z=8)</strong>: [He]2s² <span class="badge badge-amber">2p⁴ — pair 하나 생김</span></p>
+    <div class="orbital-diagram">
+      <div class="orbital-group">
+        <div class="orbital-label">2px</div>
+        <div class="orb-boxes"><div class="orb-box filled-both"></div></div>
+      </div>
+      <div class="orbital-group">
+        <div class="orbital-label">2py</div>
+        <div class="orb-boxes"><div class="orb-box filled-up"></div></div>
+      </div>
+      <div class="orbital-group">
+        <div class="orbital-label">2pz</div>
+        <div class="orb-boxes"><div class="orb-box filled-up"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Hund's Rule의 물리적 이유 — Spin Correlation</h3>
+  <div class="box box-amber reveal">
+    <div class="box-title">⭐ 왜 unpaired가 더 안정한가?</div>
+    <p>평행 스핀(parallel spin) 전자들의 공간 파동함수는 <strong>반대칭</strong>이다:</p>
+    $$\Psi_- \propto [1s(r_1)2s(r_2) - 1s(r_2)2s(r_1)]$$
+    <p>r₁ = r₂이면 Ψ₋ = 0 → <strong>두 전자가 같은 위치에 있을 확률 = 0</strong></p>
+    <p>→ 전자들이 서로 피해 다닌다 → 쿨롱 반발 감소 → 에너지 낮음</p>
+    <p>이 효과를 <strong>exchange energy (교환 에너지)</strong> 또는 <strong>spin correlation</strong>이라 한다.</p>
+  </div>
+
+  <div class="flow-diagram reveal">
+    <div class="flow-node">평행 스핀 (triplet) σ₊</div>
+    <div class="flow-down">↓</div>
+    <div class="flow-reason">공간 파동함수가 반대칭 → r₁=r₂에서 Ψ=0</div>
+    <div class="flow-node">두 전자가 공간적으로 서로 피함</div>
+    <div class="flow-down">↓</div>
+    <div class="flow-reason">쿨롱 반발 \(e^2/4\pi\varepsilon_0 r_{12}\) 감소</div>
+    <div class="flow-node highlight">에너지 낮음 → Hund's Rule</div>
+  </div>
+
+</main>
+</div>
+
+<!-- ===================== TAB 7: IE / EA (경향성만) ===================== -->
+<div id="tab-ie" class="tab-content">
+<main>
+  <h2>Ionization Energy & Electron Affinity</h2>
+
+  <div class="box box-amber reveal">
+    <div class="box-title">📌 학습 범위 안내</div>
+    <p>이 파트는 <strong>수치 계산·공식보다 경향성 파악</strong>이 목표다. Kirchhoff's law 유도 등 열역학적 세부 사항은 시험 범위 밖.</p>
+  </div>
+
+  <h3>정의 (간략)</h3>
+  <table class="compare-table reveal">
+    <tr><th>개념</th><th>정의</th><th>식</th></tr>
+    <tr><td><strong>I₁ (1차 이온화 에너지)</strong></td><td>기체 상태 중성 원자에서 전자 하나 떼어내는 최소 에너지</td><td>M(g) → M⁺(g) + e⁻(g)</td></tr>
+    <tr><td><strong>I₂ (2차)</strong></td><td>1가 양이온에서 전자 하나 더 떼어냄</td><td>항상 I₂ > I₁</td></tr>
+    <tr><td><strong>E_ea (전자 친화도)</strong></td><td>기체 상태 원자가 전자를 받을 때 방출되는 에너지</td><td>X(g) + e⁻ → X⁻(g)</td></tr>
+  </table>
+
+  <hr class="divider">
+  <h3>1차 이온화 에너지 주기적 경향성 ← 시험 포인트</h3>
+
+  <div class="ie-trend reveal">
+    <div class="ie-card">
+      <div class="ie-card-title">📈 같은 주기 — 오른쪽으로</div>
+      Z 증가 → Z_eff 증가 → 전자를 더 강하게 붙잡음 → <strong>I₁ 대체로 증가</strong>
+    </div>
+    <div class="ie-card">
+      <div class="ie-card-title">📉 같은 족 — 아래로</div>
+      주껍질 증가 → 더 멀고 더 많이 가려짐 → <strong>I₁ 감소</strong>
+    </div>
+  </div>
+
+  <h3>예외 두 가지 — 꼭 알아야 함!</h3>
+
+  <div class="box box-red reveal">
+    <div class="box-title">⚠️ 예외 1: Be → B에서 I₁ 감소</div>
+    <p>Be = [He]2s², B = [He]2s²2p¹</p>
+    <p>2p는 2s보다 침투 적음 → Z_eff 낮음 + 2s² 전자가 2p를 추가로 가려줌 → I₁이 오히려 떨어짐</p>
+    <p><strong>결론: s→p 전환 시 에너지 불연속</strong></p>
+  </div>
+
+  <div class="box box-red reveal">
+    <div class="box-title">⚠️ 예외 2: N → O에서 I₁ 감소</div>
+    <p>N = 2p³ (↑↑↑), O = 2p⁴ (↑↑↑↓)</p>
+    <p>O에서 처음으로 같은 오비탈에 <strong>paired 전자</strong>가 생김 → 전자-전자 반발 증가 → 오히려 빼기 쉬워짐 → I₁ 감소</p>
+    <p><strong>결론: half-filled(d⁵, p³) 배치가 특별히 안정</strong></p>
+  </div>
+
+  <div class="box box-green reveal">
+    <div class="box-title">📊 I₁ 그래프 읽는 법</div>
+    <p>Z=2(He), 10(Ne), 18(Ar)에서 <strong>극대</strong> — noble gas, 완전히 채워진 껍질</p>
+    <p>Z=3(Li), 11(Na)에서 <strong>급락</strong> — 새 껍질 시작, Z_eff 갑자기 작아짐</p>
+    <p>Z_eff: Li ≈ 2.5 (낮음) vs Ne ≈ 5.8 (높음) → I₁ 차이 크게 반영</p>
+  </div>
+
+  <h3>전자 친화도 E_ea 주의사항</h3>
+  <div class="box box-amber reveal">
+    <div class="box-title">부호 주의</div>
+    <p>전자 붙으면 에너지 방출(발열) → ΔH &lt; 0 이지만 <strong>E_ea는 양수로 정의</strong></p>
+    <p>O⁻의 E_ea = <strong>−844 kJ/mol</strong> (음수!) → O²⁻는 자발적으로 생기지 않는다. 결정 격자 에너지 같은 다른 요인이 필요.</p>
+  </div>
+
+</main>
+</div>
+
+<!-- ===================== TAB 8: HARTREE-FOCK ===================== -->
+<div id="tab-hf" class="tab-content">
+<main>
+  <h2>Self-Consistent Field & Hartree-Fock</h2>
+
+  <p>Orbital Approximation에서 전자-전자 반발을 무시했는데, 이걸 <strong>체계적으로 보정</strong>하는 방법이 Hartree-Fock이다.</p>
+
+  <h3>N전자계의 정확한 퍼텐셜</h3>
+  <div class="formula-block reveal">
+    <div class="formula-label">정확한 V (N전자)</div>
+    $$V = \underbrace{-\sum_{i=1}^{N}\frac{Ze^2}{4\pi\varepsilon_0 r_i}}_{\text{핵-전자 인력}} + \underbrace{\frac{1}{2}\sum_{i,j=1}^{N}{}' \frac{e^2}{4\pi\varepsilon_0 r_{ij}}}_{\text{전자-전자 반발}}$$
+    <p style="font-size:0.8rem; color:var(--text3);">∑' = i≠j 조건, 1/2은 double counting 방지</p>
+  </div>
+
+  <h3>Hartree-Fock 방정식</h3>
+  <p>전자 하나(예: 2p 전자)에 집중하고, 나머지를 <strong>고정된 평균 장</strong>으로 취급:</p>
+
+  <div class="formula-block reveal">
+    <div class="formula-label">HF equation (2p 전자 예시)</div>
+    $$\hat{H}(1)\psi_{2p}(1) + V(\text{other electrons})\psi_{2p}(1) - V(\text{exchange correction})\psi_{2p}(1) = E_{2p}\psi_{2p}(1)$$
+  </div>
+
+  <table class="compare-table reveal">
+    <tr><th>항</th><th>내용</th></tr>
+    <tr><td>\(\hat{H}(1)\psi_{2p}(1)\)</td><td>운동에너지 + 핵-전자 인력 (수소꼴 Hamiltonian)</td></tr>
+    <tr><td>\(+V(\text{other electrons})\psi_{2p}(1)\)</td><td>나머지 전자들의 평균 쿨롱 반발 — <strong>Hartree 항</strong></td></tr>
+    <tr><td>\(-V(\text{exchange correction})\psi_{2p}(1)\)</td><td>스핀 상관 효과 (같은 스핀 전자끼리 서로 피하는 효과) — <strong>Fock 항 (exchange)</strong></td></tr>
+  </table>
+
+  <div class="box box-amber reveal">
+    <div class="box-title">🔁 SCF (Self-Consistent Field) 과정</div>
+    <div class="flow-diagram">
+      <div class="flow-node sub">1. 수소꼴 오비탈로 시작 (초기 추측)</div>
+      <div class="flow-down">↓</div>
+      <div class="flow-node sub">2. 전자 1 제외, 나머지 고정</div>
+      <div class="flow-down">↓</div>
+      <div class="flow-node sub">3. 전자 1의 새 오비탈 계산</div>
+      <div class="flow-down">↓</div>
+      <div class="flow-node sub">4. 모든 전자에 반복</div>
+      <div class="flow-down">↓</div>
+      <div class="flow-node highlight">넣은 오비탈 = 나온 오비탈 → Self-Consistent ✓</div>
+    </div>
+  </div>
+
+  <div class="box box-green reveal">
+    <div class="box-title">✅ HF의 의의</div>
+    <p>수소꼴 오비탈(8A)이 시작점이지만, HF를 반복하면 <strong>전자-전자 반발을 포함한 최적 오비탈</strong>로 수렴한다. 결과로 얻은 RDF에서 K(1s), L(2s,2p), M(3s,3p,3d) shell 구조가 명확히 드러난다.</p>
+    <p>Fock 항(exchange correction)은 탭 ④에서 다룬 <strong>spin correlation / exchange energy</strong>와 같은 내용이다.</p>
+  </div>
+
+</main>
+</div>
+
+<!-- ===================== TAB 9: 예상문제 ===================== -->
+<div id="tab-exam" class="tab-content">
+<main>
+  <h2>📝 출제 예상 문제</h2>
+
+  <div class="box box-blue reveal" style="margin-bottom:1.5rem;">
+    <div class="box-title">시험 구성 비율</div>
+    <p>유도·설명형 40% / 원리·개념형 30% / 계산형 30%</p>
+  </div>
+
+  <!-- 유도형 -->
+  <h3>유도·설명형 (40%)</h3>
+
+  <details class="reveal">
+    <summary>Q1. Pauli 배타원리를 반대칭 조건에서 유도하라.</summary>
+    <div class="details-body">
+      <span class="answer-tag">모범 답안 흐름</span>
+      <p>① Pauli principle: 두 동일 페르미온 교환 시 Ψ → −Ψ</p>
+      <p>② qᵢ = qⱼ (두 전자가 동일 상태)이면 교환 후 Ψ가 변화 없음</p>
+      <p>③ 그런데 Pauli에 의해 Ψ = −Ψ → 2Ψ = 0 → Ψ = 0</p>
+      <p>④ Ψ = 0은 해당 상태가 존재하지 않음을 의미 → 두 전자는 동일 양자 상태 불가 → 배타원리</p>
+    </div>
+  </details>
+
+  <details class="reveal">
+    <summary>Q2. He 바닥상태의 파동함수를 Pauli 원리를 적용해 구성하라. (왜 ↑↓이어야 하는가)</summary>
+    <div class="details-body">
+      <span class="answer-tag">모범 답안 흐름</span>
+      <p>① 두 전자 모두 1s → 공간 부분 ψ(1)ψ(2)는 1↔2 교환 불변 → <strong>대칭</strong></p>
+      <p>② 전체 Ψ = 반대칭 (Pauli) → 스핀 부분이 반드시 반대칭이어야 함</p>
+      <p>③ 4가지 스핀 조합 중 반대칭인 것은 σ₋ = (1/√2)[α(1)β(2)−β(1)α(2)]뿐</p>
+      <p>④ 따라서 Ψ = ψ(1)ψ(2)σ₋ → 두 전자의 스핀이 반드시 반대여야 함</p>
+    </div>
+  </details>
+
+  <details class="reveal">
+    <summary>Q3. Slater determinant가 Pauli 원리를 자동으로 만족하는 이유를 설명하라.</summary>
+    <div class="details-body">
+      <span class="answer-tag">모범 답안 흐름</span>
+      <p>① 행렬식의 성질 1: 두 열 교환 → 부호 반전 ↔ 두 전자 교환 → Ψ 부호 반전 (반대칭)</p>
+      <p>② 행렬식의 성질 2: 두 열이 같으면 행렬식 = 0 ↔ 두 전자가 동일 spin-orbital → Ψ = 0 (배타원리)</p>
+      <p>③ 따라서 Slater determinant는 반대칭 조건과 배타원리를 구조적으로 내포한다.</p>
+    </div>
+  </details>
+
+  <details class="reveal">
+    <summary>Q4. Hund's rule이 성립하는 이유를 spin correlation로 설명하라.</summary>
+    <div class="details-body">
+      <span class="answer-tag">모범 답안 흐름</span>
+      <p>① 평행 스핀(triplet, σ₊) 전자들은 공간 파동함수가 반대칭(Ψ₋)</p>
+      <p>② Ψ₋에서 r₁=r₂이면 Ψ₋=0 → 두 전자가 같은 위치에 있을 확률 = 0</p>
+      <p>③ 전자들이 공간적으로 서로 피함 → 쿨롱 반발 e²/4πε₀r₁₂ 감소</p>
+      <p>④ 에너지 낮음 → 바닥상태에서 평행 스핀(unpaired 최대화) 선호 = Hund's rule</p>
+    </div>
+  </details>
+
+  <details class="reveal">
+    <summary>Q5. 다전자 원자에서 같은 n인데 l이 달라지면 왜 에너지가 다른가? (수소꼴 縮退가 깨지는 이유)</summary>
+    <div class="details-body">
+      <span class="answer-tag">모범 답안 흐름</span>
+      <p>① 수소꼴은 전자 1개라 전자-전자 반발 없음 → n만으로 에너지 결정 → n²-fold 縮退</p>
+      <p>② 다전자에서는 안쪽 전자들이 바깥 전자의 핵전하를 차폐(Z_eff = Z−σ)</p>
+      <p>③ s 오비탈은 p, d보다 핵 근처까지 침투(penetration) 가능 → σ 작음 → Z_eff 큼 → 에너지 낮음</p>
+      <p>④ 결과: 같은 n이어도 s &lt; p &lt; d &lt; f 에너지 순서 → 縮退 깨짐</p>
+    </div>
+  </details>
+
+  <!-- 개념형 -->
+  <h3 style="margin-top:2rem;">원리·개념형 (30%)</h3>
+
+  <details class="reveal">
+    <summary>Q6. 스핀이 비상대론적 Schrödinger 방정식에서 나오지 않는 이유는?</summary>
+    <div class="details-body">
+      <span class="answer-tag">모범 답안</span>
+      <p>비상대론적 Schrödinger 방정식은 공간 좌표(r, θ, φ)만을 다루는데, 스핀은 이 좌표계로 표현되지 않는 내재적(intrinsic) 자유도다. 스핀 s=1/2는 Dirac이 상대론적 양자역학(Dirac equation)을 풀면서 이론적으로 유도되었다. 따라서 비상대론적 QM에서는 실험적 사실로 외삽하거나 추가 postulate로 도입해야 한다.</p>
+    </div>
+  </details>
+
+  <details class="reveal">
+    <summary>Q7. 4s 이후 3d를 채우는데, 이온화할 때는 왜 4s가 먼저 빠지나?</summary>
+    <div class="details-body">
+      <span class="answer-tag">모범 답안</span>
+      <p>채울 때: 중성 원자에서 전자-전자 반발을 고려하면 4s²3d¹이 3d²4s보다 유리 (3d 오비탈 밀집으로 인한 반발 줄임). 따라서 4s가 먼저 채워진다.</p>
+      <p>뺄 때: 이온 환경에서 3d는 4s보다 핵에 더 가까이 있어 이온화 에너지가 더 높다. 또 전자가 줄어들면 차폐가 줄어 3d가 상대적으로 더 안정해진다. 따라서 4s가 먼저 빠진다.</p>
+    </div>
+  </details>
+
+  <details class="reveal">
+    <summary>Q8. 탄소에서 2s의 평균 반지름이 2p보다 큰데 왜 2s 에너지가 더 낮은가?</summary>
+    <div class="details-body">
+      <span class="answer-tag">모범 답안</span>
+      <p>에너지를 결정하는 것은 평균 위치가 아니라 "핵 근처 확률"이다. 2s의 RDF를 보면 평균은 멀지만 핵 아주 가까이에 작은 bump(침투)가 존재한다. 이 순간 내부 전자들의 차폐 안쪽으로 들어가 Z_eff를 크게 느끼고, 이것이 전체 에너지를 낮춘다. 2p는 이런 침투가 없어 Z_eff가 작고 에너지가 높다.</p>
+    </div>
+  </details>
+
+  <!-- 계산형 -->
+  <h3 style="margin-top:2rem;">계산형 (30%)</h3>
+
+  <details class="reveal">
+    <summary>Q9. He 들뜬상태 1s¹2s¹의 singlet과 triplet 파동함수를 쓰고 각각의 공간·스핀 대칭성을 표시하라.</summary>
+    <div class="details-body">
+      <span class="answer-tag">모범 답안</span>
+      <p><strong>Singlet (S=0):</strong></p>
+      $$\Psi_\text{singlet} = \frac{1}{\sqrt{2}}[1s(1)2s(2)+1s(2)2s(1)] \times \frac{1}{\sqrt{2}}[\alpha(1)\beta(2)-\beta(1)\alpha(2)]$$
+      <p>공간: 대칭, 스핀: 반대칭 → 전체: 반대칭 ✓</p>
+      <p><strong>Triplet (S=1) — 세 가지 스핀 상태:</strong></p>
+      $$\Psi_\text{triplet} = \frac{1}{\sqrt{2}}[1s(1)2s(2)-1s(2)2s(1)] \times \begin{cases}\alpha(1)\alpha(2)\\ \frac{1}{\sqrt{2}}[\alpha(1)\beta(2)+\beta(1)\alpha(2)]\\ \beta(1)\beta(2)\end{cases}$$
+      <p>공간: 반대칭, 스핀: 대칭 → 전체: 반대칭 ✓</p>
+    </div>
+  </details>
+
+  <details class="reveal">
+    <summary>Q10. Li(Z=3) = 1s²2s¹의 Slater determinant를 3×3 행렬식으로 나타내라.</summary>
+    <div class="details-body">
+      <span class="answer-tag">모범 답안</span>
+      <p>세 spin-orbital: \(\psi_{1s}\alpha,\; \psi_{1s}\beta,\; \psi_{2s}\alpha\) (Hund's rule에 의해 2s는 α)</p>
+      $$\Psi(1,2,3) = \frac{1}{\sqrt{6}}
+      \begin{vmatrix}
+      \psi_{1s}(1)\alpha(1) & \psi_{1s}(2)\alpha(2) & \psi_{1s}(3)\alpha(3)\\
+      \psi_{1s}(1)\beta(1) & \psi_{1s}(2)\beta(2) & \psi_{1s}(3)\beta(3)\\
+      \psi_{2s}(1)\alpha(1) & \psi_{2s}(2)\alpha(2) & \psi_{2s}(3)\alpha(3)
+      \end{vmatrix}$$
+      <p>정규화 상수 (N!)^{-1/2} = (3!)^{-1/2} = 1/√6</p>
+    </div>
+  </details>
+
+  <details class="reveal">
+    <summary>Q11. 1차 이온화 에너지가 N > O인 이유를 전자 배치와 Hund's rule로 설명하라.</summary>
+    <div class="details-body">
+      <span class="answer-tag">모범 답안</span>
+      <p>N = [He]2s²2px¹2py¹2pz¹: 2p 오비탈이 모두 singly occupied (half-filled, 전자-전자 반발 없음)</p>
+      <p>O = [He]2s²2px²2py¹2pz¹: 2px에 처음으로 paired 전자 등장 → 전자-전자 반발 증가 → 그 전자를 제거하기 쉬워짐</p>
+      <p>따라서 O의 I₁ &lt; N의 I₁ — half-filled 배치가 특별히 안정하다는 Hund's rule의 증거다.</p>
+    </div>
+  </details>
+
+</main>
+</div>
+
+<script>
+// ===== THEME TOGGLE =====
+function toggleTheme() {
+  const body = document.body;
+  const btn = document.querySelector('.theme-btn');
+  if (body.dataset.theme === 'light') {
+    body.dataset.theme = 'dark';
+    btn.textContent = '☀️ 라이트';
+  } else {
+    body.dataset.theme = 'light';
+    btn.textContent = '🌙 다크';
+  }
+}
+
+// ===== TAB SWITCHING =====
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx = ['tab-why','tab-spin','tab-pauli','tab-slater','tab-screen','tab-aufbau','tab-ie','tab-hf','tab-exam'].indexOf(id);
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  // scroll to top smoothly
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // trigger reveal animations
+  setTimeout(revealVisible, 100);
+}
+
+// ===== SCROLL REVEAL =====
+function revealVisible() {
+  const items = document.querySelectorAll('.reveal:not(.visible)');
+  items.forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 60) {
+      el.classList.add('visible');
+    }
+  });
+}
+
+window.addEventListener('scroll', revealVisible, { passive: true });
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(revealVisible, 200);
+});
+</script>
+</body>
+</html>

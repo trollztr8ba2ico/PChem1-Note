@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7D 후반부 — 2D/3D 상자 · 縮退 · 터널링</title>
+
+<!-- KaTeX -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#f6f4ef; --bg2:#fffdf8; --card:#ffffff; --ink:#23201b; --ink2:#5c564c;
+  --rule:#e2dccf; --shadow:0 2px 14px rgba(60,50,30,.07);
+  --blue:#2563a8; --blue-bg:#e8f1fb;
+  --amber:#b5740f; --amber-bg:#fdf2dc;
+  --green:#1f7a52; --green-bg:#e4f4ec;
+  --red:#c0392b; --red-bg:#fbe9e7;
+  --purple:#6d4aa0; --purple-bg:#f1eafb;
+  --accent:var(--blue);
+}
+[data-theme="dark"]{
+  --bg:#15171c; --bg2:#1b1e25; --card:#21252e; --ink:#e7e3da; --ink2:#a59f93;
+  --rule:#333a46; --shadow:0 2px 16px rgba(0,0,0,.4);
+  --blue:#6fb0f0; --blue-bg:#16293d;
+  --amber:#e0a64b; --amber-bg:#382b14;
+  --green:#5fc996; --green-bg:#143025;
+  --red:#f08074; --red-bg:#3a1f1c;
+  --purple:#b89ae6; --purple-bg:#271c3a;
+  --accent:var(--blue);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Pretendard","Apple SD Gothic Neo",sans-serif;
+  line-height:1.75;font-size:16px;
+  transition:background .3s,color .3s;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:840px;margin:0 auto;padding:20px 16px 80px;}
+
+/* header */
+header{padding:14px 0 10px;border-bottom:2px solid var(--ink);margin-bottom:6px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.htext .kick{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;}
+h1{font-size:1.5rem;margin:.15em 0 0;line-height:1.2;font-weight:700;}
+.htext .sub{color:var(--ink2);font-size:.86rem;margin-top:3px;}
+.toggle{flex:none;display:flex;align-items:center;gap:7px;background:var(--card);
+  border:1px solid var(--rule);border-radius:30px;padding:7px 13px;cursor:pointer;
+  font-family:"IBM Plex Mono",monospace;font-size:.78rem;color:var(--ink2);
+  box-shadow:var(--shadow);transition:.2s;user-select:none;}
+.toggle:hover{color:var(--ink);border-color:var(--accent);}
+.toggle .ic{font-size:1rem;line-height:1;}
+
+/* tabs */
+.tabs{display:flex;gap:5px;flex-wrap:wrap;margin:22px 0 0;}
+.tab{font-family:"IBM Plex Mono",monospace;font-weight:500;font-size:.82rem;
+  padding:9px 13px;border:1px solid var(--rule);border-bottom:none;background:var(--bg2);
+  color:var(--ink2);cursor:pointer;border-radius:9px 9px 0 0;transition:.18s;white-space:nowrap;}
+.tab:hover{color:var(--ink);}
+.tab.active{background:var(--card);color:var(--accent);border-color:var(--ink);
+  font-weight:600;position:relative;top:1px;}
+.panelbox{border:1px solid var(--ink);background:var(--card);border-radius:0 12px 12px 12px;
+  padding:24px 22px 30px;box-shadow:var(--shadow);}
+.panel{display:none;animation:fade .3s ease;}
+.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+
+h2{font-size:1.22rem;margin:.1em 0 .5em;line-height:1.3;}
+h3{font-size:1.03rem;margin:24px 0 7px;padding-left:11px;border-left:4px solid var(--accent);}
+p{margin:.5em 0;}
+.lead{color:var(--ink2);font-size:.92rem;margin-top:-2px;}
+
+/* callout boxes */
+.box{border-radius:9px;padding:11px 15px;margin:13px 0;border:1px solid;font-size:.94rem;}
+.box .lab{font-family:"IBM Plex Mono",monospace;font-size:.68rem;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:3px;}
+.b-blue{background:var(--blue-bg);border-color:var(--blue);} .b-blue .lab{color:var(--blue);}
+.b-amber{background:var(--amber-bg);border-color:var(--amber);} .b-amber .lab{color:var(--amber);}
+.b-green{background:var(--green-bg);border-color:var(--green);} .b-green .lab{color:var(--green);}
+.b-red{background:var(--red-bg);border-color:var(--red);} .b-red .lab{color:var(--red);}
+.b-purple{background:var(--purple-bg);border-color:var(--purple);} .b-purple .lab{color:var(--purple);}
+
+ul,ol{margin:.5em 0;padding-left:1.3em;}
+li{margin:5px 0;}
+.katex{font-size:1.04em;}
+.katex-display{margin:.7em 0;overflow-x:auto;overflow-y:hidden;padding:4px 2px;}
+
+/* table */
+.tbl{overflow-x:auto;margin:14px 0;-webkit-overflow-scrolling:touch;}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:380px;}
+th,td{border:1px solid var(--rule);padding:8px 10px;text-align:center;vertical-align:middle;}
+th{background:var(--bg2);font-weight:600;font-family:"IBM Plex Mono",monospace;font-size:.8rem;}
+td.l{text-align:left;}
+.yes{color:var(--green);font-weight:700;} .no{color:var(--red);font-weight:700;}
+
+/* exam toggle */
+.exam{margin-top:14px;}
+.exam details{border:1px dashed var(--amber);border-radius:9px;margin:9px 0;background:var(--amber-bg);overflow:hidden;}
+.exam summary{cursor:pointer;padding:11px 15px;font-weight:600;font-size:.92rem;color:var(--amber);
+  list-style:none;display:flex;align-items:center;gap:8px;}
+.exam summary::-webkit-details-marker{display:none;}
+.exam summary::before{content:"▸";transition:.2s;color:var(--amber);}
+.exam details[open] summary::before{transform:rotate(90deg);}
+.exam .ans{padding:2px 16px 14px;border-top:1px solid var(--amber);background:var(--card);font-size:.92rem;}
+.exam .ans .lab{font-family:"IBM Plex Mono",monospace;font-size:.66rem;color:var(--amber);
+  font-weight:600;letter-spacing:.08em;display:block;margin:12px 0 3px;}
+.qtype{font-family:"IBM Plex Mono",monospace;font-size:.62rem;background:var(--accent);color:#fff;
+  padding:2px 7px;border-radius:20px;margin-left:auto;font-weight:500;}
+
+.note{font-size:.84rem;color:var(--ink2);font-style:italic;margin-top:6px;}
+hr{border:none;border-top:1px solid var(--rule);margin:22px 0;}
+.foot{text-align:center;color:var(--ink2);font-size:.78rem;margin-top:30px;font-family:"IBM Plex Mono",monospace;}
+
+@media(max-width:520px){
+  body{font-size:15px;}
+  .wrap{padding:14px 11px 70px;}
+  h1{font-size:1.28rem;}
+  .panelbox{padding:18px 14px 24px;}
+  .tab{font-size:.76rem;padding:8px 10px;}
+  .katex{font-size:.98em;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="htext">
+      <span class="kick">PChem 1 · Focus 7 · Quantum Theory</span>
+      <h1>7D 후반부 — 2D/3D 상자 · 縮退 · 터널링</h1>
+      <div class="sub">변수분리 · degeneracy · quantum tunneling · finite well</div>
+    </div>
+    <div class="toggle" id="themeBtn"><span class="ic" id="themeIc">🌙</span><span id="themeTx">Dark</span></div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" data-t="p1">1 · 2D/3D 상자</div>
+    <div class="tab" data-t="p2">2 · 4단계 프레임</div>
+    <div class="tab" data-t="p3">3 · 縮退</div>
+    <div class="tab" data-t="p4">4 · 터널링</div>
+    <div class="tab" data-t="p5">5 · T 확률 · Q3</div>
+    <div class="tab" data-t="p6">6 · 출제 예상</div>
+  </div>
+
+  <div class="panelbox">
+
+  <!-- ============ PANEL 1 ============ -->
+  <div class="panel active" id="p1">
+    <h2>2D / 3D 상자 — 변수분리</h2>
+    <p class="lead">핵심 한 줄: 2D/3D는 새 물리가 아니라 <b>변수분리로 1D PIB를 방향 수만큼 복제</b>한 것. ψ는 곱(×), E는 합(+).</p>
+
+    <h3>1. 2D 세팅 — 운동에너지 항이 방향마다</h3>
+    <p>1D에서 딱 하나 바뀐 것: 운동에너지 항이 x·y 두 개. 사각형 안(V=0)에 갇힌 입자.</p>
+    $$-\frac{\hbar^2}{2m}\left(\frac{\partial^2\psi}{\partial x^2}+\frac{\partial^2\psi}{\partial y^2}\right)=E\psi$$
+    <div class="box b-blue"><span class="lab">개념</span>
+      ψ가 이제 두 변수의 함수 \(\psi(x,y)\) → 미분이 편미분(∂)으로 바뀌고, 방정식이 <b>편미분방정식(PDE)</b>이 됨. 1D처럼 sin/cos 바로 대입이 안 통해서 <b>변수분리</b>가 필요.</div>
+
+    <h3>2. 변수분리 (이 파트의 심장)</h3>
+    <p><b>① 가정:</b> \(\psi(x,y)=X(x)\,Y(y)\) — x만의 함수 × y만의 함수의 곱.</p>
+    <p><b>② 편미분 정리</b> (x로 미분 시 Y는 상수 취급):</p>
+    $$\frac{\partial^2\psi}{\partial x^2}=Y\frac{d^2X}{dx^2},\qquad \frac{\partial^2\psi}{\partial y^2}=X\frac{d^2Y}{dy^2}$$
+    <p class="note">편미분 ∂가 한쪽 함수만 남기고 상미분 d로 강등됨 → 이미 ODE로 가는 길.</p>
+    <p><b>③ 대입 후 XY로 나누기:</b></p>
+    $$\frac{1}{X}\frac{d^2X}{dx^2}+\frac{1}{Y}\frac{d^2Y}{dy^2}=-\frac{2mE}{\hbar^2}$$
+    <div class="box b-amber"><span class="lab">왜 분리되는가 (핵심 논리)</span>
+      첫 항은 <b>x만의 함수</b>, 둘째 항은 <b>y만의 함수</b>, 그 합이 <b>상수</b>다. x를 바꿔도 합이 일정하려면 각 항이 <b>각자 상수</b>일 수밖에 없다. → PDE 하나가 ODE 두 개로 쪼개짐.</div>
+    $$-\frac{\hbar^2}{2m}\frac{d^2X}{dx^2}=E_X X,\qquad -\frac{\hbar^2}{2m}\frac{d^2Y}{dy^2}=E_Y Y,\qquad E=E_X+E_Y$$
+
+    <h3>3. 2D 결과 (1D를 두 번 복사)</h3>
+    <p>각 ODE는 1D PIB와 완전히 동일 → 답도 그대로 베껴서 곱하기:</p>
+    $$\psi_{n_1,n_2}(x,y)=\frac{2}{\sqrt{L_1 L_2}}\sin\!\frac{n_1\pi x}{L_1}\sin\!\frac{n_2\pi y}{L_2}$$
+    $$E_{n_1,n_2}=\left(\frac{n_1^2}{L_1^2}+\frac{n_2^2}{L_2^2}\right)\frac{h^2}{8m}$$
+    <div class="box b-blue"><span class="lab">노드 직관</span>
+      (1,1) 내부 노드 없음 · (1,2) 가로 노드선 1개 · (2,1) 세로 노드선 1개 · (2,2) 4분면. <b>양자수 = 그 방향 노드 수 + 1</b>이라는 1D 직관이 방향마다 유지.</div>
+
+    <h3>4. 3D 확장 (패턴 한 번 더)</h3>
+    $$\psi_{n_1 n_2 n_3}=\left(\frac{8}{L_1 L_2 L_3}\right)^{1/2}\!\sin\!\frac{n_1\pi x}{L_1}\sin\!\frac{n_2\pi y}{L_2}\sin\!\frac{n_3\pi z}{L_3}$$
+    $$E_{n_1,n_2,n_3}=\left(\frac{n_1^2}{L_1^2}+\frac{n_2^2}{L_2^2}+\frac{n_3^2}{L_3^2}\right)\frac{h^2}{8m}$$
+    <p class="note">규격화 상수: 방향마다 (2/L)<sup>½</sup>가 곱해지는 패턴 → 외울 필요 없음.</p>
+  </div>
+
+  <!-- ============ PANEL 2 ============ -->
+  <div class="panel" id="p2">
+    <h2>슈뢰딩거 4단계 프레임워크 — 2D 버전</h2>
+    <p class="lead">2D는 1단계에 <b>변수분리 한 줄</b>이 추가될 뿐, 2~4단계는 방향마다 1D를 반복.</p>
+
+    <h3>1단계 — 일반해 (변수분리 선행)</h3>
+    <p>(1-a) 가정 \(\psi=XY\) → (1-b) PDE를 ODE 2개로 분해 → (1-c) 각 ODE에 1D 일반해 대입:</p>
+    $$X=C_1\sin k_1 x+D_1\cos k_1 x,\quad Y=C_2\sin k_2 y+D_2\cos k_2 y$$
+    $$k_1^2=\frac{2mE_X}{\hbar^2},\quad k_2^2=\frac{2mE_Y}{\hbar^2}$$
+
+    <h3>2단계 — 경계조건 → 양자화</h3>
+    <p>각 방향에 1D 경계조건을 <b>독립적으로</b> 적용 (x벽과 y벽은 무관):</p>
+    <ul>
+      <li>x: \(X(0)=0\Rightarrow D_1=0\); \(X(L_1)=0\Rightarrow k_1=n_1\pi/L_1\)</li>
+      <li>y: \(D_2=0\); \(k_2=n_2\pi/L_2\)</li>
+    </ul>
+    $$E_{n_1,n_2}=\left(\frac{n_1^2}{L_1^2}+\frac{n_2^2}{L_2^2}\right)\frac{h^2}{8m}$$
+    <div class="box b-amber"><span class="lab">縮退의 씨앗</span>
+      양자수가 <b>독립적으로 2개</b>(n₁, n₂) 등장. 독립이라 서로 다른 조합이 같은 에너지 합을 만들 수 있음 → 다음 탭 degeneracy.</div>
+
+    <h3>3단계 — 정규화</h3>
+    <p>ψ=XY라 2D 적분이 1D 적분 두 개의 곱으로 분해:</p>
+    $$\iint|XY|^2\,dx\,dy=\Big(\!\int_0^{L_1}\!|X|^2dx\Big)\Big(\!\int_0^{L_2}\!|Y|^2dy\Big)=1$$
+    $$C_1=\Big(\tfrac{2}{L_1}\Big)^{1/2},\ C_2=\Big(\tfrac{2}{L_2}\Big)^{1/2}\Rightarrow \frac{2}{\sqrt{L_1 L_2}}$$
+
+    <h3>4단계 — 최종 ψ</h3>
+    $$\psi_{n_1,n_2}=\frac{2}{\sqrt{L_1 L_2}}\sin\!\frac{n_1\pi x}{L_1}\sin\!\frac{n_2\pi y}{L_2}\quad(\text{밖에선 }0)$$
+
+    <div class="tbl"><table>
+      <tr><th>단계</th><th>1D</th><th>2D 추가/변화</th></tr>
+      <tr><td>1</td><td class="l">sin/cos 바로</td><td class="l"><b>변수분리 ψ=XY 먼저</b> → 방향별 sin/cos</td></tr>
+      <tr><td>2</td><td class="l">경계 → n, E</td><td class="l">방향별 독립 → n₁,n₂ / E는 <b>합</b></td></tr>
+      <tr><td>3</td><td class="l">∫|ψ|²=1 → C</td><td class="l">적분이 <b>곱으로 분해</b> → 상수도 곱</td></tr>
+      <tr><td>4</td><td class="l">ψ_n</td><td class="l">ψ_{n₁,n₂} = X·Y (곱)</td></tr>
+    </table></div>
+  </div>
+
+  <!-- ============ PANEL 3 ============ -->
+  <div class="panel" id="p3">
+    <h2>縮退 (Degeneracy)</h2>
+    <p class="lead">서로 다른 파동함수가 <b>같은 에너지</b>를 갖는 것. 근원은 <b>계의 대칭</b>.</p>
+
+    <h3>정사각형 (L₁=L₂=L)</h3>
+    $$E_{n_1,n_2}=(n_1^2+n_2^2)\frac{h^2}{8mL^2}$$
+    <p>에너지가 <b>제곱합 \(n_1^2+n_2^2\)</b>에만 의존 → n₁, n₂를 맞바꿔도 같은 값.</p>
+    <div class="tbl"><table>
+      <tr><th>상태</th><th>ψ</th><th>E</th></tr>
+      <tr><td>(1,2)</td><td class="l">(2/L) sin(πx/L) sin(2πy/L)</td><td>5h²/8mL²</td></tr>
+      <tr><td>(2,1)</td><td class="l">(2/L) sin(2πx/L) sin(πy/L)</td><td>5h²/8mL²</td></tr>
+    </table></div>
+    <p><b>ψ는 다른 함수</b>(가로 노드 vs 세로 노드)인데 <b>E는 같음</b> → 2-fold degenerate.</p>
+
+    <div class="box b-amber"><span class="lab">縮退의 근원 = 대칭</span>
+      정사각형은 x↔y가 구별 불가(90° 회전 대칭) → (1,2)와 (2,1)은 라벨만 다른 셈 → 에너지 같음. <b>직사각형(L₁≠L₂)이면 대칭이 깨져 縮退도 풀림(lifted).</b></div>
+
+    <h3>Q2 — 직사각형 L₁=L, L₂=2L에서 (4,4)와 縮退인 상태</h3>
+    <p>에너지 괄호 안만 비교 (공통 인자 h²/8m 제외):</p>
+    $$\frac{n_1^2}{L^2}+\frac{n_2^2}{4L^2}\ \Rightarrow\ (4,4):\ \frac{16}{L^2}+\frac{16}{4L^2}=\frac{20}{L^2}$$
+    <p>조건식 (양변 ×4L²):</p>
+    $$4n_1^2+n_2^2=80$$
+    <div class="tbl"><table>
+      <tr><th>n₁</th><th>4n₁²</th><th>n₂²=80−4n₁²</th><th>n₂ 정수?</th></tr>
+      <tr><td>1</td><td>4</td><td>76</td><td class="no">✗</td></tr>
+      <tr><td>2</td><td>16</td><td>64</td><td class="yes">8 ✓</td></tr>
+      <tr><td>3</td><td>36</td><td>44</td><td class="no">✗</td></tr>
+      <tr><td>4</td><td>64</td><td>16</td><td>4 (원래 상태)</td></tr>
+    </table></div>
+    <div class="box b-green"><span class="lab">답</span>
+      \((n_1,n_2)=(2,8)\). 검산: \((4/L^2+64/4L^2)\tfrac{h^2}{8m}=20\cdot\tfrac{h^2}{8mL^2}=E_{4,4}\) ✓</div>
+
+    <h3>실제 사례 — 벤젠 π 분자궤도 (고리 모델)</h3>
+    <p>벤젠 π 전자는 직선 상자가 아니라 <b>고리 둘레</b>를 도는 입자 → 양자수가 상자의 n이 아니라 <b>고리의 \(m_l\)</b>. 에너지 \(E\propto m_l^2\)이라 <b>+m_l과 −m_l이 같은 에너지</b>.</p>
+    <div class="tbl"><table>
+      <tr><th>궤도</th><th>m_l</th><th>E ∝ m_l²</th><th>縮退</th></tr>
+      <tr><td>π₁</td><td>0</td><td>0</td><td>단일</td></tr>
+      <tr><td><b>π₂, π₃</b></td><td><b>+1, −1</b></td><td><b>1</b></td><td class="yes">2-fold</td></tr>
+      <tr><td><b>π₄*, π₅*</b></td><td><b>+2, −2</b></td><td><b>4</b></td><td class="yes">2-fold</td></tr>
+      <tr><td>π₆*</td><td>3</td><td>9</td><td>단일</td></tr>
+    </table></div>
+    <div class="box b-blue"><span class="lab">물리적 직관</span>
+      +m_l = 고리를 시계방향, −m_l = 반시계방향으로 도는 전자. <b>방향만 반대, 빠르기(E)는 같음</b>. 고리의 회전 대칭이 縮退를 강제 — 정사각형 x↔y 대칭과 같은 원리. (7F 회전운동에서 정식 유도 예정.)</div>
+  </div>
+
+  <!-- ============ PANEL 4 ============ -->
+  <div class="panel" id="p4">
+    <h2>양자 터널링 (Quantum Tunneling)</h2>
+    <p class="lead">유한 높이 배리어를 E&lt;V인 입자가 뚫고 나가는 현상. 고전적으로 금지된 영역을 침투.</p>
+
+    <h3>3개 구역과 해의 형태</h3>
+    <div class="tbl"><table>
+      <tr><th>구역</th><th>조건</th><th>ψ</th><th>형태</th></tr>
+      <tr><td>1 (x&lt;0)</td><td>V=0</td><td>Ae^{ikx}+Be^{-ikx}</td><td>진동</td></tr>
+      <tr><td>2 (0&lt;x&lt;L)</td><td>E&lt;V</td><td>Ce^{κx}+De^{-κx}</td><td class="no">지수 감쇠</td></tr>
+      <tr><td>3 (x&gt;L)</td><td>V=0</td><td>A'e^{ikx}</td><td>진동</td></tr>
+    </table></div>
+    $$\hbar k=(2mE)^{1/2},\qquad \hbar\kappa=\{2m(V-E)\}^{1/2}$$
+
+    <div class="box b-purple"><span class="lab">핵심 ① — 왜 구역 2만 지수해?</span>
+      슈뢰딩거 방정식을 \(\psi''=\dfrac{2m}{\hbar^2}(V-E)\psi\) 로 정리하면 <b>(V−E)의 부호</b>가 모든 걸 결정:
+      <ul style="margin-bottom:0">
+        <li>구역 1,3 (E&gt;V): \(\psi''=-k^2\psi\) → 진동 (sin/cos)</li>
+        <li>구역 2 (E&lt;V): \(\psi''=+\kappa^2\psi\) → 지수 (e^{±κx}), 출렁이지 못하고 죽어감</li>
+      </ul>
+      앞서 배운 <b>curvature ↔ E 직관</b>이 그대로 작동.</div>
+
+    <div class="box b-blue"><span class="lab">핵심 ② — κ의 의미</span>
+      $$\kappa=\frac{\sqrt{2m(V-E)}}{\hbar}\quad[\text{m}^{-1}]$$
+      배리어 안에서 ψ가 <b>죽는 속도(감쇠율)</b>. 1/κ = 침투 깊이. <b>m↑, (V−E)↑ 이면 κ↑</b> → 더 빨리 죽음 → 터널링 어려움. 모든 의존성의 뿌리.</div>
+
+    <h3>각 항의 물리적 의미</h3>
+    <div class="tbl"><table>
+      <tr><th>항</th><th>의미</th><th>방향</th></tr>
+      <tr><td class="l">A e^{ikx}</td><td class="l">입사파 (incident)</td><td>+운동량 →</td></tr>
+      <tr><td class="l">B e^{-ikx}</td><td class="l">반사파 (reflected)</td><td>−운동량 ←</td></tr>
+      <tr><td class="l">C e^{κx}+D e^{-κx}</td><td class="l">배리어 내부 (진폭 지수 변화)</td><td>진동 아님</td></tr>
+      <tr><td class="l">A' e^{ikx}</td><td class="l">투과파 (transmitted)</td><td>+운동량 →</td></tr>
+    </table></div>
+    <p class="note">구역 3에 반사항(e^{-ikx})이 없는 이유: 배리어를 뚫은 뒤엔 막는 게 없어 되돌아올 이유가 없음.</p>
+  </div>
+
+  <!-- ============ PANEL 5 ============ -->
+  <div class="panel" id="p5">
+    <h2>투과 확률 (Transmission Probability) · Q3</h2>
+
+    <h3>T 정의와 경계조건 (핵심 ③)</h3>
+    $$T=\frac{|A'|^2}{|A|^2}\quad(\text{투과파 세기}/\text{입사파 세기})$$
+    <p>A'와 A를 잇는 도구가 <b>경계조건</b>: 경계(x=0, x=L)에서 <b>① ψ 연속, ② dψ/dx 연속</b>.</p>
+    <div class="box b-amber"><span class="lab">무한상자와의 핵심 대비</span>
+      <div class="tbl"><table style="min-width:0">
+        <tr><th></th><th>무한 상자 (V=∞)</th><th>유한 배리어</th></tr>
+        <tr><td>벽에서 ψ</td><td>ψ=0 강제</td><td>ψ≠0, 침투</td></tr>
+        <tr><td>기울기 ψ'</td><td class="no">불연속 허용</td><td class="yes">연속 필수</td></tr>
+      </table></div>
+      V가 유한 → ψ'' 유한 → ψ'가 갑자기 꺾일 수 없음. 경계 2개 × 조건 2개 = <b>식 4개</b>로 비율을 풀면 T.</div>
+
+    <h3>T 완전식</h3>
+    $$T=\left\{1+\frac{(e^{\kappa L}-e^{-\kappa L})^2}{16\varepsilon(1-\varepsilon)}\right\}^{-1},\quad \varepsilon=\frac{E}{V}$$
+    <ul>
+      <li>E ≪ V: T ≈ 0</li>
+      <li>E → V: T 증가</li>
+      <li><b>E &gt; V여도 T &lt; 1</b>: 고전적으로 넘어가야 하는데 양자에선 반사도 일어남</li>
+      <li>E ≫ V: T ≈ 1 (고전 극한)</li>
+    </ul>
+
+    <div class="box b-purple"><span class="lab">핵심 ④ — 두꺼운 배리어 근사 (κL≫1)</span>
+      \(e^{\kappa L}\gg e^{-\kappa L}\)이라 작은 항·앞의 1 무시:
+      $$T\approx 16\varepsilon(1-\varepsilon)\,e^{-2\kappa L}$$
+      이 \(e^{-2\kappa L}\)이 터널링의 상징. <b>m·L·(V−E) 클수록 지수적으로 감소.</b> 가벼운 입자(전자)라야 잘 뚫음 → STM, 핵융합, 효소 H 터널링.</div>
+
+    <h3>Q3 — V=2.00 eV, L=100 pm, 전자 E=1.95 eV</h3>
+    <p>값 정리: ε=1.95/2.00=0.975, V−E=0.05 eV=8.01×10⁻²¹ J, L=1.00×10⁻¹⁰ m</p>
+    $$\kappa=\frac{\sqrt{2m(V-E)}}{\hbar}=\frac{\sqrt{2(9.109\times10^{-31})(8.01\times10^{-21})}}{1.0546\times10^{-34}}=1.15\times10^{9}\,\text{m}^{-1}$$
+    $$\kappa L=1.15\times10^{9}\times1.00\times10^{-10}=0.115$$
+    <div class="box b-red"><span class="lab">함정 — 근사식 쓰지 말 것</span>
+      κL ≈ 0.115 로 <b>1보다 한참 작음</b> → 근사식(κL≫1 조건) 부적합. <b>완전식</b>으로 가야 함. (근사식 잘못 쓰면 0.31, 완전식은 0.88 — 완전히 어긋남.)</div>
+    <p>완전식 대입:</p>
+    $$e^{\kappa L}-e^{-\kappa L}=1.121-0.892=0.230,\quad (\cdots)^2=0.0527$$
+    $$16\varepsilon(1-\varepsilon)=16(0.975)(0.025)=0.390$$
+    $$T=\left(1+\frac{0.0527}{0.390}\right)^{-1}=\frac{1}{1.135}\approx 0.88$$
+    <div class="box b-green"><span class="lab">답</span>
+      \(T\approx 0.88\) (약 88%). ε이 1에 가깝고, 배리어 얇고, 가벼운 전자라 잘 뚫는 게 타당.</div>
+
+    <h3>유한 깊이 우물 (Finite Well)</h3>
+    <div class="tbl"><table>
+      <tr><th></th><th>무한 상자</th><th>유한 우물</th></tr>
+      <tr><td>벽에서 ψ</td><td>정확히 0</td><td>침투 후 지수 감쇠</td></tr>
+      <tr><td>속박상태 수</td><td>무한</td><td class="no">유한 (N개)</td></tr>
+      <tr><td>같은 n의 E</td><td>더 높음</td><td>약간 낮음(파장이 벽 밖까지 늘어남)</td></tr>
+    </table></div>
+  </div>
+
+  <!-- ============ PANEL 6 ============ -->
+  <div class="panel" id="p6">
+    <h2>출제 예상 문제</h2>
+    <p class="lead">유도형 40% · 원리·설명형 30% · 계산형 30%. 토글을 눌러 펼치기.</p>
+    <div class="exam">
+
+      <details>
+        <summary>2D PIB 슈뢰딩거 방정식을 변수분리로 푸는 과정을 유도하라 <span class="qtype">유도</span></summary>
+        <div class="ans">
+          <span class="lab">답 방향</span>
+          ① ψ=XY 가정 → ② 편미분이 Y·X″, X·Y″로 정리됨 → ③ 양변 XY로 나누면 (1/X)X″+(1/Y)Y″=−2mE/ℏ² → ④ "x함수+y함수=상수"이므로 각 항이 상수 → ODE 2개로 분리 → ⑤ 각각 1D 해, ψ=XY로 곱, E=E_X+E_Y.
+        </div>
+      </details>
+
+      <details>
+        <summary>정사각형에서 縮退가 생기고 직사각형에서 풀리는 이유를 설명하라 <span class="qtype">원리</span></summary>
+        <div class="ans">
+          <span class="lab">답 방향</span>
+          정사각형은 x↔y 교환 대칭(90° 회전)이 있어 (n₁,n₂)와 (n₂,n₁)이 같은 에너지 → 縮退. 직사각형(L₁≠L₂)은 이 대칭이 깨져 두 상태의 에너지가 달라짐 → 縮退 풀림(lifted). <b>縮退는 계의 대칭이 만든 필연.</b>
+        </div>
+      </details>
+
+      <details>
+        <summary>직사각형 L₁=L, L₂=2L에서 (3,3)과 縮退인 상태를 찾아라 <span class="qtype">계산</span></summary>
+        <div class="ans">
+          <span class="lab">답 방향</span>
+          괄호 안 = n₁²/L²+n₂²/4L². (3,3): 9/L²+9/4L²=45/4L². 조건 ×4L²: 4n₁²+n₂²=45. 정수해 탐색: n₁=3,n₂=3(자기)뿐 아니라 n₁=... 점검 → 4(1)+41✗, 4(4)+29✗, 4(9)+9 →n₂=3(자기). 이 경우 자기 자신 외 정수해 없음(縮退 없음). <span class="note">(주의: 모든 상태가 縮退 짝을 갖는 건 아님 — 정수해 존재 여부를 직접 따져야 함.)</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>터널링에서 배리어 안은 지수해, 밖은 진동해인 이유를 유도하라 <span class="qtype">유도</span></summary>
+        <div class="ans">
+          <span class="lab">답 방향</span>
+          ψ″=(2m/ℏ²)(V−E)ψ. 배리어 밖(V=0,E&gt;0): (V−E)&lt;0 → ψ″=−k²ψ → 진동해 e^{±ikx}. 배리어 안(E&lt;V): (V−E)&gt;0 → ψ″=+κ²ψ → 지수해 e^{±κx}. 부호가 curvature 방향을 바꿔 진동/감쇠를 가름.
+        </div>
+      </details>
+
+      <details>
+        <summary>무한상자와 달리 터널링에선 왜 기울기 연속까지 요구하는가 <span class="qtype">원리</span></summary>
+        <div class="ans">
+          <span class="lab">답 방향</span>
+          V가 유한하면 ψ″=(2m/ℏ²)(V−E)ψ도 유한 → ψ′(기울기)에 갑작스런 점프가 불가능 → 경계에서 ψ′ 연속 필수. 무한상자는 V=∞라 ψ″가 발산할 수 있어 ψ′ 불연속이 허용됨.
+        </div>
+      </details>
+
+      <details>
+        <summary>T 근사식 T≈16ε(1−ε)e^{−2κL}을 완전식에서 유도하라 <span class="qtype">유도</span></summary>
+        <div class="ans">
+          <span class="lab">답 방향</span>
+          완전식 T={1+(e^{κL}−e^{−κL})²/16ε(1−ε)}⁻¹. κL≫1 가정 → e^{κL}≫e^{−κL}이라 (e^{κL}−e^{−κL})²≈e^{2κL}. 이 항이 1보다 압도적으로 커서 +1 무시 → T≈16ε(1−ε)/e^{2κL}=16ε(1−ε)e^{−2κL}.
+        </div>
+      </details>
+
+      <details>
+        <summary>같은 배리어를 양성자와 전자가 통과할 때 T를 비교하라 <span class="qtype">원리</span></summary>
+        <div class="ans">
+          <span class="lab">답 방향</span>
+          κ=√(2m(V−E))/ℏ ∝ √m. 양성자는 전자보다 m이 약 1836배 → κ가 √1836≈43배 → T∝e^{−2κL}로 지수적으로 훨씬 작음. <b>가벼운 전자가 압도적으로 잘 뚫음</b>(H/D 동위원소 효과의 기원).
+        </div>
+      </details>
+
+      <details>
+        <summary>V=1.50 eV, L=50 pm 배리어를 E=1.0 eV 전자가 뚫을 T를 구하라 <span class="qtype">계산</span></summary>
+        <div class="ans">
+          <span class="lab">답 방향</span>
+          ε=1.0/1.5=0.667, V−E=0.5 eV=8.0×10⁻²⁰ J. κ=√(2·9.109×10⁻³¹·8.0×10⁻²⁰)/1.0546×10⁻³⁴≈3.6×10⁹ m⁻¹. κL=3.6×10⁹×5.0×10⁻¹¹≈0.18 → 여전히 &lt;1이므로 <b>완전식</b> 사용. 완전식에 대입해 T 계산. <span class="note">습관: κL 먼저 구해 근사식/완전식 선택.</span>
+        </div>
+      </details>
+
+    </div>
+  </div>
+
+  </div>
+
+  <div class="foot">PChem 1 · Focus 7 Quantum Theory · ch7d_2 · 2026-1</div>
+</div>
+
+<script>
+// theme toggle
+const root=document.documentElement, btn=document.getElementById('themeBtn'),
+      ic=document.getElementById('themeIc'), tx=document.getElementById('themeTx');
+function setTheme(t){root.setAttribute('data-theme',t);
+  if(t==='dark'){ic.textContent='☀️';tx.textContent='Light';}
+  else{ic.textContent='🌙';tx.textContent='Dark';}}
+btn.addEventListener('click',()=>setTheme(root.getAttribute('data-theme')==='dark'?'light':'dark'));
+
+// tabs
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.t).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+
+// KaTeX render
+document.addEventListener('DOMContentLoaded',()=>{
+  renderMathInElement(document.body,{
+    delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}],
+    throwOnError:false
+  });
+});
+</script>
+</body>
+</html>
