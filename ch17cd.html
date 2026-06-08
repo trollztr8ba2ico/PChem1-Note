@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>17C·20D — Reaction Mechanisms & Arrhenius</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    tags: 'none'
+  },
+  output: { font: 'mathjax-stix2' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/@mathjax/mathjax-stix2-font@4.0.0/tex-mml-chtml-mathjax-stix2.js"></script>
+<style>
+  :root {
+    --header-bg: #1a3a2a;
+    --accent: #2d7a4a;
+    --accent-light: #3d9a5a;
+    --bg: #f7f5f0;
+    --bg-card: #ffffff;
+    --bg-card2: #f0ede6;
+    --text: #1a1a18;
+    --text-muted: #5a5a52;
+    --border: #d8d4cc;
+    --blue: #1d4ed8;
+    --blue-bg: #eff6ff;
+    --blue-border: #bfdbfe;
+    --amber: #b45309;
+    --amber-bg: #fffbeb;
+    --amber-border: #fde68a;
+    --green: #15803d;
+    --green-bg: #f0fdf4;
+    --green-border: #bbf7d0;
+    --red: #b91c1c;
+    --red-bg: #fef2f2;
+    --red-border: #fecaca;
+    --purple: #6d28d9;
+    --purple-bg: #f5f3ff;
+    --purple-border: #ddd6fe;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --tab-active: #1a3a2a;
+    --tab-text-active: #ffffff;
+  }
+  [data-theme="dark"] {
+    --bg: #12110e;
+    --bg-card: #1e1d19;
+    --bg-card2: #252420;
+    --text: #e8e4dc;
+    --text-muted: #9a9488;
+    --border: #3a3830;
+    --blue-bg: #1e3a5f;
+    --blue-border: #2563eb;
+    --amber-bg: #3d2a00;
+    --amber-border: #d97706;
+    --green-bg: #0d2a18;
+    --green-border: #16a34a;
+    --red-bg: #2d0f0f;
+    --red-border: #dc2626;
+    --purple-bg: #2d1f5e;
+    --purple-border: #7c3aed;
+    --shadow: 0 2px 12px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 15px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--header-bg);
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+  .header-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #a8d8b8;
+  }
+  .header-sub {
+    font-size: 0.75rem;
+    color: #7aaa8a;
+    margin-left: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .header-left { display: flex; align-items: baseline; gap: 0; }
+  .theme-btn {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-family: 'IBM Plex Sans KR', sans-serif;
+    transition: background 0.2s;
+  }
+  .theme-btn:hover { background: rgba(255,255,255,0.2); }
+
+  /* ── TABS ── */
+  .tab-bar {
+    background: var(--bg-card);
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 56px;
+    z-index: 90;
+    box-shadow: var(--shadow);
+  }
+  .tab-bar-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tab-bar-inner::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    padding: 12px 18px;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Sans KR', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .tab-btn:hover { color: var(--accent); }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ── CONTENT ── */
+  .content { max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── SECTION HEADERS ── */
+  .section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--header-bg);
+    margin: 40px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent);
+  }
+  [data-theme="dark"] .section-title { color: #a8d8b8; }
+  .section-title:first-child { margin-top: 0; }
+
+  .subsection-title {
+    font-family: 'IBM Plex Sans KR', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 28px 0 10px;
+  }
+
+  /* ── BOXES ── */
+  .box {
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    border-left: 4px solid;
+  }
+  .box-blue { background: var(--blue-bg); border-color: var(--blue); color: var(--blue); }
+  .box-amber { background: var(--amber-bg); border-color: var(--amber); color: var(--amber); }
+  .box-green { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+  .box-red { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+  .box-purple { background: var(--purple-bg); border-color: var(--purple); color: var(--purple); }
+  .box .box-body { color: var(--text); margin-top: 6px; }
+  .box-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ── MATH DISPLAY ── */
+  .math-block {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 24px;
+    margin: 16px 0;
+    overflow-x: auto;
+    font-size: 1.05em;
+  }
+  .math-block.highlight {
+    background: var(--green-bg);
+    border-color: var(--green-border);
+  }
+
+  /* ── DERIVATION STEPS ── */
+  .deriv-steps { margin: 16px 0; }
+  .deriv-step {
+    display: flex;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .deriv-step:last-child { border-bottom: none; }
+  .step-num {
+    min-width: 28px;
+    height: 28px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-content { flex: 1; color: var(--text); }
+  .step-tag {
+    font-size: 0.68rem;
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--purple-bg);
+    color: var(--purple);
+    border: 1px solid var(--purple-border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin-left: 8px;
+    vertical-align: middle;
+    font-weight: 500;
+  }
+
+  /* ── TABLE ── */
+  .chem-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.9rem;
+  }
+  .chem-table th {
+    background: var(--header-bg);
+    color: #a8d8b8;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+  }
+  .chem-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .chem-table tr:nth-child(even) td { background: var(--bg-card2); }
+  .chem-table tr:hover td { background: var(--green-bg); }
+
+  /* ── GRID ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ── EXAM Q ── */
+  .exam-q {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 16px 0;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .exam-q-header {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .exam-q-header:hover { background: var(--bg-card2); }
+  .q-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .q-deriv { background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple-border); }
+  .q-calc  { background: var(--blue-bg);   color: var(--blue);   border: 1px solid var(--blue-border); }
+  .q-exp   { background: var(--amber-bg);  color: var(--amber);  border: 1px solid var(--amber-border); }
+  .q-text { flex: 1; font-weight: 500; font-size: 0.92rem; }
+  .q-arrow { color: var(--text-muted); font-size: 0.85rem; transition: transform 0.25s; }
+  details[open] .q-arrow { transform: rotate(90deg); }
+  .exam-answer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--bg-card2);
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+
+  p { margin: 10px 0; color: var(--text); }
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--bg-card2);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 0.88em;
+  }
+
+  /* ── POTENTIAL ENERGY DIAGRAM ── */
+  .pe-diagram {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 16px 0;
+    text-align: center;
+  }
+  .pe-diagram svg { max-width: 100%; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <span class="header-title">Chemical Kinetics</span>
+      <span class="header-sub">17C · 20D — Mechanisms & Arrhenius</span>
+    </div>
+    <button class="theme-btn" onclick="toggleTheme()">🌙 다크</button>
+  </div>
+</header>
+
+<div class="tab-bar">
+  <div class="tab-bar-inner">
+    <button class="tab-btn active" onclick="switchTab('overview',this)">개요</button>
+    <button class="tab-btn" onclick="switchTab('equilibrium',this)">가역반응·이완</button>
+    <button class="tab-btn" onclick="switchTab('consecutive',this)">연속·병렬·2차</button>
+    <button class="tab-btn" onclick="switchTab('arrhenius',this)">Arrhenius</button>
+    <button class="tab-btn" onclick="switchTab('eyring',this)">Eyring·TST</button>
+    <button class="tab-btn" onclick="switchTab('exam',this)">📝 출제예상</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ══════════════════════════════════════════════ TAB: 개요 -->
+<div id="tab-overview" class="tab-panel active">
+  <h2 class="section-title">이 챕터의 로드맵</h2>
+
+  <div class="box box-blue">
+    <div class="box-label">핵심 질문</div>
+    <div class="box-body">
+      17B에서 "k_r은 농도와 무관하고 온도에 의존한다"고만 했어. 이 챕터에서는 <strong>(1) 복잡한 반응 형태들의 적분 rate law 유도</strong>, <strong>(2) k_r의 온도 의존성이 정확히 어떤 수식을 따르는지</strong>를 다룬다.
+    </div>
+  </div>
+
+  <h3 class="subsection-title">파트 구성</h3>
+
+  <table class="chem-table">
+    <thead>
+      <tr><th>파트</th><th>주제</th><th>핵심 결과</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>17C-1</code></td>
+        <td>가역 1차 반응 → 평형</td>
+        <td>\([A](t) = \frac{k_r' + k_r e^{-(k_r+k_r')t}}{k_r+k_r'}[A]_0\)</td>
+      </tr>
+      <tr>
+        <td><code>17C-2</code></td>
+        <td>Relaxation methods</td>
+        <td>\(x = x_0 e^{-t/\tau},\quad \tau = 1/(k_r+k_r')\)</td>
+      </tr>
+      <tr>
+        <td><code>17C-3</code></td>
+        <td>연속(consecutive) 반응</td>
+        <td>\([B](t) = \frac{k_a[A]_0}{k_b-k_a}(e^{-k_a t}-e^{-k_b t})\)</td>
+      </tr>
+      <tr>
+        <td><code>17C-4</code></td>
+        <td>병렬(parallel) 반응</td>
+        <td>\([B_i](t)=\frac{k_i}{k_T}[A]_0(1-e^{-k_T t})\)</td>
+      </tr>
+      <tr>
+        <td><code>17C-5</code></td>
+        <td>2차 반응 Type 2</td>
+        <td>부분분수 적분 → 로그형</td>
+      </tr>
+      <tr>
+        <td><code>20D-1</code></td>
+        <td>Arrhenius 방정식</td>
+        <td>\(k_r = Ae^{-E_a/RT}\)</td>
+      </tr>
+      <tr>
+        <td><code>20D-2</code></td>
+        <td>Eyring 방정식 (TST)</td>
+        <td>\(k_r = \frac{k_BT}{h}e^{-\Delta G^\ddagger/RT}\)</td>
+      </tr>
+      <tr>
+        <td><code>20D-3</code></td>
+        <td>Catalyst</td>
+        <td>\(E_a \downarrow\), \(K\) 불변</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box box-amber">
+    <div class="box-label">유도 흐름 공통 패턴</div>
+    <div class="box-body">
+      모든 복잡한 반응의 유도는 <strong>① ODE 세우기 → ② 치환/변수 정리 → ③ 변수분리 or 적분인자 → ④ 적분 → ⑤ 초기조건 대입</strong> 순서를 따른다. 패턴을 외우면 새로운 반응형도 풀 수 있다.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ TAB: 가역반응·이완 -->
+<div id="tab-equilibrium" class="tab-panel">
+  <h2 class="section-title">가역 1차 반응 → 평형 접근</h2>
+
+  <div class="box box-blue">
+    <div class="box-label">왜 이걸 보는가?</div>
+    <div class="box-body">17B는 비가역 반응만 다뤘다. 현실의 반응은 대부분 가역이고, 평형 상수 K가 kinetics로부터 어떻게 나오는지를 보여준다.</div>
+  </div>
+
+  <h3 class="subsection-title">설정</h3>
+  <div class="math-block">
+    $$A \underset{k_r'}{\stackrel{k_r}{\rightleftharpoons}} B, \qquad [A]_0 \text{ 주어짐},\quad [B]_0 = 0$$
+    $$\text{질량보존: } [A]+[B]=[A]_0 \quad \text{(항상 성립)}$$
+  </div>
+
+  <h3 class="subsection-title">미분방정식 → 일반해 유도</h3>
+  <div class="deriv-steps">
+    <div class="deriv-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        ODE 세우기: A는 forward로 사라지고 reverse로 생긴다.
+        $$\frac{d[A]}{dt} = -k_r[A] + k_r'[B]$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        \([B] = [A]_0 - [A]\) 대입 <span class="step-tag">질량보존</span>
+        $$\frac{d[A]}{dt} = -k_r[A] + k_r'([A]_0 - [A]) = -(k_r+k_r')[A] + k_r'[A]_0$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        형태: \(\dot{y} = -\alpha y + \beta\) → 일반해 = 정상해 + 제차해 <span class="step-tag">1차 선형 ODE</span><br>
+        정상해 (\(\dot{y}=0\)):
+        $$[A]_{eq} = \frac{k_r'[A]_0}{k_r+k_r'}$$
+        제차해: \(Ce^{-(k_r+k_r')t}\)
+        $$[A](t) = [A]_{eq} + Ce^{-(k_r+k_r')t}$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        초기조건 \([A](0)=[A]_0\) 대입: \(C = [A]_0 - [A]_{eq} = \frac{k_r[A]_0}{k_r+k_r'}\) <span class="step-tag">초기조건</span>
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        최종 결과:
+      </div>
+    </div>
+  </div>
+  <div class="math-block highlight">
+    $$\boxed{[A](t) = \frac{k_r' + k_r e^{-(k_r+k_r')t}}{k_r+k_r'}[A]_0}$$
+  </div>
+
+  <h3 class="subsection-title">평형 농도 & K</h3>
+  <p>\(t\to\infty\)에서 지수항 소멸:</p>
+  <div class="two-col">
+    <div class="math-block">
+      $$[A]_{eq} = \frac{k_r'}{k_r+k_r'}[A]_0 \qquad [B]_{eq} = \frac{k_r}{k_r+k_r'}[A]_0$$
+    </div>
+    <div class="math-block highlight">
+      $$K = \frac{[B]_{eq}}{[A]_{eq}} = \frac{k_r}{k_r'}$$
+    </div>
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-label">Another approach — 더 빠른 길</div>
+    <div class="box-body">
+      평형에서는 \(\frac{d[A]}{dt}=0\)이므로:
+      $$-k_r[A]_{eq} + k_r'[B]_{eq} = 0 \implies k_r[A]_{eq} = k_r'[B]_{eq} \implies K = \frac{k_r}{k_r'}$$
+      유도 없이 이 관계만 사용해도 되지만, 배경을 알아야 non-Arrhenius 거동도 이해할 수 있다.
+    </div>
+  </div>
+
+  <div class="box box-green">
+    <div class="box-label">일반화: 다단계 메커니즘</div>
+    <div class="box-body">
+      여러 단계를 거치는 반응에서 전체 K는 각 단계의 rate constant 비율의 곱:
+      $$K = \frac{k_a}{k_a'} \times \frac{k_b}{k_b'} \times \cdots$$
+    </div>
+  </div>
+
+  <hr style="border:none;border-top:1px solid var(--border);margin:40px 0;">
+
+  <h2 class="section-title">Relaxation Methods</h2>
+
+  <div class="box box-blue">
+    <div class="box-label">핵심 아이디어</div>
+    <div class="box-body">
+      이미 평형에 있는 계를 <strong>Temperature Jump (T-jump)</strong>로 살짝 흔든 뒤, 새로운 평형으로 돌아오는 과정을 관찰한다. "반응 시작 → 평형 도달"이 아니라 "평형 → perturbation → 새 평형" 방향.
+    </div>
+  </div>
+
+  <h3 class="subsection-title">핵심 유도 — 편차 변수 x 도입</h3>
+
+  <div class="deriv-steps">
+    <div class="deriv-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        T-jump 후 새 평형 농도에서의 편차를 \(x\)로 정의: <span class="step-tag">변수치환</span>
+        $$[A] = [A]_{eq} + x, \qquad [B] = [B]_{eq} - x$$
+        (\([A]\)가 \(x\)만큼 초과이면 \([B]\)는 \(x\)만큼 부족)
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        미분방정식에 대입:
+        $$\frac{d[A]}{dt} = \frac{dx}{dt} = -k_r([A]_{eq}+x) + k_r'([B]_{eq}-x)$$
+        $$= \underbrace{(-k_r[A]_{eq} + k_r'[B]_{eq})}_{=0 \text{ (평형조건)}} - (k_r+k_r')x$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <strong>평형 조건 \(k_r[A]_{eq} = k_r'[B]_{eq}\) 덕분에 상수항 소거!</strong> <span class="step-tag">평형조건</span>
+        $$\frac{dx}{dt} = -(k_r+k_r')x$$
+        → 순수한 지수 감쇠 ODE
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        즉시 풀 수 있음:
+      </div>
+    </div>
+  </div>
+
+  <div class="math-block highlight">
+    $$\boxed{x(t) = x_0\,e^{-(k_r+k_r')t} = x_0\,e^{-t/\tau}, \qquad \tau = \frac{1}{k_r+k_r'}}$$
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-label">왜 x 도입이 강력한가?</div>
+    <div class="box-body">
+      편차 변수를 쓰면 평형 조건이 상수항을 자동으로 소거해줘서 <strong>순수한 감쇠 방정식</strong>으로 변한다. 이 트릭은 임의의 선형화 가능한 반응계에 모두 적용된다.
+    </div>
+  </div>
+
+  <h3 class="subsection-title">실험적 파워</h3>
+  <table class="chem-table">
+    <thead><tr><th>측정량</th><th>주는 정보</th></tr></thead>
+    <tbody>
+      <tr><td>\(\tau = 1/(k_r+k_r')\)</td><td>\(k_r + k_r'\) 값</td></tr>
+      <tr><td>열역학 \(K = k_r/k_r'\)</td><td>\(k_r/k_r'\) 비율</td></tr>
+      <tr><td>둘을 연립</td><td>\(k_r\)과 \(k_r'\) 각각 분리 → 평형 측정만으론 불가!</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════ TAB: 연속·병렬·2차 -->
+<div id="tab-consecutive" class="tab-panel">
+
+  <h2 class="section-title">1. First-order Consecutive Reactions</h2>
+
+  <div class="math-block">
+    $$A \xrightarrow{k_a} B \xrightarrow{k_b} C, \qquad [A]_0,\;[B]_0=[C]_0=0$$
+  </div>
+
+  <h3 class="subsection-title">[A](t) — 가장 쉬운 부분</h3>
+  <p>A는 그냥 비가역 1차:</p>
+  <div class="math-block highlight">
+    $$[A](t) = [A]_0 e^{-k_a t}$$
+  </div>
+
+  <h3 class="subsection-title">[B](t) — 핵심 유도</h3>
+
+  <div class="deriv-steps">
+    <div class="deriv-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        B는 A에서 생기고(+) C로 사라진다(−):
+        $$\frac{d[B]}{dt} = k_a[A] - k_b[B] = k_a[A]_0 e^{-k_a t} - k_b[B]$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        표준형으로 쓰면: <span class="step-tag">1차 선형 비제차 ODE</span>
+        $$\frac{d[B]}{dt} + k_b[B] = k_a[A]_0 e^{-k_a t}$$
+        적분인자 \(e^{k_b t}\)를 곱한다:
+        $$\frac{d}{dt}\!\left([B]e^{k_b t}\right) = k_a[A]_0\, e^{(k_b-k_a)t}$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        양변 적분: <span class="step-tag">적분인자법</span>
+        $$[B]e^{k_b t} = \frac{k_a[A]_0}{k_b-k_a}e^{(k_b-k_a)t} + C$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        초기조건 \([B](0)=0\) 대입: \(C = -\frac{k_a[A]_0}{k_b-k_a}\) <span class="step-tag">초기조건</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="math-block highlight">
+    $$\boxed{[B](t) = \frac{k_a[A]_0}{k_b-k_a}\left(e^{-k_a t} - e^{-k_b t}\right)}$$
+  </div>
+
+  <div class="box box-red">
+    <div class="box-label">주의: k_a = k_b 경우</div>
+    <div class="box-body">위 식은 \(k_a \neq k_b\)를 가정한다. \(k_a = k_b\)이면 분모가 0이 되어 별도 유도가 필요하다 (L'Hôpital 또는 처음부터 다시).</div>
+  </div>
+
+  <h3 class="subsection-title">[C](t) — 질량보존 이용</h3>
+  <div class="math-block">
+    $$[C](t) = [A]_0 - [A] - [B] = [A]_0\!\left[1 - \frac{k_b e^{-k_a t} - k_a e^{-k_b t}}{k_b - k_a}\right]$$
+  </div>
+
+  <h3 class="subsection-title">t_max — B의 최댓값 시점</h3>
+  <div class="deriv-steps">
+    <div class="deriv-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        \(\frac{d[B]}{dt}=0\) 조건: \(k_a e^{-k_a t} = k_b e^{-k_b t}\)
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        \(e^{(k_b-k_a)t} = k_b/k_a\) → 로그 취하면:
+      </div>
+    </div>
+  </div>
+  <div class="math-block highlight">
+    $$t_{max} = \frac{\ln(k_b/k_a)}{k_b - k_a}$$
+  </div>
+  <div class="box box-green">
+    <div class="box-label">실용적 의의</div>
+    <div class="box-body">중간체 B(예: 합성 목표 물질)가 최대 농도에 달하는 시점 → <strong>반응 정지 타이밍 최적화</strong>에 직접 사용된다.</div>
+  </div>
+
+  <hr style="border:none;border-top:1px solid var(--border);margin:40px 0;">
+
+  <h2 class="section-title">2. First-order Parallel Reactions</h2>
+
+  <div class="math-block">
+    $$A \xrightarrow{k_1} B_1, \quad A \xrightarrow{k_2} B_2, \quad A \xrightarrow{k_3} B_3, \quad \cdots$$
+  </div>
+
+  <h3 class="subsection-title">[A](t) 유도</h3>
+  <div class="deriv-steps">
+    <div class="deriv-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        사라지는 경로가 여러 개 → 모두 더한다:
+        $$\frac{d[A]}{dt} = -(k_1+k_2+k_3+\cdots)[A] = -k_T[A], \quad k_T \equiv \sum_i k_i$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        변수분리 후 적분: <span class="step-tag">1차 반응</span>
+      </div>
+    </div>
+  </div>
+  <div class="math-block highlight">
+    $$[A](t) = [A]_0 e^{-k_T t}, \qquad k_T = \sum_i k_i$$
+  </div>
+
+  <h3 class="subsection-title">각 생성물 [B_i](t)</h3>
+  <div class="deriv-steps">
+    <div class="deriv-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        \(B_i\)는 오직 경로 \(i\)에서만 생긴다:
+        $$\frac{d[B_i]}{dt} = k_i[A] = k_i[A]_0 e^{-k_T t}$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        직접 적분 (\([B_i](0)=0\)):
+      </div>
+    </div>
+  </div>
+  <div class="math-block highlight">
+    $$\boxed{[B_i](t) = \frac{k_i}{k_T}[A]_0\!\left(1-e^{-k_T t}\right)}$$
+  </div>
+
+  <h3 class="subsection-title">Branching Ratio</h3>
+  <p>\(t\to\infty\)에서 최종 수율:</p>
+  <div class="math-block highlight">
+    $$\phi_i = \frac{[B_i](\infty)}{[A]_0} = \frac{k_i}{k_T} = \frac{k_i}{\sum_j k_j}$$
+  </div>
+  <div class="box box-amber">
+    <div class="box-label">핵심</div>
+    <div class="box-body">각 생성물의 최종 수율은 자기 경로의 rate constant가 전체 합에서 차지하는 비율이다. 빠른 경로일수록 많이 생성된다.</div>
+  </div>
+
+  <hr style="border:none;border-top:1px solid var(--border);margin:40px 0;">
+
+  <h2 class="section-title">3. Second-order Reactions: A + B → P (Type 2)</h2>
+
+  <div class="math-block">
+    $$v = k_r[A][B], \quad [A]_0 = a,\; [B]_0 = b \quad (a \neq b)$$
+  </div>
+
+  <h3 class="subsection-title">유도</h3>
+  <div class="deriv-steps">
+    <div class="deriv-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        A, B는 1:1로 반응 → 소비량 \(x\)로 통일: <span class="step-tag">변수치환</span>
+        $$[A]=a-x,\quad [B]=b-x,\quad \frac{dx}{dt}=k_r(a-x)(b-x)$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        변수분리 후 부분분수 분해: <span class="step-tag">부분분수</span>
+        $$\frac{1}{(a-x)(b-x)} = \frac{1}{b-a}\!\left(\frac{1}{a-x} - \frac{1}{b-x}\right)$$
+        <em>검증:</em> \(\frac{A}{a-x}+\frac{B}{b-x}=\frac{1}{(a-x)(b-x)}\)에서 \(A=\frac{1}{b-a}\), \(B=-\frac{1}{b-a}\)
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        양변 적분:
+        $$\frac{1}{b-a}\!\left[-\ln(a-x)+\ln(b-x)\right]_0^x = k_r t$$
+        $$\frac{1}{b-a}\!\left[\ln\frac{b-x}{a-x} - \ln\frac{b}{a}\right] = k_r t$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div name="step-num" class="step-num">4</div>
+      <div class="step-content">
+        \([A]=a-x\), \([B]=b-x\)로 되돌리면: <span class="step-tag">최종 정리</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="math-block highlight">
+    $$\boxed{\frac{1}{b-a}\ln\frac{[B]/[B]_0}{[A]/[A]_0} = k_r t}$$
+    $$\text{또는:}\quad \ln\frac{[B]/[B]_0}{[A]/[A]_0} = ([B]_0-[A]_0)\cdot k_r\cdot t$$
+  </div>
+
+  <h3 class="subsection-title">직선화</h3>
+  <p>\(\ln\dfrac{[A]_0[B]}{[B]_0[A]}\)를 \(t\)에 대해 그리면 기울기 = \((b-a)k_r\) → \(k_r\) 결정 가능</p>
+
+  <div class="box box-red">
+    <div class="box-label">주의: [A]₀ = [B]₀ 경우</div>
+    <div class="box-body">
+      \(a = b\)이면 부분분수가 성립하지 않는다. 이 경우는 Type 1 (\(v=k_r[A]^2\))과 동일한 형태로 풀린다:
+      $$\frac{1}{[A]} - \frac{1}{[A]_0} = k_r t$$
+    </div>
+  </div>
+
+  <h3 class="subsection-title">반응 유형 비교 요약</h3>
+  <table class="chem-table">
+    <thead>
+      <tr><th>반응 유형</th><th>ODE 특징</th><th>유도 핵심 기법</th><th>결과 형태</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>가역 1차</td>
+        <td>상수항 있는 1차 선형</td>
+        <td>정상해 + 제차해</td>
+        <td>지수 감쇠 + 상수</td>
+      </tr>
+      <tr>
+        <td>Relaxation</td>
+        <td>편차 변수로 상수 소거</td>
+        <td>평형조건 이용</td>
+        <td>순수 지수 감쇠</td>
+      </tr>
+      <tr>
+        <td>Consecutive</td>
+        <td>비제차 1차 선형</td>
+        <td>적분인자 \(e^{k_b t}\)</td>
+        <td>두 지수의 차</td>
+      </tr>
+      <tr>
+        <td>Parallel</td>
+        <td>직접 분리 가능</td>
+        <td>경로별 적분</td>
+        <td>Branching ratio</td>
+      </tr>
+      <tr>
+        <td>2차 Type 2</td>
+        <td>비선형 2차</td>
+        <td>변수치환 + 부분분수</td>
+        <td>로그형 \(\ln\) 비율</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════ TAB: ARRHENIUS -->
+<div id="tab-arrhenius" class="tab-panel">
+
+  <h2 class="section-title">20D: Arrhenius Equation</h2>
+
+  <div class="box box-blue">
+    <div class="box-label">출발점</div>
+    <div class="box-body">
+      17B에서 \(k_r\)은 온도에 의존한다고만 했다. Arrhenius(1889)는 수많은 실험 데이터에서 \(\ln k_r\) vs \(1/T\)가 직선이 됨을 발견했다. 이 경험식이 Arrhenius 방정식이다.
+    </div>
+  </div>
+
+  <h3 class="subsection-title">Arrhenius 방정식</h3>
+
+  <div class="math-block highlight">
+    $$\ln k_r = \ln A - \frac{E_a}{RT} \qquad \Longleftrightarrow \qquad k_r = A\,e^{-E_a/RT}$$
+  </div>
+
+  <table class="chem-table">
+    <thead><tr><th>파라미터</th><th>이름</th><th>의미</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>\(A\)</td>
+        <td>Pre-exponential factor (frequency factor)</td>
+        <td>충돌 빈도 + 기하학적 배향 인자. \(k_BT/h\)와 연결됨 (Eyring)</td>
+      </tr>
+      <tr>
+        <td>\(E_a\)</td>
+        <td>Activation energy (활성화 에너지)</td>
+        <td>반응이 일어나기 위해 넘어야 할 에너지 장벽 [J/mol]</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pe-diagram">
+    <svg viewBox="0 0 480 240" xmlns="http://www.w3.org/2000/svg" style="font-family:'IBM Plex Sans KR',sans-serif;">
+      <path d="M 40 180 C 100 180 130 60 200 50 C 270 40 300 190 420 195" 
+            stroke="#2d7a4a" stroke-width="2.5" fill="none"/>
+      <line x1="40" y1="180" x2="120" y2="180" stroke="#888" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="200" y1="50" x2="280" y2="50" stroke="#888" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="420" y1="195" x2="340" y2="195" stroke="#888" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="240" y1="180" x2="240" y2="50" stroke="#e53e3e" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <text x="245" y="120" fill="#e53e3e" font-size="13" font-style="italic">E&#x2090;</text>
+      <text x="50" y="172" fill="#2d7a4a" font-size="12">Reactants</text>
+      <text x="340" y="190" fill="#2d7a4a" font-size="12">Products</text>
+      <text x="170" y="45" fill="#888" font-size="11">TS (Activated complex)</text>
+      <text x="160" y="220" fill="#888" font-size="11">Reaction coordinate →</text>
+    </svg>
+  </div>
+
+  <h3 class="subsection-title">두 온도에서 k_r 비교 — 실용 공식</h3>
+
+  <div class="deriv-steps">
+    <div class="deriv-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        \(T_1\)에서: \(\ln k_{r,1} = \ln A - \frac{E_a}{RT_1}\)<br>
+        \(T_2\)에서: \(\ln k_{r,2} = \ln A - \frac{E_a}{RT_2}\)
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        두 식을 빼면 \(\ln A\) 소거: <span class="step-tag">대수 정리</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="math-block highlight">
+    $$\ln\frac{k_{r,2}}{k_{r,1}} = \frac{E_a}{R}\!\left(\frac{1}{T_1}-\frac{1}{T_2}\right) \tag{20D.2}$$
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-label">부호 확인 요령</div>
+    <div class="box-body">
+      \(T_2 > T_1\)이면 \(\frac{1}{T_1} > \frac{1}{T_2}\) → 우변 양수 → \(k_{r,2} > k_{r,1}\). 온도 올리면 반응 빨라진다는 직관과 일치. <strong>시험에서 부호 실수 가장 많이 나오는 곳!</strong>
+    </div>
+  </div>
+
+  <h3 class="subsection-title">Physical Interpretation of E_a</h3>
+  <table class="chem-table">
+    <thead><tr><th>상황</th><th>k_r 거동</th><th>예시</th></tr></thead>
+    <tbody>
+      <tr><td>\(E_a\) 크다</td><td>온도에 매우 민감 (그래프 가파름)</td><td>대부분의 유기 반응</td></tr>
+      <tr><td>\(E_a = 0\)</td><td>온도 무관 (\(k_r = A\))</td><td>일부 라디칼 결합 반응</td></tr>
+      <tr><td>\(E_a < 0\)</td><td>온도 올리면 <em>느려짐</em></td><td>효소 반응 고온 억제, radical recombination</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="subsection-title">Non-Arrhenius & E_a의 일반 정의</h3>
+  <p>복잡한 반응(효소, 라디칼 연쇄, 저온 양자 터널링)에서는 \(\ln k_r\) vs \(1/T\) 그래프가 직선이 아닐 수 있다. 이 경우에도 임의의 온도에서 <strong>국소 활성화 에너지</strong>를 정의할 수 있다:</p>
+
+  <div class="math-block highlight">
+    $$E_a = RT^2\frac{d\ln k_r}{dT} \quad \text{(정의)}$$
+  </div>
+
+  <div class="box box-purple">
+    <div class="box-label">유도 배경</div>
+    <div class="box-body">
+      Arrhenius 식이 성립한다고 가정하고 \(T\)로 미분:
+      $$\frac{d\ln k_r}{dT} = \frac{d}{dT}\!\left(\ln A - \frac{E_a}{RT}\right) = \frac{E_a}{RT^2}$$
+      따라서 \(E_a = RT^2\frac{d\ln k_r}{dT}\). Arrhenius가 성립하면 이 \(E_a\)는 상수, non-Arrhenius이면 \(T\)의 함수.
+    </div>
+  </div>
+
+  <h3 class="subsection-title">Boltzmann 분포와 e^{-E_a/RT}의 기원</h3>
+  <p>Arrhenius 식의 지수 인자가 왜 \(e^{-E_a/RT}\) 형태인지를 통계역학으로 정당화할 수 있다.</p>
+
+  <div class="deriv-steps">
+    <div class="deriv-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        에너지 준위가 \(\varepsilon\) 간격으로 균등하게 분포할 때 Boltzmann 분포:
+        $$\frac{N_i}{N} = (1-e^{-\varepsilon\beta})e^{-i\varepsilon\beta}, \qquad \beta = \frac{1}{k_BT}$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        최솟값 에너지 \(\varepsilon_{min} = i_{min}\varepsilon\) <strong>이상</strong>을 가진 분자의 비율:
+        $$\frac{1}{N}\sum_{i=i_{min}}^{\infty}N_i = 1 - \frac{1}{N}\sum_{i=0}^{i_{min}-1}N_i$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        유한 등비급수 공식으로 아래 합 계산: <span class="step-tag">등비급수</span>
+        $$\sum_{i=0}^{i_{min}-1}e^{-i\varepsilon\beta} = \frac{1-e^{-i_{min}\varepsilon\beta}}{1-e^{-\varepsilon\beta}} = q(1-e^{-i_{min}\varepsilon\beta})$$
+        따라서:
+        $$\frac{1}{N}\sum_{i=i_{min}}^{\infty}N_i = 1 - (1-e^{-i_{min}\varepsilon\beta}) = e^{-\varepsilon_{min}/k_BT}$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        몰 단위 전환: \(k_BT \to RT\), \(\varepsilon_{min} \to E_a\) <span class="step-tag">몰 단위</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="math-block highlight">
+    $$\text{에너지 }E_a \text{ 이상 분자 비율} = e^{-E_a/RT}$$
+  </div>
+
+  <div class="box box-green">
+    <div class="box-label">의미</div>
+    <div class="box-body">
+      이게 Arrhenius 식 \(e^{-E_a/RT}\)의 물리적 기원이다. 실험적 귀납이었던 Arrhenius 식이 Boltzmann 통계역학으로부터 정당화되는 순간. 온도를 올리면 이 비율이 지수적으로 증가 → 반응 속도 급증.
+    </div>
+  </div>
+
+  <h3 class="subsection-title">Catalyst 효과</h3>
+
+  <div class="box box-blue">
+    <div class="box-label">정의</div>
+    <div class="box-body">
+      <strong>Catalyst</strong> = 반응을 가속시키지만 알짜 화학 변화를 겪지 않는 물질<br>
+      • Heterogeneous: 다른 상 (고체 Pt + 기체 반응)<br>
+      • Homogeneous: 같은 상 (산 촉매 + 수용액 반응)
+    </div>
+  </div>
+
+  <div class="pe-diagram">
+    <svg viewBox="0 0 480 240" xmlns="http://www.w3.org/2000/svg" style="font-family:'IBM Plex Sans KR',sans-serif;">
+      <!-- Uncatalysed path -->
+      <path d="M 40 180 C 100 180 130 40 200 30 C 270 20 300 190 420 195" 
+            stroke="#dc2626" stroke-width="2" fill="none"/>
+      <!-- Catalysed path -->
+      <path d="M 40 180 C 100 180 140 90 200 80 C 260 70 300 190 420 195" 
+            stroke="#2d7a4a" stroke-width="2" fill="none" stroke-dasharray="6,3"/>
+      <!-- E_a lines -->
+      <line x1="205" y1="180" x2="205" y2="30" stroke="#dc2626" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="220" y1="180" x2="220" y2="80" stroke="#2d7a4a" stroke-width="1" stroke-dasharray="4,3"/>
+      <!-- Labels -->
+      <text x="170" y="22" fill="#dc2626" font-size="11">E_a (uncatalysed)</text>
+      <text x="230" y="72" fill="#2d7a4a" font-size="11">E_a (catalysed)</text>
+      <text x="50" y="172" fill="#888" font-size="12">Reactants</text>
+      <text x="340" y="190" fill="#888" font-size="12">Products</text>
+      <text x="160" y="230" fill="#888" font-size="11">Reaction coordinate →</text>
+    </svg>
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-label">핵심: 촉매가 바꾸지 않는 것</div>
+    <div class="box-body">
+      촉매는 \(E_a\)만 낮추고 <strong>평형 상수 K는 바꾸지 않는다</strong>. 왜냐하면 \(\Delta G_{rxn}\)이 불변이고 \(K = e^{-\Delta G_{rxn}/RT}\)이기 때문이다. Forward와 reverse 반응 모두 같은 비율로 빨라진다.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ TAB: EYRING -->
+<div id="tab-eyring" class="tab-panel">
+
+  <h2 class="section-title">Eyring Equation — Transition State Theory</h2>
+
+  <div class="box box-blue">
+    <div class="box-label">Arrhenius vs Eyring</div>
+    <div class="box-body">
+      Arrhenius는 실험적 귀납이었다. Transition State Theory (TST)는 통계역학으로부터 이를 유도하고, 파라미터에 열역학적 의미를 부여한다.
+    </div>
+  </div>
+
+  <h3 class="subsection-title">TST의 핵심 가정</h3>
+  <div class="box box-amber">
+    <div class="box-label">Quasi-equilibrium 가정</div>
+    <div class="box-body">
+      반응물과 전이 상태(activated complex) \([AB]^\ddagger\) 사이에 준평형이 성립하고, \([AB]^\ddagger\)가 생성물로 분해되는 속도로 전체 반응 속도가 결정된다.
+      $$A + B \rightleftharpoons [AB]^\ddagger \xrightarrow{\nu} \text{Products}$$
+    </div>
+  </div>
+
+  <h3 class="subsection-title">Eyring 방정식</h3>
+  <div class="math-block highlight">
+    $$k_r = \frac{k_B T}{h}\,e^{-\Delta G^\ddagger/RT}$$
+  </div>
+
+  <table class="chem-table">
+    <thead><tr><th>기호</th><th>의미</th></tr></thead>
+    <tbody>
+      <tr><td>\(k_B\)</td><td>Boltzmann 상수 \(= 1.381\times10^{-23}\) J/K</td></tr>
+      <tr><td>\(h\)</td><td>Planck 상수 \(= 6.626\times10^{-34}\) J·s</td></tr>
+      <tr><td>\(\Delta G^\ddagger\)</td><td>활성화 Gibbs 에너지 (\(= \Delta H^\ddagger - T\Delta S^\ddagger\))</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="subsection-title">Eyring Plot 유도 — 필기 내용</h3>
+
+  <div class="deriv-steps">
+    <div class="deriv-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        양변을 \(T\)로 나누고 \(\ln\) 취한다:
+        $$\ln\frac{k_r}{T} = \ln\frac{k_B}{h} - \frac{\Delta G^\ddagger}{RT}$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        \(\Delta G^\ddagger = \Delta H^\ddagger - T\Delta S^\ddagger\) 대입: <span class="step-tag">열역학 관계</span>
+        $$= \ln\frac{k_B}{h} - \frac{\Delta H^\ddagger - T\Delta S^\ddagger}{RT}$$
+      </div>
+    </div>
+    <div class="deriv-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        전개:
+      </div>
+    </div>
+  </div>
+
+  <div class="math-block highlight">
+    $$\ln\frac{k_r}{T} = \underbrace{\ln\frac{k_B}{h} + \frac{\Delta S^\ddagger}{R}}_{y\text{절편}} - \underbrace{\frac{\Delta H^\ddagger}{R}}_{기울기}\cdot\frac{1}{T}$$
+  </div>
+
+  <div class="box box-green">
+    <div class="box-label">Eyring Plot에서 읽는 정보</div>
+    <div class="box-body">
+      \(\ln(k_r/T)\) vs \(1/T\) 그래프:<br>
+      • 기울기 \(= -\Delta H^\ddagger/R\) → <strong>\(\Delta H^\ddagger\)</strong> 결정 (활성화 엔탈피)<br>
+      • \(y\)절편 \(= \ln(k_B/h) + \Delta S^\ddagger/R\) → <strong>\(\Delta S^\ddagger\)</strong> 결정 (활성화 엔트로피)
+    </div>
+  </div>
+
+  <h3 class="subsection-title">Arrhenius vs Eyring 비교</h3>
+  <table class="chem-table">
+    <thead>
+      <tr><th></th><th>Arrhenius</th><th>Eyring (TST)</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>기원</strong></td>
+        <td>실험적 귀납 (1889)</td>
+        <td>통계역학 유도 (1935)</td>
+      </tr>
+      <tr>
+        <td><strong>파라미터</strong></td>
+        <td>\(A\), \(E_a\)</td>
+        <td>\(\Delta H^\ddagger\), \(\Delta S^\ddagger\)</td>
+      </tr>
+      <tr>
+        <td><strong>Plot</strong></td>
+        <td>\(\ln k_r\) vs \(1/T\)</td>
+        <td>\(\ln(k_r/T)\) vs \(1/T\)</td>
+      </tr>
+      <tr>
+        <td><strong>기울기</strong></td>
+        <td>\(-E_a/R\)</td>
+        <td>\(-\Delta H^\ddagger/R\)</td>
+      </tr>
+      <tr>
+        <td><strong>연결</strong></td>
+        <td colspan="2">\(E_a \approx \Delta H^\ddagger + RT\), \quad A \propto e^{\Delta S^\ddagger/R}\)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box box-purple">
+    <div class="box-label">A의 물리적 의미 (Eyring으로 해석)</div>
+    <div class="box-body">
+      \(A\)가 크다 = \(\Delta S^\ddagger\)가 크다 = 전이 상태가 반응물보다 엔트로피가 높다 (느슨한 TS)<br>
+      \(A\)가 작다 = \(\Delta S^\ddagger\)가 작다 = 분자들이 매우 특정한 방향/배향으로 충돌해야 함<br><br>
+      이것이 교재의 "steric factor"(충돌 방향 인자)와 연결되는 부분이다.
+    </div>
+  </div>
+
+  <h3 class="subsection-title">전체 연결 지도</h3>
+  <div class="math-block">
+    $$\underbrace{k_r = Ae^{-E_a/RT}}_{\text{Arrhenius (실험)}}
+    \longleftrightarrow
+    \underbrace{k_r = \frac{k_BT}{h}e^{-\Delta G^\ddagger/RT}}_{\text{Eyring (TST)}}
+    \longleftarrow
+    \underbrace{e^{-E_a/RT} = \text{fraction with }E \geq E_a}_{\text{Boltzmann (통계역학)}}$$
+  </div>
+  <div class="box box-green">
+    <div class="box-label">최종 연결</div>
+    <div class="box-body">
+      Boltzmann 통계역학이 Arrhenius의 지수 형태를 설명하고, Eyring TST가 전지수 인자 A에 열역학적 의미(\(\Delta S^\ddagger\))를 부여한다. 세 프레임워크가 하나의 그림으로 통합된다.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ TAB: 출제예상 -->
+<div id="tab-exam" class="tab-panel">
+
+  <h2 class="section-title">📝 출제 예상 문제</h2>
+
+  <div class="box box-amber">
+    <div class="box-label">출제 비율</div>
+    <div class="box-body">유도형 40% · 계산형 30% · 원리·설명형 30%</div>
+  </div>
+
+  <!-- ── 유도형 ── -->
+  <h3 class="subsection-title">유도형 (Derivation)</h3>
+
+  <div class="exam-q">
+    <details>
+      <summary class="exam-q-header">
+        <span class="q-badge q-deriv">유도</span>
+        <span class="q-text">가역 1차 반응 \(A \rightleftharpoons B\)에서 \([A](t)\)를 유도하고, \(t\to\infty\)에서 \(K = k_r/k_r'\)가 됨을 보여라.</span>
+        <span class="q-arrow">▶</span>
+      </summary>
+      <div class="exam-answer">
+        <strong>핵심 흐름:</strong> 질량보존 \([B]=[A]_0-[A]\) 대입 → \(\frac{d[A]}{dt}=-(k_r+k_r')[A]+k_r'[A]_0\) → 정상해 \([A]_{eq}=k_r'[A]_0/(k_r+k_r')\) + 제차해 \(Ce^{-(k_r+k_r')t}\) → 초기조건 → \(C=k_r[A]_0/(k_r+k_r')\).
+        평형: \(t\to\infty\)에서 \([B]_{eq}/[A]_{eq} = k_r/k_r' = K\).
+      </div>
+    </details>
+  </div>
+
+  <div class="exam-q">
+    <details>
+      <summary class="exam-q-header">
+        <span class="q-badge q-deriv">유도</span>
+        <span class="q-text">Relaxation method에서 편차 변수 \(x = [A]-[A]_{eq}\)를 도입하여 \(x = x_0 e^{-t/\tau}\), \(\tau = 1/(k_r+k_r')\)를 유도하라.</span>
+        <span class="q-arrow">▶</span>
+      </summary>
+      <div class="exam-answer">
+        <strong>핵심 트릭:</strong> \([A]=[A]_{eq}+x\), \([B]=[B]_{eq}-x\) 대입 → 미분방정식에서 평형 조건 \(k_r[A]_{eq}=k_r'[B]_{eq}\) 때문에 상수항이 정확히 소거 → \(\dot{x}=-(k_r+k_r')x\) → 표준 1차 감쇠.
+      </div>
+    </details>
+  </div>
+
+  <div class="exam-q">
+    <details>
+      <summary class="exam-q-header">
+        <span class="q-badge q-deriv">유도</span>
+        <span class="q-text">연속 반응 \(A\xrightarrow{k_a}B\xrightarrow{k_b}C\)에서 \([B](t)\)를 유도하고, \(t_{max}\)를 구하라.</span>
+        <span class="q-arrow">▶</span>
+      </summary>
+      <div class="exam-answer">
+        <strong>\([B]\) 유도:</strong> \(\frac{d[B]}{dt}+k_b[B]=k_a[A]_0e^{-k_at}\) → 적분인자 \(e^{k_bt}\) 양변 곱 → \(\frac{d}{dt}([B]e^{k_bt})=k_a[A]_0e^{(k_b-k_a)t}\) → 적분 + 초기조건 \([B](0)=0\) → \([B]=\frac{k_a[A]_0}{k_b-k_a}(e^{-k_at}-e^{-k_bt})\).
+        <br><strong>\(t_{max}\):</strong> \(\frac{d[B]}{dt}=0\) → \(k_ae^{-k_at}=k_be^{-k_bt}\) → \(t_{max}=\frac{\ln(k_b/k_a)}{k_b-k_a}\).
+      </div>
+    </details>
+  </div>
+
+  <div class="exam-q">
+    <details>
+      <summary class="exam-q-header">
+        <span class="q-badge q-deriv">유도</span>
+        <span class="q-text">Eyring 방정식 \(k_r=(k_BT/h)e^{-\Delta G^\ddagger/RT}\)에서 \(\ln(k_r/T)\) vs \(1/T\) plot의 기울기와 절편을 유도하고, Arrhenius 파라미터와의 관계를 설명하라.</span>
+        <span class="q-arrow">▶</span>
+      </summary>
+      <div class="exam-answer">
+        양변 \(T\)로 나눠 \(\ln\) → \(\ln(k_r/T)=\ln(k_B/h)+\Delta S^\ddagger/R - (\Delta H^\ddagger/R)(1/T)\).
+        기울기 \(=-\Delta H^\ddagger/R\), 절편 \(=\ln(k_B/h)+\Delta S^\ddagger/R\).
+        Arrhenius 연결: \(E_a\approx\Delta H^\ddagger+RT\), \(A=(k_BT/h)e^{\Delta S^\ddagger/R}\).
+      </div>
+    </details>
+  </div>
+
+  <!-- ── 계산형 ── -->
+  <h3 class="subsection-title">계산형 (Calculation)</h3>
+
+  <div class="exam-q">
+    <details>
+      <summary class="exam-q-header">
+        <span class="q-badge q-calc">계산</span>
+        <span class="q-text">어떤 반응의 \(k_r(300\,\text{K})=2.0\times10^{-3}\,\text{s}^{-1}\)이고 \(E_a=75\,\text{kJ/mol}\)이다. \(k_r(330\,\text{K})\)를 구하라.</span>
+        <span class="q-arrow">▶</span>
+      </summary>
+      <div class="exam-answer">
+        20D.2 식 적용:
+        $$\ln\frac{k_2}{k_1} = \frac{E_a}{R}\!\left(\frac{1}{T_1}-\frac{1}{T_2}\right) = \frac{75000}{8.314}\!\left(\frac{1}{300}-\frac{1}{330}\right)$$
+        $$= 9018 \times 3.03\times10^{-4} = 2.73$$
+        $$k_2 = 2.0\times10^{-3} \times e^{2.73} = 2.0\times10^{-3}\times15.3 \approx 3.1\times10^{-2}\,\text{s}^{-1}$$
+      </div>
+    </details>
+  </div>
+
+  <div class="exam-q">
+    <details>
+      <summary class="exam-q-header">
+        <span class="q-badge q-calc">계산</span>
+        <span class="q-text">병렬 반응 \(A\xrightarrow{k_1}B_1\), \(A\xrightarrow{k_2}B_2\)에서 \(k_1=0.3\,\text{s}^{-1}\), \(k_2=0.7\,\text{s}^{-1}\). \(t=2\,\text{s}\)에서 \([B_1]/[A]_0\)를 구하고, 최종 branching ratio \(\phi_1\)을 계산하라.</span>
+        <span class="q-arrow">▶</span>
+      </summary>
+      <div class="exam-answer">
+        \(k_T = 0.3+0.7=1.0\,\text{s}^{-1}\)<br>
+        \([B_1](t)=\frac{k_1}{k_T}[A]_0(1-e^{-k_Tt})=0.3[A]_0(1-e^{-2.0})=0.3[A]_0\times0.865=0.260[A]_0\)<br>
+        최종 branching ratio: \(\phi_1=k_1/k_T=0.3/1.0=0.30\) (30%)
+      </div>
+    </details>
+  </div>
+
+  <div class="exam-q">
+    <details>
+      <summary class="exam-q-header">
+        <span class="q-badge q-calc">계산</span>
+        <span class="q-text">가역 반응 \(A\rightleftharpoons B\)에서 \(k_r=0.4\,\text{s}^{-1}\), \(k_r'=0.1\,\text{s}^{-1}\). (a) relaxation time \(\tau\)를 구하고, (b) 평형 상수 K를 구하라.</span>
+        <span class="q-arrow">▶</span>
+      </summary>
+      <div class="exam-answer">
+        (a) \(\tau=1/(k_r+k_r')=1/(0.4+0.1)=2.0\,\text{s}\)<br>
+        (b) \(K=k_r/k_r'=0.4/0.1=4\)
+      </div>
+    </details>
+  </div>
+
+  <!-- ── 설명형 ── -->
+  <h3 class="subsection-title">원리·설명형 (Conceptual)</h3>
+
+  <div class="exam-q">
+    <details>
+      <summary class="exam-q-header">
+        <span class="q-badge q-exp">설명</span>
+        <span class="q-text">촉매가 반응 속도를 높이지만 평형 상수 K는 변화시키지 않는 이유를 열역학적으로 설명하라.</span>
+        <span class="q-arrow">▶</span>
+      </summary>
+      <div class="exam-answer">
+        촉매는 새로운 반응 경로를 제공하여 \(E_a\)를 낮추지만 반응물과 생성물의 에너지 준위 자체는 바꾸지 않는다. 따라서 \(\Delta G_{rxn}\)이 불변이고, \(K=e^{-\Delta G_{rxn}/RT}\)이므로 K도 불변이다. Forward와 reverse 반응의 \(E_a\)가 모두 같은 양만큼 낮아지기 때문에 두 속도 상수가 같은 비율로 증가하고 그 비율인 K는 그대로다.
+      </div>
+    </details>
+  </div>
+
+  <div class="exam-q">
+    <details>
+      <summary class="exam-q-header">
+        <span class="q-badge q-exp">설명</span>
+        <span class="q-text">활성화 에너지가 음수(\(E_a < 0\))인 반응이 물리적으로 가능한지, 가능하다면 어떤 메커니즘에서 나타나는지 설명하라.</span>
+        <span class="q-arrow">▶</span>
+      </summary>
+      <div class="exam-answer">
+        가능하다. Eyring 관점에서 \(E_a &lt; 0\)는 \(\Delta H^\ddagger &lt; 0\)에 해당하는데, 이는 전이 상태가 반응물보다 엔탈피가 낮은 상황이다. 메커니즘적으로는: ① 라디칼 결합 반응처럼 장벽이 없는 exothermic 반응, ② 효소 반응에서 온도 증가 시 활성 자리 구조가 변해 기질 결합이 약해지는 경우, ③ 복잡한 다단계 반응에서 역반응이 온도에 더 강하게 반응하는 경우. 복합 rate law \(k_{eff}=k_a/(k_b+k_c)\)에서 나타날 수 있다.
+      </div>
+    </details>
+  </div>
+
+  <div class="exam-q">
+    <details>
+      <summary class="exam-q-header">
+        <span class="q-badge q-exp">설명</span>
+        <span class="q-text">Relaxation method에서 \(\tau\) 하나를 측정하는 것만으로 가역 반응의 \(k_r\)과 \(k_r'\) 각각을 결정할 수 있는 이유를 설명하라.</span>
+        <span class="q-arrow">▶</span>
+      </summary>
+      <div class="exam-answer">
+        \(\tau\)로부터 \(k_r+k_r'\)을 얻고, 열역학적으로 측정한 \(K=k_r/k_r'\)로부터 비율을 얻는다. 두 식을 연립하면: \(k_r=(K/(K+1))\cdot(1/\tau)\), \(k_r'=(1/(K+1))\cdot(1/\tau)\). 즉 평형 측정(\(K\))과 kinetics 측정(\(\tau\))의 조합이 개별 rate constant를 결정하는 데 필요하다. 평형 측정만으로는 비율만 알 수 있고 절댓값은 알 수 없다.
+      </div>
+    </details>
+  </div>
+
+  <div class="exam-q">
+    <details>
+      <summary class="exam-q-header">
+        <span class="q-badge q-exp">설명</span>
+        <span class="q-text">Arrhenius 식의 \(e^{-E_a/RT}\) 인자가 Boltzmann 통계역학으로부터 어떻게 나오는지 논하라.</span>
+        <span class="q-arrow">▶</span>
+      </summary>
+      <div class="exam-answer">
+        균등 간격 \(\varepsilon\) 에너지 준위에서 Boltzmann 분포를 이용해 에너지 \(\varepsilon_{min}\) 이상을 가진 분자의 비율을 계산한다. 유한 등비급수 공식으로 정리하면 \(\sum_{i=i_{min}}^{\infty}N_i/N = e^{-\varepsilon_{min}/k_BT}\). 몰 단위로 전환하면 \(e^{-E_a/RT}\). 즉 이 인자는 "반응 장벽을 넘기에 충분한 에너지를 가진 분자의 비율"이며, 온도 증가 시 이 비율이 지수적으로 증가해 반응이 빨라진다.
+      </div>
+    </details>
+  </div>
+
+</div><!-- end content -->
+</div>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+  document.querySelector('.theme-btn').textContent = isDark ? '🌙 다크' : '☀️ 라이트';
+}
+</script>
+</body>
+</html>

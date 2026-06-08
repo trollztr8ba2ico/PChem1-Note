@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 17A–B | Chemical Kinetics</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['$$', '$$']],
+    tags: 'none'
+  },
+  output: { font: 'mathjax-stix2' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/@mathjax/mathjax-stix2-font@4.0.0/tex-mml-chtml-mathjax-stix2.js"></script>
+
+<style>
+:root {
+  --header-bg: #1a3a2a;
+  --accent: #2d7a4a;
+  --accent-light: #3d9a5e;
+  --accent-hover: #4ab870;
+  --bg: #f7f5f0;
+  --bg-card: #fdfcf9;
+  --bg-card2: #f4f2ed;
+  --text: #1c1a17;
+  --text-secondary: #5a5650;
+  --text-muted: #8a867e;
+  --border: #dedad4;
+  --border-strong: #c8c4bc;
+
+  /* concept box colors */
+  --blue-bg: #eef4fc; --blue-border: #3b82f6; --blue-text: #1d4ed8;
+  --amber-bg: #fefce8; --amber-border: #f59e0b; --amber-text: #92400e;
+  --green-bg: #f0fdf4; --green-border: #22c55e; --green-text: #166534;
+  --red-bg: #fff1f2; --red-border: #ef4444; --red-text: #991b1b;
+  --purple-bg: #faf5ff; --purple-border: #a855f7; --purple-text: #6b21a8;
+  --teal-bg: #f0fdfa; --teal-border: #14b8a6; --teal-text: #115e59;
+
+  --tab-active-bg: var(--accent);
+  --tab-active-text: #fff;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+[data-theme="dark"] {
+  --bg: #12110e;
+  --bg-card: #1c1a16;
+  --bg-card2: #221f1a;
+  --text: #f0ede6;
+  --text-secondary: #b0aca4;
+  --text-muted: #70696080;
+  --border: #2e2b25;
+  --border-strong: #3e3a32;
+
+  --blue-bg: #1a2540; --blue-border: #3b82f6; --blue-text: #93c5fd;
+  --amber-bg: #2a2010; --amber-border: #f59e0b; --amber-text: #fcd34d;
+  --green-bg: #0f2a18; --green-border: #22c55e; --green-text: #86efac;
+  --red-bg: #2a1015; --red-border: #ef4444; --red-text: #fca5a5;
+  --purple-bg: #1e1030; --purple-border: #a855f7; --purple-text: #d8b4fe;
+  --teal-bg: #0a2420; --teal-border: #14b8a6; --teal-text: #5eead4;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'IBM Plex Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.75;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ── HEADER ── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--header-bg);
+  color: #fff;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 54px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.header-left { display: flex; align-items: baseline; gap: 0.75rem; }
+.header-chapter {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: #6dbf8a;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.header-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.0rem;
+  font-weight: 600;
+  color: #e8f5ee;
+}
+.header-right { display: flex; align-items: center; gap: 0.75rem; }
+.breadcrumb {
+  font-size: 0.72rem;
+  color: #7cbe92;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.theme-btn {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #e8f5ee;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: 'IBM Plex Sans KR', sans-serif;
+}
+.theme-btn:hover { background: rgba(255,255,255,0.22); }
+
+/* ── LAYOUT ── */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, #1a3a2a 0%, #2d5a3a 50%, #1a4a30 100%);
+  border-radius: var(--radius);
+  padding: 2.2rem 2rem 1.8rem;
+  margin-bottom: 1.8rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 30px,
+    rgba(255,255,255,0.015) 30px,
+    rgba(255,255,255,0.015) 31px
+  );
+  pointer-events: none;
+}
+.hero-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: #6dbf8a;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.hero h1 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #e8f5ee;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+.hero-sub {
+  color: #9dd4ae;
+  font-size: 0.88rem;
+  margin-bottom: 1.2rem;
+}
+.hero-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.chip {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #c8e8d2;
+  border-radius: 20px;
+  padding: 3px 11px;
+  font-size: 0.74rem;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex;
+  gap: 0.35rem;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.4rem;
+  margin-bottom: 1.6rem;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  font-size: 0.82rem;
+  font-family: 'IBM Plex Sans KR', sans-serif;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+.tab-btn:hover { background: var(--border); color: var(--text); }
+.tab-btn.active {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 500;
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── SECTION / CARD ── */
+.section { margin-bottom: 1.6rem; }
+.section-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.section-title .icon { font-size: 1.1rem; }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+}
+.card-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+p { margin-bottom: 0.7rem; }
+p:last-child { margin-bottom: 0; }
+
+/* ── CONCEPT BOXES ── */
+.box {
+  border-left: 4px solid;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.85rem 1.1rem;
+  margin: 0.9rem 0;
+  font-size: 0.9rem;
+}
+.box-blue   { background: var(--blue-bg);   border-color: var(--blue-border);   color: var(--text); }
+.box-amber  { background: var(--amber-bg);  border-color: var(--amber-border);  color: var(--text); }
+.box-green  { background: var(--green-bg);  border-color: var(--green-border);  color: var(--text); }
+.box-red    { background: var(--red-bg);    border-color: var(--red-border);    color: var(--text); }
+.box-purple { background: var(--purple-bg); border-color: var(--purple-border); color: var(--text); }
+.box-teal   { background: var(--teal-bg);   border-color: var(--teal-border);   color: var(--text); }
+
+.box-label {
+  font-size: 0.7rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+.box-blue   .box-label { color: var(--blue-text); }
+.box-amber  .box-label { color: var(--amber-text); }
+.box-green  .box-label { color: var(--green-text); }
+.box-red    .box-label { color: var(--red-text); }
+.box-purple .box-label { color: var(--purple-text); }
+.box-teal   .box-label { color: var(--teal-text); }
+
+/* ── MATH DISPLAY ── */
+.math-block {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.2rem;
+  margin: 0.85rem 0;
+  overflow-x: auto;
+  text-align: center;
+}
+.math-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+/* ── DERIVATION BOX ── */
+.deriv {
+  background: var(--bg-card2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.4rem;
+  margin: 1rem 0;
+  font-size: 0.88rem;
+}
+.deriv-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.deriv-steps { display: flex; flex-direction: column; gap: 0.5rem; }
+.deriv-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.8rem;
+  align-items: start;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.deriv-step:last-child { border-bottom: none; }
+.step-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--accent);
+  background: var(--green-bg);
+  border: 1px solid var(--green-border);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+.step-content { font-size: 0.88rem; }
+.step-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+/* ── COMPARISON TABLE ── */
+.cmp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+  margin: 0.9rem 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.cmp-table th {
+  background: var(--accent);
+  color: #fff;
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 500;
+  font-family: 'IBM Plex Sans KR', sans-serif;
+}
+.cmp-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.cmp-table tr:nth-child(even) td { background: var(--bg-card2); }
+.cmp-table tr:last-child td { border-bottom: none; }
+.cmp-table .mono { font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; }
+.highlight-row td { background: #e8f5ee !important; }
+[data-theme="dark"] .highlight-row td { background: #0f2a18 !important; }
+
+/* ── METHOD CARDS ── */
+.method-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.9rem;
+  margin: 0.9rem 0;
+}
+.method-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem;
+  border-top: 3px solid var(--accent);
+}
+.method-card-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: var(--accent);
+  font-family: 'Noto Serif KR', serif;
+}
+.method-card p { font-size: 0.84rem; }
+
+/* ── TIMELINE ── */
+.timeline {
+  position: relative;
+  padding-left: 1.6rem;
+  margin: 0.9rem 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.3rem;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  width: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+.tl-item {
+  position: relative;
+  margin-bottom: 0.9rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -1.3rem;
+  top: 1rem;
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+}
+.tl-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+/* ── DETAILS / QUIZ ── */
+details {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 0.8rem;
+  overflow: hidden;
+}
+details[open] { border-color: var(--accent); }
+summary {
+  padding: 0.85rem 1.1rem;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  user-select: none;
+}
+summary::-webkit-details-marker { display: none; }
+summary::before {
+  content: '▶';
+  font-size: 0.65rem;
+  color: var(--accent);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+details[open] summary::before { transform: rotate(90deg); }
+summary:hover { background: var(--bg-card2); }
+.answer-box {
+  padding: 1rem 1.2rem;
+  background: var(--bg-card2);
+  border-top: 1px solid var(--border);
+  font-size: 0.88rem;
+}
+.q-tag {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-right: 0.4rem;
+}
+.q-deriv  { background: #dbeafe; color: #1d4ed8; }
+.q-calc   { background: #dcfce7; color: #166534; }
+.q-conc   { background: #fef3c7; color: #92400e; }
+[data-theme="dark"] .q-deriv  { background: #1e3a5f; color: #93c5fd; }
+[data-theme="dark"] .q-calc   { background: #14432a; color: #86efac; }
+[data-theme="dark"] .q-conc   { background: #43300f; color: #fcd34d; }
+
+/* ── BADGE ── */
+.badge {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 0.3rem;
+  vertical-align: middle;
+}
+.badge-green { background: var(--green-bg); color: var(--green-text); border: 1px solid var(--green-border); }
+.badge-amber { background: var(--amber-bg); color: var(--amber-text); border: 1px solid var(--amber-border); }
+.badge-blue  { background: var(--blue-bg);  color: var(--blue-text);  border: 1px solid var(--blue-border); }
+.badge-purple{ background: var(--purple-bg);color: var(--purple-text);border: 1px solid var(--purple-border); }
+
+/* ── KEY RESULT ── */
+.key-result {
+  background: linear-gradient(135deg, #1a3a2a, #2d5a3a);
+  color: #e8f5ee;
+  border-radius: var(--radius);
+  padding: 1.1rem 1.4rem;
+  margin: 1rem 0;
+  text-align: center;
+}
+.key-result .math-inner { font-size: 1.05rem; }
+.key-result .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: #6dbf8a;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85em;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+ul, ol { padding-left: 1.4rem; margin-bottom: 0.7rem; }
+li { margin-bottom: 0.35rem; font-size: 0.9rem; }
+li:last-child { margin-bottom: 0; }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 0.9rem 0;
+}
+@media (max-width: 600px) {
+  .two-col { grid-template-columns: 1fr; }
+  .method-grid { grid-template-columns: 1fr; }
+  header { padding: 0 1rem; }
+  .hero h1 { font-size: 1.35rem; }
+}
+
+hr.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.2rem 0;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <span class="header-chapter">Atkins PChem 12e · Ch 17</span>
+    <span class="header-title">Chemical Kinetics</span>
+  </div>
+  <div class="header-right">
+    <span class="breadcrumb">17A · 17B</span>
+    <button class="theme-btn" onclick="toggleTheme()">🌙 다크</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Focus 17 · Chemical Kinetics</div>
+    <h1>반응 속도와 Rate Law</h1>
+    <p class="hero-sub">측정 방법론부터 적분 속도식까지 — 반응이 "얼마나 빠른지"를 다루는 학문</p>
+    <div class="hero-chips">
+      <span class="chip">17A: Monitoring</span>
+      <span class="chip">17B: Rate Laws</span>
+      <span class="chip">Integrated Rate Law</span>
+      <span class="chip">Half-life</span>
+      <span class="chip">Pump-probe</span>
+    </div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar" role="tablist">
+    <button class="tab-btn active" onclick="switchTab('overview')" role="tab">① 개요</button>
+    <button class="tab-btn" onclick="switchTab('monitoring')" role="tab">② 측정 방법</button>
+    <button class="tab-btn" onclick="switchTab('ratelaw')" role="tab">③ Rate Law</button>
+    <button class="tab-btn" onclick="switchTab('integrated')" role="tab">④ 적분 속도식</button>
+    <button class="tab-btn" onclick="switchTab('summary')" role="tab">⑤ 비교 정리</button>
+    <button class="tab-btn" onclick="switchTab('exam')" role="tab">⑥ 출제 예상</button>
+  </div>
+
+  <!-- ══════════════════ TAB 1: 개요 ══════════════════ -->
+  <div id="tab-overview" class="tab-panel active">
+
+    <div class="section">
+      <div class="section-title"><span class="icon">⚗️</span> Chemical Kinetics란?</div>
+      <div class="card">
+        <p>열역학이 <strong>"반응이 어느 방향으로 가는가?"</strong>를 다룬다면, Chemical Kinetics는 <strong>"얼마나 빠르게 가는가?"</strong>를 다루는 학문이야.</p>
+        <div class="two-col">
+          <div class="box box-blue">
+            <div class="box-label">📚 정의</div>
+            반응 속도(reaction rates)의 정의·측정·이론을 다루는 분야. 반응물/생성물의 <strong>농도가 시간에 따라 어떻게 변하는지</strong>가 핵심 데이터.
+          </div>
+          <div class="box box-amber">
+            <div class="box-label">🎯 핵심 질문</div>
+            반응 속도는 반응물 농도에 어떻게 의존하는가? → 이걸 수식으로 표현한 것이 <strong>Rate Law (속도법칙)</strong>
+          </div>
+        </div>
+        <div class="box box-green">
+          <div class="box-label">✅ 열역학 vs 반응속도론 비교</div>
+          열역학: ΔG &lt; 0이면 자발. 하지만 속도를 보장하지 않음 (다이아몬드 → 흑연은 열역학적으로 자발이지만 사실상 진행 안 됨!). Kinetics가 이 "속도"를 알려줌.
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="icon">📐</span> 17A·17B 커버리지</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-label">17A — Monitoring</div>
+          반응 진행 상황을 어떻게 측정하는가: 분광법, pump-probe, flow 기법, quenching 등 실험 방법론
+        </div>
+        <div class="tl-item">
+          <div class="tl-label">17B Part 1 — Rate Law</div>
+          반응 속도의 정의, rate constant, reaction order, 실험적 결정법 (isolation / initial rates)
+        </div>
+        <div class="tl-item">
+          <div class="tl-label">17B Part 2 — Integrated Rate Law</div>
+          미분 rate law를 적분 → 농도-시간 관계식. 0차·1차·2차·n차. 반감기 \(t_{1/2}\), time constant \(\tau\).
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════ TAB 2: 측정 방법 ══════════════════ -->
+  <div id="tab-monitoring" class="tab-panel">
+
+    <div class="section">
+      <div class="section-title"><span class="icon">🔬</span> 반응 진행 모니터링</div>
+      <div class="card">
+        <div class="card-title">🎯 기본 원리</div>
+        <p>Kinetics의 raw data = 시간에 따른 반응물·생성물 농도. 농도를 직접 꺼내 측정하면 반응이 방해되므로, <strong>비파괴적(non-invasive) 물리적 성질</strong>을 이용해 간접 측정한다.</p>
+        <div class="box box-blue">
+          <div class="box-label">핵심 원리</div>
+          반응이 진행되면서 변하는 <strong>어떤 물리적 성질이든</strong> 농도 프록시(proxy)로 써먹을 수 있다.
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="icon">💡</span> 분광법 기반 방법</div>
+
+      <div class="method-grid">
+        <div class="method-card">
+          <div class="method-card-title">🌈 흡수 분광법</div>
+          <p>특정 파장 빛의 흡광도 → [농도] 변환 (Beer-Lambert 법칙). 가장 널리 사용.</p>
+          <p style="margin-top:0.5rem; font-size:0.8rem; color:var(--text-secondary);">예: H₂ + Br₂ → 2HBr에서 Br₂(갈색)의 흡광도로 반응 추적</p>
+        </div>
+        <div class="method-card">
+          <div class="method-card-title">⚡ 전기전도도</div>
+          <p>이온 수가 변하는 반응에 적용. 이온 생성 → 전도도 증가.</p>
+          <p style="margin-top:0.5rem; font-size:0.8rem; color:var(--text-secondary);">(CH₃)₃CCl + H₂O → (CH₃)₃COH + H⁺ + Cl⁻</p>
+        </div>
+        <div class="method-card">
+          <div class="method-card-title">🔴 형광 / 인광</div>
+          <p>형광 수명 = ns~fs 스케일. 방출 강도·파장 변화로 반응 추적. 생물계에 특히 유용.</p>
+        </div>
+        <div class="method-card">
+          <div class="method-card-title">🔬 기타 방법</div>
+          <p>질량 분석법(MS), 기체 크로마토그래피(GC), NMR, EPR (라디칼 반응)</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="icon">⚡</span> Ultrafast Laser Spectroscopy</div>
+      <div class="card">
+        <div class="card-title">🤔 왜 필요한가?</div>
+        <p>형광 수명이 <strong>펨토초(fs = 10⁻¹⁵ s)</strong> 스케일이라 일반 검출기로는 시간 분해가 불가능. 검출기 응답 시간이 fs보다 훨씬 느리기 때문.</p>
+
+        <div class="box box-purple">
+          <div class="box-label">💡 Pump-Probe 원리</div>
+          <ul>
+            <li><strong>Pump 펄스</strong>: t = 0에 반응을 개시(trigger)</li>
+            <li><strong>Probe 펄스</strong>: time delay Δt 후에 분자 상태를 "스냅샷"으로 측정</li>
+            <li>Δt를 조금씩 늘려가며 여러 장 → 전체 시간 진화 재구성</li>
+          </ul>
+        </div>
+
+        <div class="box box-amber">
+          <div class="box-label">🔑 핵심 아이디어</div>
+          검출기가 느려도 OK! 펄스 간 delay는 <strong>광학적 경로 길이 차이</strong>로 fs 스케일 정밀도 구현 가능. 검출기는 각 probe 펄스의 신호 세기만 재면 됨.
+        </div>
+
+        <hr class="divider">
+        <div class="card-title">🏆 Ahmed Zewail — 노벨 화학상 1999</div>
+        <p>수상 이유: <em>"펨토초 분광법을 이용한 화학 반응의 전이 상태 연구"</em></p>
+        <p>수십 년간 이론적으로만 존재했던 <strong>transition state</strong>를 실험으로 처음 직접 관측. 반응 메커니즘 연구의 패러다임 전환.</p>
+        <div class="box box-blue">
+          <div class="box-label">응용 예시</div>
+          HO⁻ + CH₃Br → [HO···CH₃···Br]‡ → CH₃OH + Br⁻ (SN2 반응의 TS 관측)
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="icon">🌊</span> Flow 기법</div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">🔄 Continuous Flow</div>
+          <p>두 반응물을 mixing chamber에서 섞으면서 흘려보냄. 튜브의 <strong>위치 x</strong>가 혼합 후 경과 시간 \(t = x/v\)에 대응.</p>
+          <div class="box box-red">
+            <div class="box-label">단점</div>
+            반응물을 대량으로 계속 흘려야 함 → 시료 소비 多
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">⏹️ Stopped-Flow</div>
+          <p>빠르게 섞은 후 stopping piston으로 즉시 정지 → 같은 위치에서 시간 경과 측정.</p>
+          <p style="margin-top:0.4rem; font-size:0.82rem;">시간 분해능: <strong>ms ~ s 스케일</strong></p>
+          <div class="box box-green">
+            <div class="box-label">장점</div>
+            시료 소비 최소화. 효소 kinetics에 필수적.
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔬 Microfluidics</div>
+        <p>손바닥만한 투명 칩에 마이크로미터 스케일 채널. Stopped-flow의 현대적 진화형.</p>
+        <ul>
+          <li>시료 부피 μL 이하로 극도 절약</li>
+          <li>여러 반응 병렬 수행 가능 (high-throughput)</li>
+          <li>mixing time 자체가 짧아짐 (채널 좁아서 확산 거리 ↓)</li>
+          <li>smFRET, 단분자 실험 등과 결합</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="icon">🛑</span> Flash Photolysis & Quenching</div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">📸 Flash Photolysis</div>
+          <p>강한 빛의 섬광으로 반응 개시 → 즉시 time-resolved spectroscopy로 모니터링. 매우 빠른 반응(μs 이하)에 적합.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">❄️ Quenching Method</div>
+          <p>일정 시간 진행 후 반응을 급격히 <strong>정지(quench)</strong> → 여유롭게 조성 분석.</p>
+          <div class="box box-teal">
+            <div class="box-label">핵심 장점</div>
+            수명이 짧은 <strong>반응 중간체(intermediate)</strong>를 트랩 가능!
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════ TAB 3: RATE LAW ══════════════════ -->
+  <div id="tab-ratelaw" class="tab-panel">
+
+    <div class="section">
+      <div class="section-title"><span class="icon">📏</span> 반응 속도의 정의</div>
+      <div class="card">
+        <p>반응 \(\text{A} + 2\text{B} \rightarrow 3\text{C} + \text{D}\) 에서 각 물질의 속도는 화학양론 계수로 연결돼:</p>
+        <div class="math-block">
+          <span class="math-label">stoichiometric relation</span>
+          $$\frac{d[\text{D}]}{dt} = \frac{1}{3}\frac{d[\text{C}]}{dt} = -\frac{d[\text{A}]}{dt} = -\frac{1}{2}\frac{d[\text{B}]}{dt}$$
+        </div>
+        <div class="box box-amber">
+          <div class="box-label">⚠️ 부호 규약</div>
+          반응물은 \(d[\text{A}]/dt &lt; 0\) (소모), 생성물은 \(d[\text{D}]/dt &gt; 0\) (생성). 어느 기준으로 쓰든 결과가 달라지니까 통일된 정의가 필요!
+        </div>
+        <hr class="divider">
+        <div class="card-title">📌 Rate of Reaction \(v\) 의 정의</div>
+        <p>stoichiometric coefficient \(\nu_J\)로 나눠서 통일 (반응물 \(\nu_J < 0\), 생성물 \(\nu_J > 0\)):</p>
+        <div class="key-result">
+          <div class="label">Rate of Reaction (정의)</div>
+          $$v = \frac{1}{\nu_J}\frac{d[\text{J}]}{dt}$$
+          <div style="font-size:0.8rem; color:#9dd4ae; margin-top:0.4rem;">어떤 물질 J를 기준으로 잡아도 동일한 v 값 → 반응 진행 속도의 "유일한" 척도</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="icon">⚖️</span> Rate Law & Rate Constant</div>
+      <div class="card">
+        <p>반응 속도 \(v\)는 반응물 농도의 함수 — 이 관계식이 <strong>rate law</strong>야.</p>
+        <div class="math-block">
+          <span class="math-label">example: second-order rate law</span>
+          $$v = k_r[\text{A}][\text{B}]$$
+        </div>
+        <div class="two-col">
+          <div class="box box-blue">
+            <div class="box-label">Rate Constant k_r</div>
+            <ul>
+              <li>농도에 <strong>무관</strong></li>
+              <li>온도에 <strong>의존</strong> (Arrhenius)</li>
+              <li>단위: 차수에 따라 다름</li>
+            </ul>
+          </div>
+          <div class="box box-red">
+            <div class="box-label">⚠️ 핵심 주의</div>
+            Rate law는 화학 반응식에서 <strong>읽어낼 수 없다!</strong> 반드시 실험으로 결정해야 함.
+          </div>
+        </div>
+        <div class="box box-purple">
+          <div class="box-label">예시: H₂ + Br₂ → 2HBr</div>
+          반응식에서 예상: \(v = k_r[\text{H}_2][\text{Br}_2]\) ?<br>
+          실제 실험 결과:
+          $$v = \frac{k_a[\text{H}_2][\text{Br}_2]^{3/2}}{[\text{Br}_2] + k_b[\text{HBr}]}$$
+          분모에 생성물 [HBr]까지 등장! 라디칼 연쇄 메커니즘 때문.
+        </div>
+        <p>기체상 균일 반응은 농도 대신 <strong>부분압</strong>으로 표현하기도 해: \(v = f(p_A, p_B, \ldots)\)</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="icon">🔢</span> Reaction Order (반응 차수)</div>
+      <div class="card">
+        <p>Rate law가 power law 형태일 때:</p>
+        <div class="math-block">
+          $$v = k_r[\text{A}]^a[\text{B}]^b \cdots$$
+        </div>
+        <p>A에 대한 차수 = \(a\), B에 대한 차수 = \(b\), overall order = \(a + b + \cdots\)</p>
+        <div class="box box-amber">
+          <div class="box-label">⚠️ 차수는 반드시 정수일 필요 없음!</div>
+          예: \(v = k_r[\text{A}]^{1/2}[\text{B}]\) → overall order = 3/2 (three-halves order)
+        </div>
+        <hr class="divider">
+        <div class="card-title">Zero-order reaction</div>
+        $$v = k_r$$
+        <p>농도가 변해도 속도가 일정! 반응 메커니즘에 <strong>병목(bottle-neck)</strong>이 있을 때 발생.</p>
+        <div class="box box-teal">
+          <div class="box-label">물리적 이유</div>
+          효소 반응에서 기질이 효소를 완전히 포화(saturation)시키면, 기질 농도를 아무리 올려도 속도는 효소 수에 의해 제한 → 겉보기 0차 반응.
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="icon">🧪</span> Rate Law 결정법</div>
+
+      <div class="card">
+        <div class="card-title">방법 1: Isolation Method (격리법)</div>
+        <p>반응물 중 하나를 제외한 나머지를 <strong>엄청난 과량</strong>으로 투입 → 나머지는 상수 취급 → 변수 하나만 남김.</p>
+        <div class="deriv">
+          <div class="deriv-title">▶ pseudo first-order 유도</div>
+          <div class="deriv-steps">
+            <div class="deriv-step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                원래 rate law: \(v = k_r[\text{A}][\text{B}]\)
+              </div>
+            </div>
+            <div class="deriv-step">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                \([\text{B}]_0 \gg [\text{A}]\) 조건 → 반응 진행 중 [B]는 거의 변하지 않음: \([\text{B}] \approx [\text{B}]_0 = \text{const}\)
+              </div>
+            </div>
+            <div class="deriv-step">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                \(v = k_r[\text{B}]_0 \cdot [\text{A}] = k_r'[\text{A}]\) &nbsp; 단, &nbsp; \(k_r' = k_r[\text{B}]_0\)
+                <div class="step-note">→ A에 대한 1차 반응처럼 보임 = pseudo first-order</div>
+              </div>
+            </div>
+            <div class="deriv-step">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                A의 차수 결정 후, A를 과량으로 바꿔 B의 차수 결정 → 조합해서 전체 rate law 획득
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">방법 2: Method of Initial Rates (초기 속도법)</div>
+        <p>반응 초기(\(t \approx 0\))의 속도를 측정. 이 시점엔 생성물 거의 없고 농도 ≈ 초기 농도 → 깔끔.</p>
+        <div class="box box-blue">
+          <div class="box-label">실험 방법</div>
+          초기 농도 \([\text{A}]_0\)를 바꿔가며 여러 실험 → 각 실험에서 \(v_0\) 측정 → 농도와의 비율로 차수 결정
+        </div>
+        <div class="box box-green">
+          <div class="box-label">차수 판별법</div>
+          \(v = k_r[\text{A}]^a\) 에서, \([\text{A}]_0\)를 2배로 올렸을 때:
+          <ul style="margin-top:0.4rem;">
+            <li>\(v_0\)가 2배 → \(a = 1\) (1차)</li>
+            <li>\(v_0\)가 4배 → \(a = 2\) (2차)</li>
+            <li>\(v_0\)가 √2배 → \(a = 1/2\)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════ TAB 4: 적분 속도식 ══════════════════ -->
+  <div id="tab-integrated" class="tab-panel">
+
+    <div class="section">
+      <div class="section-title"><span class="icon">∫</span> 왜 적분이 필요한가?</div>
+      <div class="card">
+        <p>미분 rate law \(v = k_r[\text{A}]^n\)은 속도와 농도의 <strong>순간적</strong> 관계를 줘. 하지만 실험에서는 "시간 t에서 농도가 얼마인지"를 직접 측정하잖아. 그러니까 미분방정식을 <strong>적분</strong>해서 \([\text{A}](t)\) 식을 얻어야 해.</p>
+        <div class="box box-blue">
+          <div class="box-label">직선화 전략</div>
+          적분 결과를 변환해서 <strong>직선 그래프</strong>로 만들면 → 기울기에서 \(k_r\) 결정, y절편에서 초기 농도 확인. 실험 데이터 분석의 핵심 전략.
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="icon">1️⃣</span> First-order Reactions</div>
+      <div class="card">
+        <div class="card-title">유도</div>
+        <div class="deriv">
+          <div class="deriv-title">▶ 1차 적분 속도식 유도</div>
+          <div class="deriv-steps">
+            <div class="deriv-step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                미분 rate law: \(\dfrac{d[\text{A}]}{dt} = -k_r[\text{A}]\)
+              </div>
+            </div>
+            <div class="deriv-step">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                변수 분리: \(\dfrac{d[\text{A}]}{[\text{A}]} = -k_r \, dt\)
+              </div>
+            </div>
+            <div class="deriv-step">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                양변 적분: \(\displaystyle\int_{[\text{A}]_0}^{[\text{A}]} \frac{d[\text{A}]}{[\text{A}]} = -k_r \int_0^t dt\)
+                <div class="step-note">\(\int \frac{dx}{x} = \ln x\) 이용</div>
+              </div>
+            </div>
+            <div class="deriv-step">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                \(\ln[\text{A}] - \ln[\text{A}]_0 = -k_r t\)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-result">
+          <div class="label">Integrated First-order Rate Law</div>
+          $$\ln\frac{[\text{A}]}{[\text{A}]_0} = -k_r t \qquad \Longleftrightarrow \qquad [\text{A}] = [\text{A}]_0 \, e^{-k_r t}$$
+        </div>
+
+        <p>1차 반응 = 농도가 <strong>지수 감쇠(exponential decay)</strong>. \(k_r\)이 클수록 훨씬 빠르게 떨어져.</p>
+        <p>직선화: \(\ln[\text{A}]\) vs \(t\) → 기울기 \(= -k_r\)</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">반감기 \(t_{1/2}\) 유도</div>
+        <div class="deriv">
+          <div class="deriv-steps">
+            <div class="deriv-step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                \([\text{A}] = \frac{1}{2}[\text{A}]_0\) 대입: \(\ln\dfrac{\frac{1}{2}[\text{A}]_0}{[\text{A}]_0} = -k_r t_{1/2}\)
+              </div>
+            </div>
+            <div class="deriv-step">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                \(\ln\dfrac{1}{2} = -\ln 2 = -k_r t_{1/2}\)
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="key-result">
+          <div class="label">1차 반감기</div>
+          $$t_{1/2} = \frac{\ln 2}{k_r}$$
+        </div>
+        <div class="box box-green">
+          <div class="box-label">🌟 핵심 특징</div>
+          <strong>\([\text{A}]_0\)에 무관!</strong> 초기 농도가 아무리 달라도 반감기는 항상 같음. 1차 반응의 시그니처.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Time Constant \(\tau\) (tau)</div>
+        <p>농도가 \(\frac{1}{e}[\text{A}]_0\)까지 떨어지는 데 걸리는 시간:</p>
+        <div class="deriv">
+          <div class="deriv-steps">
+            <div class="deriv-step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                \([\text{A}] = \frac{1}{e}[\text{A}]_0\) 대입: \(\ln\dfrac{\frac{1}{e}[\text{A}]_0}{[\text{A}]_0} = -\ln e = -1 = -k_r\tau\)
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="key-result">
+          <div class="label">Time Constant (1차 반응)</div>
+          $$\tau = \frac{1}{k_r} \qquad \Longleftrightarrow \qquad t_{1/2} = \tau \ln 2 \approx 0.693\,\tau$$
+        </div>
+        <div class="box box-teal">
+          <div class="box-label">어디서 많이 보나?</div>
+          형광 수명(fluorescence lifetime), 방사성 붕괴, RC 회로 — 모두 1차 지수 감쇠 → τ로 특성화.
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="icon">2️⃣</span> Second-order Reactions</div>
+
+      <div class="card">
+        <div class="card-title">Type 1: A → P, \(v = k_r[\text{A}]^2\)</div>
+        <div class="deriv">
+          <div class="deriv-title">▶ 2차 적분 속도식 유도</div>
+          <div class="deriv-steps">
+            <div class="deriv-step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                \(\dfrac{d[\text{A}]}{[\text{A}]^2} = -k_r \, dt\)
+                <div class="step-note">변수 분리</div>
+              </div>
+            </div>
+            <div class="deriv-step">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                \(-\displaystyle\int_{[\text{A}]_0}^{[\text{A}]} \frac{d[\text{A}]}{[\text{A}]^2} = k_r t\)
+              </div>
+            </div>
+            <div class="deriv-step">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                \(\int \frac{1}{x^2}dx = -\frac{1}{x}\) 이용 →
+                \(\left[\frac{1}{[\text{A}]}\right]_{[\text{A}]_0}^{[\text{A}]} = k_r t\)
+              </div>
+            </div>
+            <div class="deriv-step">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                \(\dfrac{1}{[\text{A}]} - \dfrac{1}{[\text{A}]_0} = k_r t\)
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="key-result">
+          <div class="label">Integrated Second-order Rate Law</div>
+          $$\frac{1}{[\text{A}]} - \frac{1}{[\text{A}]_0} = k_r t \qquad \Longleftrightarrow \qquad [\text{A}] = \frac{[\text{A}]_0}{1 + k_r t [\text{A}]_0}$$
+        </div>
+        <p>직선화: \(1/[\text{A}]\) vs \(t\) → 기울기 \(= k_r\)</p>
+        <p>1차와 비교: <strong>쌍곡선 감쇠</strong> (지수보다 훨씬 천천히 떨어짐).</p>
+
+        <hr class="divider">
+        <div class="card-title">2차 반감기 유도</div>
+        <div class="deriv">
+          <div class="deriv-steps">
+            <div class="deriv-step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                \(\dfrac{1}{\frac{1}{2}[\text{A}]_0} - \dfrac{1}{[\text{A}]_0} = k_r t_{1/2}\)
+              </div>
+            </div>
+            <div class="deriv-step">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                \(\dfrac{2}{[\text{A}]_0} - \dfrac{1}{[\text{A}]_0} = \dfrac{1}{[\text{A}]_0} = k_r t_{1/2}\)
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="key-result">
+          <div class="label">2차 반감기</div>
+          $$t_{1/2} = \frac{1}{k_r[\text{A}]_0}$$
+        </div>
+        <div class="box box-amber">
+          <div class="box-label">⚠️ 1차와 결정적 차이</div>
+          \([\text{A}]_0\)에 <strong>반비례</strong>! 초기 농도가 높을수록 반감기가 짧아짐. 물리적 이유: 2차 반응은 두 분자가 만나야 하니, 농도 높으면 충돌 빈도 높아서 빨리 없어짐.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Type 2: A + B → P, \(v = k_r[\text{A}][\text{B}]\)</div>
+        <p>두 반응물이 있어서 변수가 두 개 → 변수 치환 트릭!</p>
+        <div class="deriv">
+          <div class="deriv-title">▶ 변수 치환 전략</div>
+          <div class="deriv-steps">
+            <div class="deriv-step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                반응이 \(x\)만큼 진행: \([\text{A}] = [\text{A}]_0 - x\), \([\text{B}] = [\text{B}]_0 - x\)
+              </div>
+            </div>
+            <div class="deriv-step">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                \(\dfrac{dx}{dt} = k_r([\text{A}]_0 - x)([\text{B}]_0 - x)\)
+                <div class="step-note">변수 하나(x)로 통일</div>
+              </div>
+            </div>
+            <div class="deriv-step">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <strong>부분분수 분해</strong>:
+                $$\frac{1}{([\text{A}]_0-x)([\text{B}]_0-x)} = \frac{1}{[\text{B}]_0-[\text{A}]_0}\left(\frac{1}{[\text{A}]_0-x} - \frac{1}{[\text{B}]_0-x}\right)$$
+              </div>
+            </div>
+            <div class="deriv-step">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                적분 → ln 항 정리
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="key-result">
+          <div class="label">A+B→P 2차 적분 속도식</div>
+          $$\ln\frac{[\text{B}]/[\text{B}]_0}{[\text{A}]/[\text{A}]_0} = ([\text{B}]_0 - [\text{A}]_0)\,k_r t$$
+        </div>
+        <p>\(\ln([\text{B}]/[\text{A}])\) vs \(t\) 그래프 → 기울기 \(= ([\text{B}]_0-[\text{A}]_0)k_r\)</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="icon">n</span> nth-order 일반 반감기</div>
+      <div class="card">
+        <p>\(\text{A} \rightarrow \text{P}\), \(v = k_r[\text{A}]^n\) (n ≠ 0, 1) 을 적분하면:</p>
+        <div class="math-block">
+          <span class="math-label">일반 적분 결과</span>
+          $$\frac{1}{[\text{A}]^{n-1}} - \frac{1}{[\text{A}]_0^{n-1}} = (n-1)k_r t$$
+        </div>
+        <div class="key-result">
+          <div class="label">nth-order 반감기 (일반식)</div>
+          $$t_{1/2} = \frac{2^{n-1}-1}{(n-1)\,k_r\,[\text{A}]_0^{n-1}}$$
+        </div>
+        <div class="box box-green">
+          <div class="box-label">검산</div>
+          \(n=2\) 대입: \(\dfrac{2^1-1}{1 \cdot k_r[\text{A}]_0} = \dfrac{1}{k_r[\text{A}]_0}\) ✓ (2차 결과와 일치)
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════ TAB 5: 비교 정리 ══════════════════ -->
+  <div id="tab-summary" class="tab-panel">
+
+    <div class="section">
+      <div class="section-title"><span class="icon">📊</span> Integrated Rate Laws 총정리</div>
+      <div class="card">
+        <table class="cmp-table">
+          <thead>
+            <tr>
+              <th>차수</th>
+              <th>미분 식</th>
+              <th>적분 식 \([\text{A}](t)\)</th>
+              <th>직선화</th>
+              <th>\(t_{1/2}\)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>0</strong></td>
+              <td class="mono">\(v = k_r\)</td>
+              <td>\([\text{A}] = [\text{A}]_0 - k_r t\)</td>
+              <td>\([\text{A}]\) vs \(t\)</td>
+              <td>\(\dfrac{[\text{A}]_0}{2k_r}\)</td>
+            </tr>
+            <tr class="highlight-row">
+              <td><strong>1</strong> ⭐</td>
+              <td class="mono">\(v = k_r[\text{A}]\)</td>
+              <td>\([\text{A}] = [\text{A}]_0 e^{-k_r t}\)</td>
+              <td>\(\ln[\text{A}]\) vs \(t\)</td>
+              <td>\(\dfrac{\ln 2}{k_r}\) (초기농도 무관)</td>
+            </tr>
+            <tr>
+              <td><strong>2</strong> ⭐</td>
+              <td class="mono">\(v = k_r[\text{A}]^2\)</td>
+              <td>\([\text{A}] = \dfrac{[\text{A}]_0}{1+k_r t[\text{A}]_0}\)</td>
+              <td>\(1/[\text{A}]\) vs \(t\)</td>
+              <td>\(\dfrac{1}{k_r[\text{A}]_0}\)</td>
+            </tr>
+            <tr>
+              <td><strong>n</strong></td>
+              <td class="mono">\(v = k_r[\text{A}]^n\)</td>
+              <td>—</td>
+              <td>\([\text{A}]^{1-n}\) vs \(t\)</td>
+              <td>\(\dfrac{2^{n-1}-1}{(n-1)k_r[\text{A}]_0^{n-1}}\)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="icon">⏱️</span> 반감기와 초기 농도 의존성</div>
+      <div class="card">
+        <table class="cmp-table">
+          <thead>
+            <tr><th>차수</th><th>\(t_{1/2}\) 공식</th><th>\([\text{A}]_0\) 의존성</th><th>물리적 이유</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>0차</strong></td>
+              <td>\([\text{A}]_0 / 2k_r\)</td>
+              <td>비례 ↑</td>
+              <td>초기에 많을수록 줄어드는 절대량이 커서 시간 더 걸림</td>
+            </tr>
+            <tr class="highlight-row">
+              <td><strong>1차</strong></td>
+              <td>\(\ln 2 / k_r\)</td>
+              <td><strong>무관 🌟</strong></td>
+              <td>지수 감쇠의 수학적 특성 — 비율이 일정</td>
+            </tr>
+            <tr>
+              <td><strong>2차</strong></td>
+              <td>\(1/k_r[\text{A}]_0\)</td>
+              <td>반비례 ↓</td>
+              <td>농도 높으면 충돌 빈도↑ → 빠르게 소모</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="icon">🔬</span> 측정 방법 비교</div>
+      <div class="card">
+        <table class="cmp-table">
+          <thead>
+            <tr><th>방법</th><th>시간 스케일</th><th>원리</th><th>장단점</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Pump-probe</strong></td>
+              <td>fs ~ ps</td>
+              <td>두 펄스 delay 조절</td>
+              <td>TS 직접 관측 가능 / 고가 장비</td>
+            </tr>
+            <tr>
+              <td><strong>Flash photolysis</strong></td>
+              <td>μs ~ ms</td>
+              <td>빛으로 반응 개시</td>
+              <td>빠른 반응 측정 가능</td>
+            </tr>
+            <tr>
+              <td><strong>Stopped-flow</strong></td>
+              <td>ms ~ s</td>
+              <td>혼합 후 정지, 고정 관측</td>
+              <td>시료 절약 / 혼합 시간 한계</td>
+            </tr>
+            <tr>
+              <td><strong>Continuous flow</strong></td>
+              <td>ms ~ s</td>
+              <td>위치 = 시간</td>
+              <td>직관적 / 시료 多 필요</td>
+            </tr>
+            <tr>
+              <td><strong>Microfluidics</strong></td>
+              <td>ms ~ s</td>
+              <td>미세 채널 flow</td>
+              <td>초소량 시료, 병렬화 / 제작 복잡</td>
+            </tr>
+            <tr>
+              <td><strong>Quenching</strong></td>
+              <td>임의</td>
+              <td>반응 급정지 후 분석</td>
+              <td>중간체 트랩 가능 / 시간 분해능 낮음</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><span class="icon">💡</span> t_{1/2} vs τ 비교</div>
+      <div class="card">
+        <div class="two-col">
+          <div class="box box-blue">
+            <div class="box-label">반감기 t₁/₂</div>
+            농도가 <strong>절반</strong>으로 줄어드는 시간<br>
+            \(t_{1/2} = \frac{\ln 2}{k_r}\) (1차)<br><br>
+            직관적. 방사성 붕괴, 약물 반감기 등에 주로 사용.
+          </div>
+          <div class="box box-purple">
+            <div class="box-label">Time constant τ</div>
+            농도가 <strong>1/e ≈ 36.8%</strong>로 줄어드는 시간<br>
+            \(\tau = \frac{1}{k_r}\) (1차)<br><br>
+            수학적으로 자연스러움. 형광 수명, RC 회로, NMR relaxation.
+          </div>
+        </div>
+        <div class="math-block">
+          $$t_{1/2} = \tau \ln 2 \approx 0.693\,\tau$$
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════ TAB 6: 출제 예상 ══════════════════ -->
+  <div id="tab-exam" class="tab-panel">
+
+    <div class="section">
+      <div class="section-title"><span class="icon">🎯</span> 출제 예상 문제</div>
+
+      <details>
+        <summary><span class="q-tag q-deriv">유도형</span> 1차 반응의 적분 속도식과 반감기를 유도하고, 반감기가 초기 농도에 무관함을 보여라.</summary>
+        <div class="answer-box">
+          <p><strong>1단계 — 미분 rate law:</strong> \(\dfrac{d[\text{A}]}{dt} = -k_r[\text{A}]\)</p>
+          <p><strong>2단계 — 변수 분리 후 적분:</strong></p>
+          $$\int_{[\text{A}]_0}^{[\text{A}]} \frac{d[\text{A}]}{[\text{A}]} = -k_r\int_0^t dt \implies \ln\frac{[\text{A}]}{[\text{A}]_0} = -k_r t$$
+          <p><strong>3단계 — 결과:</strong> \([\text{A}] = [\text{A}]_0 e^{-k_r t}\)</p>
+          <p><strong>4단계 — 반감기:</strong> \([\text{A}] = \frac{1}{2}[\text{A}]_0\) 대입 →</p>
+          $$\ln\frac{1}{2} = -k_r t_{1/2} \implies t_{1/2} = \frac{\ln 2}{k_r}$$
+          <p><strong>결론:</strong> \(t_{1/2}\)에 \([\text{A}]_0\)이 없음 → 초기 농도 무관. 이것이 1차 반응의 특징.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="q-tag q-deriv">유도형</span> 2차 반응 A → P의 적분 속도식을 유도하고, 1차 반응과의 반감기 차이를 설명하라.</summary>
+        <div class="answer-box">
+          <p><strong>미분 식:</strong> \(\dfrac{d[\text{A}]}{dt} = -k_r[\text{A}]^2\)</p>
+          <p><strong>변수 분리:</strong> \(\dfrac{d[\text{A}]}{[\text{A}]^2} = -k_r dt\)</p>
+          <p><strong>적분:</strong> \(\int \frac{1}{x^2}dx = -\frac{1}{x}\) 이용 →</p>
+          $$\frac{1}{[\text{A}]} - \frac{1}{[\text{A}]_0} = k_r t \implies [\text{A}] = \frac{[\text{A}]_0}{1+k_r t[\text{A}]_0}$$
+          <p><strong>반감기:</strong> \([\text{A}] = \frac{1}{2}[\text{A}]_0\) 대입 → \(t_{1/2} = \dfrac{1}{k_r[\text{A}]_0}\)</p>
+          <p><strong>비교:</strong> 1차는 \([\text{A}]_0\) 무관, 2차는 \([\text{A}]_0\)에 반비례. 2차에서 초기 농도 2배 → 반감기 반으로 줄어듦.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="q-tag q-deriv">유도형</span> n차 반응의 일반 반감기 공식을 유도하고, n=1 극한에서 1차 반감기와 일치함을 확인하라.</summary>
+        <div class="answer-box">
+          <p>\(\dfrac{d[\text{A}]}{[\text{A}]^n} = -k_r dt\) 적분 →</p>
+          $$\frac{1}{[\text{A}]^{n-1}} - \frac{1}{[\text{A}]_0^{n-1}} = (n-1)k_r t$$
+          <p>\([\text{A}] = \frac{1}{2}[\text{A}]_0\) 대입, \([\text{A}]_0^{1-n}\) 정리:</p>
+          $$t_{1/2} = \frac{2^{n-1}-1}{(n-1)k_r[\text{A}]_0^{n-1}}$$
+          <p><strong>n→1 극한:</strong> \(\lim_{n\to1}\dfrac{2^{n-1}-1}{n-1}\) — L'Hôpital 적용: 분자미분 \(2^{n-1}\ln 2\), 분모 1 → \(\ln 2\). 따라서 \(t_{1/2} \to \dfrac{\ln 2}{k_r}\) ✓</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="q-tag q-calc">계산형</span> \(k_r = 2.0 \times 10^{-3}\) s⁻¹ 인 1차 반응에서, 초기 농도 0.80 M이 0.10 M이 되는 데 걸리는 시간을 구하라.</summary>
+        <div class="answer-box">
+          <p>1차 적분 식: \(\ln\dfrac{[\text{A}]}{[\text{A}]_0} = -k_r t\)</p>
+          $$t = -\frac{1}{k_r}\ln\frac{[\text{A}]}{[\text{A}]_0} = -\frac{1}{2.0\times10^{-3}}\ln\frac{0.10}{0.80}$$
+          $$= -\frac{1}{2.0\times10^{-3}}\ln(0.125) = -\frac{-2.079}{2.0\times10^{-3}} = 1040 \text{ s}$$
+          <p>검산: \(t_{1/2} = \ln 2 / (2.0\times10^{-3}) = 347\) s. 0.80→0.40→0.20→0.10은 3번의 반감기 = 1040 s ✓</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="q-tag q-calc">계산형</span> 2차 반응 A → P에서 \(k_r = 0.050\) L mol⁻¹ s⁻¹, \([\text{A}]_0 = 0.20\) M일 때 반감기를 구하고, 초기 농도를 0.40 M으로 바꾸면 반감기가 어떻게 달라지는지 설명하라.</summary>
+        <div class="answer-box">
+          <p>\(t_{1/2} = \dfrac{1}{k_r[\text{A}]_0} = \dfrac{1}{0.050 \times 0.20} = 100\) s</p>
+          <p>\([\text{A}]_0 = 0.40\) M이면: \(t_{1/2} = \dfrac{1}{0.050\times0.40} = 50\) s</p>
+          <p>초기 농도 2배 → 반감기 절반. 2차 반응에서 반감기는 \([\text{A}]_0\)에 <strong>반비례</strong>하기 때문. 물리적으로 농도가 높으면 두 분자의 충돌 빈도가 높아서 더 빨리 소모됨.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="q-tag q-conc">원리형</span> Rate law가 화학 반응식으로부터 예측될 수 없는 이유를 설명하고, H₂ + Br₂ → 2HBr 반응의 rate law를 예시로 들어라.</summary>
+        <div class="answer-box">
+          <p>Rate law는 반응의 <strong>메커니즘(mechanism)</strong>에 의해 결정된다. 화학 반응식은 반응물과 생성물의 전체 양론만 나타낼 뿐, 실제로 반응이 어떤 elementary steps로 진행되는지는 알려주지 않는다.</p>
+          <p>H₂ + Br₂ → 2HBr의 경우, 반응식에서 예상하면 \(v = k_r[\text{H}_2][\text{Br}_2]\)이지만, 실제 실험에서는:</p>
+          $$v = \frac{k_a[\text{H}_2][\text{Br}_2]^{3/2}}{[\text{Br}_2] + k_b[\text{HBr}]}$$
+          <p>분모에 생성물 [HBr]이 등장하는 이유: 이 반응은 Br· 라디칼을 통한 연쇄 메커니즘으로 진행되며, HBr이 라디칼 중간체와 반응해 역반응을 일으키기 때문이다. → Rate law는 반드시 실험으로 결정.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="q-tag q-conc">원리형</span> Zero-order 반응이 발생하는 물리적 원인을 설명하고, 효소 반응을 예시로 들어라.</summary>
+        <div class="answer-box">
+          <p>Zero-order 반응은 반응 메커니즘에 <strong>병목(bottle-neck)</strong>이 존재할 때 발생한다. 이때 반응 속도를 결정하는 단계가 반응물 농도와 무관하게 일정한 속도로 진행된다.</p>
+          <p>효소 반응의 예: 효소(E)가 기질(S)과 결합해 반응을 촉매한다. 기질 농도가 매우 높아서 효소의 모든 활성 부위가 기질로 포화(saturation)되면, 반응 속도는 기질 농도가 아니라 <strong>효소의 총 농도 [E]_total</strong>에 의해 결정된다.</p>
+          <p>이때 겉보기 rate law: \(v = k_\text{cat}[\text{E}]_\text{total} = \text{const}\) → 0차 반응. 기질 농도를 아무리 올려도 속도가 증가하지 않는다.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="q-tag q-conc">원리형</span> Pump-probe spectroscopy의 원리를 설명하고, 왜 검출기 응답 시간이 느려도 fs 스케일 측정이 가능한지 논하라.</summary>
+        <div class="answer-box">
+          <p><strong>원리:</strong> 두 개의 레이저 펄스를 사용. Pump 펄스(t=0)로 반응을 개시하고, Probe 펄스를 time delay Δt 후에 쏴서 그 시점의 분자 상태를 측정. Δt를 조금씩 바꿔가면서 여러 번 측정 → 전체 시간 진화 재구성.</p>
+          <p><strong>검출기가 느려도 되는 이유:</strong> time delay Δt는 두 빔의 <strong>광학적 경로 길이 차이</strong>로 구현한다. 빛의 속도가 3×10⁸ m/s이므로, 경로를 0.3 μm만 늘려도 1 fs의 delay를 얻을 수 있다. 경로 차이는 정밀한 광학 스테이지로 nm 수준까지 조절 가능. 검출기는 각 probe 펄스에 대한 평균 신호만 기록하면 되므로 빠른 응답 시간이 필요 없다.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="q-tag q-conc">원리형</span> Isolation method에서 pseudo first-order rate law가 어떻게 만들어지는지 설명하고, 이 방법의 이점을 논하라.</summary>
+        <div class="answer-box">
+          <p>원래 rate law가 \(v = k_r[\text{A}][\text{B}]\)일 때, \([\text{B}]_0 \gg [\text{A}]_0\) 조건으로 실험한다. 반응이 진행되면서 [A]는 크게 변하지만 [B]는 거의 변하지 않아 사실상 상수: \([\text{B}] \approx [\text{B}]_0\).</p>
+          <p>그러면: \(v = k_r[\text{B}]_0 \cdot [\text{A}] = k_r'[\text{A}]\) (단, \(k_r' = k_r[\text{B}]_0\))</p>
+          <p>이것이 pseudo first-order rate law. 이점:</p>
+          <ul>
+            <li>반응물 하나에 대한 차수만 결정하면 되므로 분석이 단순해짐</li>
+            <li>1차 적분 속도식(\(\ln[\text{A}]\) vs \(t\) 직선)을 이용 가능</li>
+            <li>순서대로 각 반응물에 대해 반복하면 전체 rate law 결정 가능</li>
+          </ul>
+        </div>
+      </details>
+
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+  document.querySelector('.theme-btn').textContent = isDark ? '🌙 다크' : '☀️ 라이트';
+}
+</script>
+
+</body>
+</html>

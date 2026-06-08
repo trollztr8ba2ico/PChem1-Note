@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>판구조론 기말고사 완전정복 🌋</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+  :root {
+    --bg:#0a0e1a;--surface:#111827;--surface2:#1a2235;--border:#2a3550;
+    --a1:#f97316;--a2:#22d3ee;--a3:#a78bfa;--a4:#4ade80;--a5:#fb7185;
+    --text:#e2e8f0;--muted:#94a3b8;--gold:#fbbf24;--red:#ef4444;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;line-height:1.7;overflow-x:hidden;}
+  .hero{position:relative;padding:50px 20px 30px;text-align:center;background:radial-gradient(ellipse at 50% 0%,#1a2a4a 0%,var(--bg) 70%);border-bottom:1px solid var(--border);}
+  .hero-badge{display:inline-block;background:rgba(249,115,22,0.2);border:1px solid var(--a1);color:var(--a1);padding:4px 14px;border-radius:20px;font-size:.8rem;letter-spacing:.1em;margin-bottom:12px;}
+  .hero h1{font-size:clamp(1.6rem,5vw,2.8rem);font-weight:900;line-height:1.2;margin-bottom:10px;}
+  .hero h1 span{color:var(--a1);}
+  .hero-sub{color:var(--muted);font-size:.9rem;max-width:600px;margin:0 auto;}
+  .nav-tabs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:14px 16px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+  .nav-tab{padding:7px 13px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.78rem;font-family:'Noto Sans KR',sans-serif;transition:all .2s;white-space:nowrap;}
+  .nav-tab.active{background:var(--surface2);color:var(--tc,var(--a1));border-color:var(--tc,var(--a1));}
+  .section{display:none;padding:18px;max-width:940px;margin:0 auto;}
+  .section.active{display:block;animation:fadeIn .3s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;}
+  .card-h{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+  .ci{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+  .ct{font-size:.98rem;font-weight:700;}
+  .cs{font-size:.76rem;color:var(--muted);margin-top:1px;}
+  .sec-h{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+  .sec-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+  .sec-title{font-size:1.35rem;font-weight:800;}
+  .sec-desc{font-size:.82rem;color:var(--muted);margin-top:2px;}
+  /* TOPIC TREE */
+  .topic-tree{list-style:none;padding:0;}
+  .topic-tree>li{margin-bottom:7px;}
+  .tm{display:flex;align-items:flex-start;gap:8px;padding:9px 12px;background:var(--surface2);border-radius:8px;cursor:pointer;border-left:3px solid var(--tc,var(--a1));}
+  .tm:hover{filter:brightness(1.12);}
+  .ti{font-size:.95rem;flex-shrink:0;margin-top:2px;}
+  .tt{font-size:.88rem;font-weight:500;}
+  .td{margin:5px 0 0 18px;padding:10px 13px;background:rgba(255,255,255,.03);border-left:2px solid var(--border);border-radius:0 8px 8px 0;font-size:.84rem;color:var(--muted);line-height:1.85;display:none;}
+  .td.open{display:block;}
+  .td em{color:var(--a2);font-style:normal;font-weight:500;}
+  .td strong{color:var(--text);}
+  .key{display:inline-block;background:rgba(251,191,36,.15);color:var(--gold);padding:1px 6px;border-radius:4px;font-size:.8rem;margin:1px;}
+  /* TABLES */
+  .tbl{width:100%;border-collapse:collapse;font-size:.82rem;margin:8px 0;}
+  .tbl th{background:var(--surface2);padding:9px 11px;text-align:left;color:var(--gold);font-weight:700;border-bottom:2px solid var(--a1);}
+  .tbl td{padding:8px 11px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.6;}
+  .tbl tr:hover td{background:rgba(255,255,255,.02);}
+  .tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:.77rem;font-weight:500;}
+  .to{background:rgba(249,115,22,.15);color:var(--a1);}
+  .tc{background:rgba(34,211,238,.12);color:var(--a2);}
+  .tp{background:rgba(167,139,250,.15);color:var(--a3);}
+  .tg{background:rgba(74,222,128,.12);color:var(--a4);}
+  .tr{background:rgba(239,68,68,.15);color:var(--red);}
+  /* CALLOUTS */
+  .call{padding:11px 15px;border-radius:8px;margin:9px 0;font-size:.86rem;line-height:1.75;display:flex;gap:9px;}
+  .cw{background:rgba(249,115,22,.1);border-left:3px solid var(--a1);color:#fcd9b5;}
+  .ci2{background:rgba(34,211,238,.07);border-left:3px solid var(--a2);color:#a5f3fc;}
+  .ck{background:rgba(251,191,36,.08);border-left:3px solid var(--gold);color:#fde68a;}
+  .call-icon{font-size:1.05rem;flex-shrink:0;}
+  /* FIG */
+  .fig{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin:9px 0;}
+  .fig-t{font-size:.77rem;font-weight:700;color:var(--a2);letter-spacing:.05em;margin-bottom:7px;text-transform:uppercase;}
+  .fig-d{font-size:.85rem;color:var(--muted);line-height:1.82;}
+  .fig-d b{color:var(--text);} .fig-d .hl{color:var(--a1);}
+  /* FLOW */
+  .flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin:9px 0;font-size:.8rem;}
+  .fs{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:5px 9px;white-space:nowrap;}
+  .fa{color:var(--a1);font-size:.95rem;}
+  .fs.o{border-color:var(--a1);color:var(--a1);}
+  .fs.b{border-color:var(--a2);color:var(--a2);}
+  .fs.p{border-color:var(--a3);color:var(--a3);}
+  .fs.g{border-color:var(--a4);color:var(--a4);}
+  /* QUIZ */
+  .qcard{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:15px;margin-bottom:11px;}
+  .qq{font-size:.9rem;font-weight:600;margin-bottom:9px;display:flex;gap:7px;align-items:flex-start;}
+  .qn{background:var(--a3);color:#000;width:21px;height:21px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.73rem;font-weight:700;flex-shrink:0;margin-top:1px;}
+  .qtog{background:rgba(167,139,250,.15);border:1px solid var(--a3);color:var(--a3);padding:4px 11px;border-radius:6px;cursor:pointer;font-size:.76rem;margin-top:7px;font-family:'Noto Sans KR',sans-serif;}
+  .qa{display:none;margin-top:9px;padding:11px;background:rgba(34,211,238,.05);border-left:3px solid var(--a2);border-radius:0 8px 8px 0;font-size:.84rem;line-height:1.85;color:var(--muted);}
+  .qa b{color:var(--a2);} .qa.show{display:block;}
+  /* MINERAL */
+  .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:9px;margin:9px 0;}
+  .mcard{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px;}
+  .mname{font-size:.92rem;font-weight:700;color:var(--a4);margin-bottom:5px;}
+  .mprop{font-size:.76rem;color:var(--muted);line-height:1.75;}
+  .mprop span{color:var(--text);}
+  /* MISC */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+  @media(max-width:580px){.grid2{grid-template-columns:1fr;}}
+  code{font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,.08);padding:1px 5px;border-radius:4px;font-size:.8em;color:var(--a4);}
+  hr.dv{border:none;border-top:1px dashed var(--border);margin:14px 0;}
+  .badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:.74rem;font-weight:700;margin-left:5px;}
+  .scroll-h{text-align:center;color:var(--muted);font-size:.78rem;padding:18px;}
+  /* SVG */
+  .svg-wrap{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin:9px 0;overflow-x:auto;}
+  .depth-row{display:flex;align-items:center;gap:9px;margin-bottom:7px;font-size:.8rem;}
+  .depth-lbl{width:105px;color:var(--muted);flex-shrink:0;}
+  .depth-wrap{flex:1;height:22px;background:var(--surface2);border-radius:4px;overflow:hidden;}
+  .depth-bar{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:7px;font-size:.76rem;font-weight:600;}
+  .depth-val{color:var(--muted);font-size:.76rem;width:70px;text-align:right;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">📚 판구조론 기말고사 완전정복 v2.0</div>
+  <h1>7~12강 + 실험·필드 <span>원스톱 벼락치기</span></h1>
+  <p class="hero-sub">수렴경계 · 변성·마그마 · 지진 메커니즘 · Mantle flow · Caledonian · 박편관찰 총망라</p>
+</div>
+
+<div class="nav-tabs">
+  <button class="nav-tab active" style="--tc:var(--a1)" onclick="show('s1',this)">🌊 7강. 섭입대 구조</button>
+  <button class="nav-tab" style="--tc:var(--a2)" onclick="show('s2',this)">🔮 8강. 변성·마그마</button>
+  <button class="nav-tab" style="--tc:var(--a3)" onclick="show('s3',this)">⚡ 9-10강. 지진</button>
+  <button class="nav-tab" style="--tc:var(--a4)" onclick="show('s4',this)">🔩 11강. Mantle Flow</button>
+  <button class="nav-tab" style="--tc:var(--a5)" onclick="show('s5',this)">⛰️ 12강. Caledonian</button>
+  <button class="nav-tab" style="--tc:var(--gold)" onclick="show('s6',this)">🗺️ 실험·필드보고서</button>
+  <button class="nav-tab" style="--tc:var(--a3)" onclick="show('s7',this)">❓ 예상문제</button>
+  <button class="nav-tab" style="--tc:var(--a2)" onclick="show('s8',this)">💎 광물구별법</button>
+</div>
+
+<!-- ===== SECTION 1: 7강 ===== -->
+<div id="s1" class="section active">
+  <div class="sec-h"><div class="sec-dot" style="background:var(--a1)"></div><div><div class="sec-title">7강. Subduction Zone: 종류·구조·퇴적물</div><div class="sec-desc">수렴경계 4가지 유형 · Forearc/Backarc · Accretionary Wedge · Mélange</div></div></div>
+
+  <!-- 1. 정의 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(249,115,22,.2)">🌋</div><div><div class="ct">1. 섭입대 정의 & Arc 이름의 유래 (Fig. 7.4)</div></div></div>
+    <ul class="topic-tree">
+      <li>
+        <div class="tm" style="--tc:var(--a1)" onclick="tog(this)"><span class="ti">📌</span><span class="tt">섭입대(Subduction Zone): 하부판이 상부판 밑으로 들어가 소멸하는 지역</span></div>
+        <div class="td">
+          <strong>핵심 원리:</strong> 해양판 밀도 &gt; 연약권(asthenosphere) 밀도 → 스스로 가라앉음. 대륙판은 밀도 낮아 섭입 불가 → 대륙지각은 항상 위에 위치<br><br>
+          <strong>'Arc(호)' 이름 유래 (Fig. 7.4):</strong> 판은 섭입 전 지구 표면(구 형태)을 따라 <em>볼록(convex)</em>한 곡률을 가짐. 섭입할 때 곡률이 반대가 되어 <em>오목(concave)</em>하게 바뀜 → 이 오목한 형태가 '호(arc, arc-shape)'처럼 보임. 고무공을 엄지로 눌렀을 때 표면이 오목해지는 것과 같은 원리!<br><br>
+          <strong>섭입의 힘:</strong> 섭입은 판 운동의 <em>근본적인 구동력(slab pull)</em>으로 여겨짐. 무거운 슬랩이 맨틀 속으로 침강하며 판을 당김.
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 2. 섭입대 종류 (마리아나/칠레) -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(249,115,22,.2)">🗺️</div><div><div class="ct">2. 섭입대 2가지 역학적 유형: 마리아나 vs 칠레 타입</div><div class="cs">Fig. 7.1 지도 + 단면도 핵심!</div></div></div>
+    <table class="tbl">
+      <tr><th>구분</th><th style="color:var(--a2)">마리아나(Mariana) 타입</th><th style="color:var(--a1)">칠레(Chile) 타입</th></tr>
+      <tr><td><strong>섭입판 특성</strong></td><td>오래되고(older), 차갑고(colder), 무거움(denser) — 연약권보다 밀도 약 2% 큼</td><td>상대적으로 젊고(younger), 뜨겁고(hotter), 가벼움(lighter)</td></tr>
+      <tr><td><strong>섭입 방식</strong></td><td><em>자발적 침강 (spontaneous/free subduction)</em> — 스스로 가라앉음. 높은 경사각</td><td><em>강제 섭입 (forced subduction)</em> — 상부판 압축력에 의해 강제로 침강. 낮은 경사각 (shallow subduction)</td></tr>
+      <tr><td><strong>판 커플링</strong></td><td>Decoupling 지배 → 상부판 변형 적음</td><td>Coupling 지배 → 응력 경계부에 집중·축적 → decoupling 시 붕괴(collapse) → <em>쓰나미!</em></td></tr>
+      <tr><td><strong>Slab rollback</strong></td><td>있음. Slab이 arc로부터 멀어지며 하강 → 신장력 발생 → <em>배호분지(backarc basin)</em> 형성 (동해가 대표 예!)</td><td>없거나 약함. 압축력으로 <em>조산운동(orogeny)</em> 발생 → 높은 산맥 형성 (안데스 지각두께 ~70 km)</td></tr>
+      <tr><td><strong>특징 구조</strong></td><td>Backarc basin에 새로운 해양지각 형성, 역단층 구조 드묾</td><td>상부판 압축 → <em>역단층(reverse fault)</em> 관찰. Plutonism(심성암 관입) 발달</td></tr>
+      <tr><td><strong>대표 예</strong></td><td>마리아나 제도, 소앤틸리스 열도, 알류샨 열도</td><td>안데스(Andes), 수마트라-자바(Sumatra-Java)</td></tr>
+    </table>
+    <div class="call cw"><span class="call-icon">⚠️</span><span><strong>칠레 타입 쓰나미 메커니즘 (Fig. 슬라이드):</strong> 두 판이 coupling → 경계부에 응력 집중·축적 → 상부판이 bulge(불룩) 형성 → 한계 초과 시 갑작스러운 decoupling → 신장력으로 normal fault 재활성화 → 상부판 extension+subsidence → 해저면 수직 변위 → 쓰나미. 2004 수마트라 쓰나미의 원인!</span></div>
+  </div>
+
+  <!-- 3. 수렴경계 4가지 유형 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(249,115,22,.2)">📊</div><div><div class="ct">3. 수렴경계 4가지 유형 (Fig. 7.1, 7.2)</div><div class="cs">지도에서 색깔로 구분!</div></div></div>
+    <table class="tbl">
+      <tr><th>#</th><th>유형</th><th>예시</th><th>핵심 특징</th></tr>
+      <tr><td>①</td><td><strong>두 해양판 충돌</strong><br><small>Intraoceanic / Ensimatic</small></td><td>마리아나 제도(Mariana), 소앤틸리스(Lesser Antilles)</td><td>무거운 판이 아래로. 해양지각 위 <em>ensimatic island arc</em>. Deep sea trench &gt;8 km (진파랑), &lt;8 km (하늘색)</td></tr>
+      <tr><td>②</td><td><strong>해양판 + 대륙판</strong><br><small>Ensialic island arc</small></td><td>일본(Japan), 동해(backarc basin)</td><td>해양판이 대륙판 아래 섭입. Arc와 대륙 사이에 backarc basin. 노란색 (Fig. 7.1)</td></tr>
+      <tr><td>③</td><td><strong>활동성 대륙경계부</strong><br><small>Active continental margin</small></td><td>안데스(Andes)/페루-칠레 해구, 수마트라·자바</td><td>해양판이 대륙판 아래 섭입. Arc가 내륙(hinterland)에 형성. Retroarc foreland basin. 빨간색 (Fig. 7.1)</td></tr>
+      <tr><td>④</td><td><strong>대륙-대륙 충돌</strong><br><small>Continental collision</small></td><td>히말라야(Himalayas), 알프스(Alps)</td><td>해양판 소멸 후 대륙 충돌. 대륙 부력(buoyancy)으로 깊이 섭입 못함 → 충돌대에서 멈춤. 먼저 섭입한 해양판은 <em>slab breakoff</em>. 대규모 산맥</td></tr>
+    </table>
+    <div class="call ci2"><span class="call-icon">💡</span><span><strong>Fig. 7.1 지도 색깔 외우기:</strong> 빨강=active continental margin / 노랑=ensialic island arc / 하늘=ensimatic (trench &lt;8km) / 진파랑=ensimatic (trench &gt;8km). 마리아나 해구는 세계 최심 (~11km)!</span></div>
+  </div>
+
+  <!-- 4. 섭입대 구조 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(249,115,22,.2)">🏗️</div><div><div class="ct">4. 섭입대 단면 구조 (Fig. 7.3) ⭐ 그릴 수 있어야!</div></div></div>
+    <div class="flow">
+      <div class="fs">심해저 (Abyssal plain)</div><div class="fa">→</div>
+      <div class="fs o">해구 (Deep sea trench)</div><div class="fa">→</div>
+      <div class="fs b">부가쐐기 (Accretionary wedge)</div><div class="fa">→</div>
+      <div class="fs">Outer ridge</div><div class="fa">→</div>
+      <div class="fs">전호분지 (Forearc basin)</div><div class="fa">→</div>
+      <div class="fs o">화산호 (Volcanic arc)</div><div class="fa">→</div>
+      <div class="fs p">배호분지 (Backarc basin)</div>
+    </div>
+    <div class="fig"><div class="fig-t">📐 Fig. 7.3 단면도 핵심 설명</div>
+    <div class="fig-d">
+      <b>수평 배열 (왼쪽→오른쪽):</b> abyssal plain → deep sea trench(V자 해구) → accretionary wedge(쐐기형 퇴적체) → outer ridge(가장자리 능선) → forearc basin(전호분지) → magmatic arc(화산) → backarc basin<br><br>
+      <b>수직 구조:</b> 표면 아래 ~50 km: oceanic crust + lithospheric mantle. ~100 km: asthenosphere<br><br>
+      <b>변성 위치:</b> 섭입판 상면(forearc 아래) = <span class="hl">high-pressure metamorphism (Low T/High P)</span> → blueschist, eclogite. 화산호 하부 = <span class="hl">Abukuma-type metamorphism (High T/Low P)</span> → amphibolite, granulite<br><br>
+      <b>Arc-trench gap:</b> 해구~화산호 사이 화산 활동 없는 구간. 폭 <b>100~250 km</b>. 섭입하는 슬랩에서 탈수된 물이 맨틀웨지에 공급되어 마그마가 생성되는 깊이(~100 km)에 해당하는 지점에 화산 형성 → 해구에서 일정 거리 떨어짐
+    </div></div>
+    <div class="call ck"><span class="call-icon">🗝️</span><span><strong>Forearc basin 형성 (Fig. 7.17):</strong> 불규칙한 대륙경계부에서 섭입대 형성 시, 해양지각과 대륙지각 사이에 남겨진 공간이 <em>residual forearc basin</em>이 됨. Pelagic sediments(원양성 퇴적물)이 쌓임.</span></div>
+  </div>
+
+  <!-- 5. 퇴적물 & Accretionary wedge -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(249,115,22,.2)">🧱</div><div><div class="ct">5. 섭입대 퇴적물 & Accretionary Wedge (Fig. 7.7~7.11)</div></div></div>
+    <ul class="topic-tree">
+      <li>
+        <div class="tm" style="--tc:var(--a1)" onclick="tog(this)"><span class="ti">📦</span><span class="tt">Accretionary Wedge = 섭입판 위의 퇴적물이 긁혀 쌓인 쐐기형 구조</span></div>
+        <div class="td">
+          <strong>형성 과정:</strong> 해양지각 위의 퇴적물이 섭입 시 상부판 앞면에 스크레이핑(scraping)되어 역단층(thrust fault)으로 중첩 누적<br><br>
+          <strong>Sedimentary balance:</strong> 퇴적물 공급 속도 vs 섭입 속도의 균형.<br>
+          • 섭입 느림 + 퇴적물 많음 → wedge <em>성장 (accretionary margin)</em><br>
+          • 섭입 빠름 → tectonic removal (퇴적물이 판과 함께 섭입) → <em>subduction erosion</em><br><br>
+          <strong>지역 비교 (Fig. 7.7):</strong> 워싱턴-오레곤 해구(퇴적↑) → 쿠릴-캄차카 해구(퇴적↓) 순으로 감소. 섭입 속도가 빠를수록 wedge 작아짐<br><br>
+          <strong>Basal décollement:</strong> Accretionary wedge 하부 경계면. 공극 유체(pore fluid)가 높은 압력 하에서 <em>윤활제(lubricant)</em> 역할 → 데꼴라망 활성화
+        </div>
+      </li>
+      <li>
+        <div class="tm" style="--tc:var(--a2)" onclick="tog(this)"><span class="ti">🔩</span><span class="tt">Subduction Erosion (섭입 침식) — accretionary wedge와 반대</span></div>
+        <div class="td">
+          섭입하는 판이 상부판의 하부를 침식 → arc가 뒤로 물러남 (arc migration)<br><br>
+          <strong>마리아나 타입:</strong> 섭입각 크고 roll-back → 톱니 모양(saw-tooth-like)의 섭입판에 의해 침식<br>
+          <strong>칠레 타입:</strong> 두 판의 강한 coupling으로 침식<br><br>
+          <strong>코스타리카 사례 (Fig. 7.16):</strong> Cocos판이 Caribbean판 아래 섭입. 서쪽 해안선이 ~40 km 후퇴, 화산호도 ~40 km 내륙으로 이동. 해저 침강(subsidence)도 동반.
+        </div>
+      </li>
+      <li>
+        <div class="tm" style="--tc:var(--a3)" onclick="tog(this)"><span class="ti">🌀</span><span class="tt">Mélange (멜란지) 3종류 (Fig. 7.11)</span></div>
+        <div class="td">
+          <strong>Fig. 7.11 단면도 해석:</strong> 왼쪽부터 slope sediments → slope basin → outer ridge → forearc basin. 확대 박스 3개:<br><br>
+          1. <em>Sedimentary-tectonic mélange (좌):</em> 역단층(thrust fault)에 의해 조각난 암석 혼재. 화살표가 반대 방향 = shear 발생<br>
+          2. <em>Sedimentary mélange (중):</em> 퇴적 과정에서 다양한 암석 혼재. 이방성 없이 무작위 분포<br>
+          3. <em>Mud volcano (우):</em> 고압 유체가 위로 분출 → 이수화산 형성<br><br>
+          <strong>Tectonic mélange:</strong> 단면도 하부 깊은 위치. 순수 지구조 운동으로 형성. 섭입대 저부에 위치<br><br>
+          <strong>바누아투 사례 (Fig. 슬라이드):</strong> Deep-Sea Drilling Project(ODP Leg 134). 석회암(limestones, Eocene-Miocene)과 현무암(basalts)이 thrust plane 따라 강하게 전단됨 → tectonic breccia 형성
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== SECTION 2: 8강 변성·마그마 ===== -->
+<div id="s2" class="section">
+  <div class="sec-h"><div class="sec-dot" style="background:var(--a2)"></div><div><div class="sec-title">8강. 섭입대 변성작용 & 마그마 활동</div><div class="sec-desc">P-T diagram · Blueschist · Eclogite · Coesite · 마그마 생성 · 광석광상</div></div></div>
+
+  <!-- P-T diagram -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(34,211,238,.2)">🌡️</div><div><div class="ct">1. 변성상 P-T 다이어그램 (Fig. 7.24) ⭐ 직접 그릴 줄 알아야!</div></div></div>
+    <div class="svg-wrap">
+      <svg viewBox="0 0 570 390" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:570px;">
+        <rect width="570" height="390" fill="#111827"/>
+        <line x1="65" y1="20" x2="65" y2="325" stroke="#2a3550" stroke-width="1"/>
+        <line x1="65" y1="325" x2="540" y2="325" stroke="#2a3550" stroke-width="1"/>
+        <text x="300" y="365" fill="#94a3b8" font-size="12" text-anchor="middle" font-family="sans-serif">Temperature T [°C] →</text>
+        <text x="18" y="178" fill="#94a3b8" font-size="12" text-anchor="middle" font-family="sans-serif" transform="rotate(-90,18,178)">Pressure P [GPa] →</text>
+        <!-- T ticks -->
+        <text x="105" y="340" fill="#94a3b8" font-size="10" text-anchor="middle" font-family="sans-serif">200</text>
+        <text x="180" y="340" fill="#94a3b8" font-size="10" text-anchor="middle" font-family="sans-serif">400</text>
+        <text x="255" y="340" fill="#94a3b8" font-size="10" text-anchor="middle" font-family="sans-serif">600</text>
+        <text x="330" y="340" fill="#94a3b8" font-size="10" text-anchor="middle" font-family="sans-serif">800</text>
+        <text x="405" y="340" fill="#94a3b8" font-size="10" text-anchor="middle" font-family="sans-serif">1000</text>
+        <text x="480" y="340" fill="#94a3b8" font-size="10" text-anchor="middle" font-family="sans-serif">1200</text>
+        <!-- P ticks -->
+        <text x="57" y="305" fill="#94a3b8" font-size="10" text-anchor="end" font-family="sans-serif">0.2</text>
+        <text x="57" y="260" fill="#94a3b8" font-size="10" text-anchor="end" font-family="sans-serif">0.5</text>
+        <text x="57" y="210" fill="#94a3b8" font-size="10" text-anchor="end" font-family="sans-serif">1.0</text>
+        <text x="57" y="160" fill="#94a3b8" font-size="10" text-anchor="end" font-family="sans-serif">1.5</text>
+        <text x="57" y="110" fill="#94a3b8" font-size="10" text-anchor="end" font-family="sans-serif">2.0</text>
+        <text x="57" y="58" fill="#94a3b8" font-size="10" text-anchor="end" font-family="sans-serif">3.0</text>
+        <!-- Depth axis right -->
+        <text x="555" y="210" fill="#94a3b8" font-size="10" text-anchor="middle" font-family="sans-serif" transform="rotate(90,555,210)">Depth [km] →</text>
+        <!-- Metamorphic facies areas -->
+        <!-- Zeolite -->
+        <path d="M65,310 L140,285 L135,255 L65,270 Z" fill="rgba(100,200,100,.12)" stroke="rgba(100,200,100,.4)" stroke-width="1"/>
+        <text x="95" y="285" fill="#86efac" font-size="9" font-family="sans-serif">Zeolite</text>
+        <!-- Blueschist: High P / Low T -->
+        <path d="M65,255 L135,255 L175,195 L145,125 L65,135 Z" fill="rgba(59,130,246,.22)" stroke="rgba(59,130,246,.6)" stroke-width="1.5"/>
+        <text x="88" y="205" fill="#93c5fd" font-size="10" font-weight="bold" font-family="sans-serif">Blueschist</text>
+        <text x="92" y="218" fill="#93c5fd" font-size="9" font-family="sans-serif">facies</text>
+        <!-- Greenschist -->
+        <path d="M135,255 L225,285 L260,235 L205,185 L175,195 Z" fill="rgba(34,197,94,.15)" stroke="rgba(34,197,94,.4)" stroke-width="1"/>
+        <text x="185" y="240" fill="#86efac" font-size="9" font-family="sans-serif">Greenschist</text>
+        <!-- Amphibolite -->
+        <path d="M205,185 L260,235 L340,240 L390,200 L330,140 L260,140 Z" fill="rgba(249,115,22,.15)" stroke="rgba(249,115,22,.4)" stroke-width="1"/>
+        <text x="285" y="204" fill="#fdba74" font-size="10" font-family="sans-serif">Amphibolite</text>
+        <!-- Granulite -->
+        <path d="M330,140 L390,200 L460,200 L490,140 L430,90 L360,90 Z" fill="rgba(239,68,68,.14)" stroke="rgba(239,68,68,.4)" stroke-width="1"/>
+        <text x="400" y="153" fill="#fca5a5" font-size="10" font-family="sans-serif">Granulite</text>
+        <!-- Eclogite: HP -->
+        <path d="M65,135 L145,125 L175,195 L205,185 L260,140 L205,62 L65,62 Z" fill="rgba(167,139,250,.22)" stroke="rgba(167,139,250,.6)" stroke-width="1.5"/>
+        <text x="102" y="95" fill="#c4b5fd" font-size="10" font-weight="bold" font-family="sans-serif">Eclogite</text>
+        <text x="106" y="108" fill="#c4b5fd" font-size="9" font-family="sans-serif">facies</text>
+        <!-- UHP -->
+        <path d="M65,62 L205,62 L185,28 L65,28 Z" fill="rgba(236,72,153,.22)" stroke="rgba(236,72,153,.6)" stroke-width="1.5"/>
+        <text x="100" y="50" fill="#f9a8d4" font-size="9" font-weight="bold" font-family="sans-serif">UHP</text>
+        <!-- Coesite line -->
+        <line x1="65" y1="62" x2="205" y2="62" stroke="#f9a8d4" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="212" y="65" fill="#f9a8d4" font-size="9" font-family="sans-serif">coesite/quartz 전이선</text>
+        <!-- Melting line -->
+        <path d="M380,200 C420,180 460,150 500,110" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <text x="495" y="107" fill="#ef4444" font-size="9" font-family="sans-serif">melting</text>
+        <!-- Subduction P-T path -->
+        <path d="M210,295 C165,255 125,195 105,115 L88,45" fill="none" stroke="#22d3ee" stroke-width="2.5" stroke-dasharray="7,3"/>
+        <text x="135" y="215" fill="#22d3ee" font-size="9" font-weight="bold" font-family="sans-serif" transform="rotate(-52,135,215)">섭입 경로</text>
+        <!-- Exhumation path -->
+        <path d="M88,45 C108,95 150,155 230,225 L310,275" fill="none" stroke="#f97316" stroke-width="2.5" stroke-dasharray="7,3"/>
+        <text x="180" y="148" fill="#f97316" font-size="9" font-weight="bold" font-family="sans-serif" transform="rotate(52,180,148)">Exhumation</text>
+        <!-- Abukuma geotherm -->
+        <path d="M65,325 C120,285 205,235 330,160 L490,85" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="425" y="118" fill="#fbbf24" font-size="9" font-family="sans-serif">Abukuma-type</text>
+        <!-- Barrow geotherm -->
+        <path d="M65,325 C155,305 285,265 430,195" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="435" y="200" fill="#a78bfa" font-size="9" font-family="sans-serif">Barrow-type</text>
+        <!-- Legend -->
+        <rect x="65" y="352" width="480" height="28" fill="rgba(26,34,53,.9)" rx="4"/>
+        <line x1="80" y1="366" x2="108" y2="366" stroke="#22d3ee" stroke-width="2" stroke-dasharray="5,2"/>
+        <text x="113" y="370" fill="#22d3ee" font-size="9" font-family="sans-serif">섭입(subduction) P-T path</text>
+        <line x1="245" y1="366" x2="273" y2="366" stroke="#f97316" stroke-width="2" stroke-dasharray="5,2"/>
+        <text x="278" y="370" fill="#f97316" font-size="9" font-family="sans-serif">Exhumation path</text>
+        <line x1="395" y1="366" x2="423" y2="366" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="428" y="370" fill="#fbbf24" font-size="9" font-family="sans-serif">Abukuma/Barrow 지온선</text>
+        <defs>
+          <marker id="ac" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6Z" fill="#22d3ee"/></marker>
+          <marker id="ao" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6Z" fill="#f97316"/></marker>
+        </defs>
+      </svg>
+    </div>
+    <div class="call ck"><span class="call-icon">🗝️</span><span>
+      <strong>변성상별 핵심 광물:</strong><br>
+      • <strong style="color:#93c5fd">Blueschist</strong>: <code>glaucophane (남섬석)</code> — 파란색, HP/LT 지시자<br>
+      • <strong style="color:#c4b5fd">Eclogite</strong>: <code>omphacite (옴파사이트)</code>+<code>garnet (석류석)</code> — 초록+붉은색<br>
+      • <strong style="color:#f9a8d4">UHP</strong>: <code>coesite (코에사이트)</code> — quartz의 고압 다형체 (P≥2.8 GPa)<br>
+      • <strong style="color:#fdba74">Amphibolite</strong>: hornblende+plagioclase<br>
+      • <strong style="color:#fca5a5">Granulite</strong>: pyroxene 주 광물 (물 없음)
+    </span></div>
+    <div class="call cw"><span class="call-icon">⚠️</span><span><strong>Coesite → Quartz 전환 (Fig. 7.24 삽입 그림):</strong> UHP 조건에서 형성된 coesite가 exhumation(암석 상승) 시 압력 감소 → quartz로 전환. <em>부피 팽창</em> → garnet 결정 내에 방사상 균열(fracture) 형성! → "garnet 안에 coesite가 갇혀 있다면 UHP 환경 증거"</span></div>
+  </div>
+
+  <!-- 변성 쌍 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(34,211,238,.2)">⚖️</div><div><div class="ct">2. 변성 쌍 (Paired Metamorphic Belts) & 지온선 비교</div></div></div>
+    <table class="tbl">
+      <tr><th>유형</th><th>P-T 조건</th><th>위치</th><th>대표 암석</th><th>지온선 종류</th></tr>
+      <tr><td><strong style="color:#93c5fd">HP/LT</strong><br>Blueschist/Eclogite type</td><td>Low T / High P</td><td>섭입 슬랩 (forearc 하부)</td><td>Blueschist, Eclogite</td><td>섭입 P-T path (저지온선)</td></tr>
+      <tr><td><strong style="color:#fbbf24">Abukuma-type</strong></td><td>High T / Low P</td><td>화산호 하부 (magmatic arc)</td><td>Amphibolite, Granulite</td><td>고지온선</td></tr>
+      <tr><td><strong style="color:#a78bfa">Barrow-type</strong></td><td>Intermediate T/P</td><td>대륙 충돌대 (조산대)</td><td>Regional metamorphism 대역</td><td>중간 지온선</td></tr>
+    </table>
+    <div class="call ci2"><span class="call-icon">💡</span><span><strong>차가운 슬랩 vs 따뜻한 슬랩:</strong> 슬랩이 차가울수록 → <em>lawsonite blueschist</em> 형성. 슬랩이 비교적 따뜻하면 → <em>epidote blueschist</em> 형성. Exhuming HP rocks (고압암석이 지표로 상승하는 것)가 forearc 지역에서 관찰됨!</span></div>
+    <ul class="topic-tree">
+      <li>
+        <div class="tm" style="--tc:var(--a2)" onclick="tog(this)"><span class="ti">🔬</span><span class="tt">섭입 변성 경로 상세: Blueschist → Eclogite facies 반응 (Peacock, 1993)</span></div>
+        <div class="td">
+          해양지각이 섭입 → 함수 광물 탈수(dehydration):<br>
+          • <em>Blueschist facies:</em> glaucophane stable. 기존 basalt + gabbro가 변성됨<br>
+          • <em>Eclogite facies:</em> omphacite + garnet 형성. Hydrous eclogite (물 있음) vs Dry eclogite (물 없음)<br>
+          • 슬랩 내부: dry eclogite → 밀도 증가 → <strong>slab pull</strong> 강화<br>
+          • Serpentinized forearc mantle wedge: 해양판에서 탈수된 물이 mantle wedge로 유입 → serpentinization<br><br>
+          <strong>Jadeitite deposits (비취 광상):</strong> forearc 지역에 jadeite(Na-Al pyroxene)가 광상 형성. 고압 변성 환경 지시
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 마그마 생성 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(34,211,238,.2)">🔥</div><div><div class="ct">3. 섭입대 마그마 생성 메커니즘</div></div></div>
+    <ul class="topic-tree">
+      <li>
+        <div class="tm" style="--tc:var(--a2)" onclick="tog(this)"><span class="ti">💧</span><span class="tt">마그마 생성 원리: "물의 첨가 → 융점 강하"</span></div>
+        <div class="td">
+          <strong>단계별 설명:</strong><br>
+          ① 해양판의 수화광물(serpentine, chlorite, amphibole 등)이 섭입<br>
+          ② 고온·고압 도달 → <em>탈수반응(dehydration)</em> → H₂O 방출<br>
+          ③ H₂O가 상부 mantle wedge로 공급<br>
+          ④ H₂O가 맨틀암석의 <em>solidus(융점 곡선)를 낮춤</em> → 부분용융(partial melting) 발생<br>
+          ⑤ 마그마 생성 → 상승 → 화산호 형성<br><br>
+          <strong>핵심!</strong> 섭입대 마그마는 압력 감소(decompression)가 아닌 <em>"휘발성분(H₂O) 첨가"</em>가 주 원인. 해령(MOR) 마그마와 근본적으로 다름!<br><br>
+          <strong>왜 ~100 km 깊이에서 마그마가 생성?</strong> 이 깊이에서 대부분의 수화광물이 탈수반응. 이 위치에서 발생한 마그마가 수직으로 상승 → arc-trench gap (~100-250 km) 너머 화산호 형성.
+        </div>
+      </li>
+      <li>
+        <div class="tm" style="--tc:var(--a1)" onclick="tog(this)"><span class="ti">🌋</span><span class="tt">섭입대 화산 특성 — Stratovolcano (성층화산)</span></div>
+        <div class="td">
+          <strong>마그마 성분:</strong> Andesite(안산암, SiO₂ ~57%) ~ Dacite(데이사이트) ~ Rhyolite(유문암) 주류<br><br>
+          <strong>현무암(basalt)과 비교:</strong><br>
+          • 점성(viscosity) ↑ — SiO₂ 많을수록 Si-O 사슬 길어져 끈적<br>
+          • 휘발성분(volatile) ↑ — 특히 H₂O 많음 (섭입판에서 유래)<br>
+          • <em>폭발적 분출 (explosive eruption)</em> → 화산재 대량 방출<br><br>
+          <strong>대표 화산:</strong> 피나투보(Pinatubo, 필리핀), 후지산(Fuji, 일본), 세인트 헬렌(St. Helens, 미국), 포포카테페틀(Popocatepetl, 멕시코)<br><br>
+          <strong>Backarc 화산:</strong> Backarc basin에도 화산 활동 있음. MORB(mid-ocean ridge basalt)에 가까운 현무암질 마그마. Tonga-Lau basin 사례 (Fig. 7.37): 섭입 8 cm/yr, backarc spreading 9-16 cm/yr
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 광석광상 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(34,211,238,.2)">⛏️</div><div><div class="ct">4. 섭입대 광석광상 (Ore Deposits) (Fig. 7.35)</div></div></div>
+    <ul class="topic-tree">
+      <li>
+        <div class="tm" style="--tc:var(--a2)" onclick="tog(this)"><span class="ti">💰</span><span class="tt">Porphyry-type 광상 (반암형) vs Kuroko 타입</span></div>
+        <div class="td">
+          <strong>Porphyry-type 광상:</strong><br>
+          환태평양 섭입대 화산호를 따라 분포. 주로 <em>구리(Cu)와 몰리브덴(Mo)</em>. Granodiorite intrusion (화강섬록암 관입암)을 따라 분포. 금속이 맥(vein)에 집중되지 않고 <em>확산(disseminated)</em> 형태로 암석 내 고루 분포<br><br>
+          <strong>Kuroko 타입 광상 (일본 대표):</strong><br>
+          황화금속 광석(polymetallic sulfidic ore) — Cu, Pb, Zn, Au, Ag 등. <em>유문암질(rhyolitic)</em> 화산체와 암맥(feeder dike) 주변에 나타남. 해저 열수 활동과 관련
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== SECTION 3: 9-10강 지진 ===== -->
+<div id="s3" class="section">
+  <div class="sec-h"><div class="sec-dot" style="background:var(--a3)"></div><div><div class="sec-title">9-10강. 섭입대 지진 & 발생 메커니즘</div><div class="sec-desc">Benioff zone · 응력(Stress) · Coulomb failure criterion · 3가지 메커니즘 · Slow earthquake</div></div></div>
+
+  <!-- 0. 지진 분포 전체 개요 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(167,139,250,.2)">🌍</div><div><div class="ct">0. 전 지구적 지진 분포 (Fig. 1.8, Fig. 7.19)</div></div></div>
+    <div class="call ci2"><span class="call-icon">🌍</span><span>전 세계 지진의 <strong>95%</strong>가 섭입대(Benioff zone)에서 발생! 지진 진원 깊이: 빨강=0~100 km, 노랑=100~300 km, 초록=300~700 km. 최대 깊이 <strong>660~670 km</strong> (상하부 맨틀 경계 = mantle transition zone). 섭입대 이외에서는 대부분 지하 <strong>20 km 이내</strong>에서만 발생.</span></div>
+    <div class="fig"><div class="fig-t">📊 Fig. 7.19 — 다양한 섭입대의 Benioff Zone (Green, 1994)</div>
+    <div class="fig-d">
+      7개 섭입대 단면 비교(Philippines, Marianas, Java, Kuril, Tonga North/South, Japan):<br>
+      각 단면에서 지진(빨간 점)이 <b>섭입하는 판을 따라 선형으로 분포</b> → 이것이 Benioff zone!<br>
+      660 km 점선이 상한선. <b>Tonga North/South:</b> 660 km 이하까지 지진이 도달하는 극단적 사례. <b>Japan:</b> 비교적 완만한 각도로 섭입 → Benioff zone의 기울기가 작음.
+    </div></div>
+  </div>
+
+  <!-- 1. 지진 발생의 기초: Stress & Fault -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(167,139,250,.2)">⚖️</div><div><div class="ct">1. 지진 발생의 기초: 응력(Stress)과 Coulomb 파괴 기준 ⭐ 핵심!</div></div></div>
+    <ul class="topic-tree">
+      <li>
+        <div class="tm" style="--tc:var(--a3)" onclick="tog(this)"><span class="ti">📐</span><span class="tt">Lithostatic pressure vs Deviatoric stress (편향응력) — 둘의 차이가 핵심!</span></div>
+        <div class="td">
+          <strong>Lithostatic pressure (정압):</strong> 지하에서 모든 방향으로 <em>똑같은 크기</em>의 압력. 깊이에 비례해 증가. 이 압력만으로는 단층 발생 불가 → 모든 방향이 동일하면 특정 방향으로 미끄러짐 없음.<br><br>
+          <strong>Deviatoric stress (편향응력):</strong> 지구조 운동(판 이동, 섭입)이 <em>특정 방향에 추가 압력</em>을 가함 → σ₁ ≠ σ₂ ≠ σ₃ → <em>shear stress(전단응력)</em> 발생 → 암석 내 미소균열 생성 → 단층 형성 → <strong>지진!</strong><br><br>
+          <strong>저압 vs 고압에서 단층 형성 난이도:</strong><br>
+          • <em>저압(지표 근처):</em> 작은 shear stress로도 쉽게 단층 형성 가능<br>
+          • <em>고압(깊은 곳):</em> 큰 shear stress가 있어야 단층 형성 가능 → 깊은 곳에서 지진 발생이 어려운 이유!
+        </div>
+      </li>
+      <li>
+        <div class="tm" style="--tc:var(--a3)" onclick="tog(this)"><span class="ti">📏</span><span class="tt">Coulomb Failure Criterion — 물(유체)이 지진에 미치는 영향! (슬라이드 Fig. 6.27)</span></div>
+        <div class="td">
+          <strong>Coulomb 파괴 기준 공식:</strong><br>
+          <code>σₛ = C + μ(σₙ - Pf)</code><br><br>
+          여기서:<br>
+          • σₛ = 전단강도(shear strength, 파괴에 필요한 전단응력)<br>
+          • C = 응집력(cohesion)<br>
+          • μ = 마찰계수(coefficient of friction)<br>
+          • σₙ = 수직응력(normal stress)<br>
+          • <em>Pf = 유체압(fluid pressure, 공극압)</em><br><br>
+          <strong>(σₙ - Pf) = 유효응력(effective stress)</strong><br><br>
+          <strong>물(유체)이 어떻게 지진을 유발하나?</strong><br>
+          유체압 Pf ↑ → 유효응력(σₙ - Pf) ↓ → 파괴에 필요한 전단응력 σₛ ↓ → 더 <em>낮은 응력으로도 단층 형성 가능!</em><br><br>
+          <strong>Mohr circle 해석:</strong> 유체압이 증가하면 Mohr 원이 <em>왼쪽(원점 방향)으로 이동</em> → 파괴 포락선(failure envelope)에 접촉 → 파괴 발생<br><br>
+          <strong>지진과의 연결:</strong> 섭입하는 슬랩의 수화광물에서 탈수(dehydration) → H₂O 방출 → 주변 암석 공극압 증가 → Pf ↑ → 유효응력 감소 → 기존에 안정적이던 단층도 재활성화 → 지진!<br><br>
+          <span class="key">핵심: 물의 첨가 = 유효응력 감소 = 깊은 곳에서도 지진 가능!</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 2. 깊이별 지진 빈도 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(167,139,250,.2)">📊</div><div><div class="ct">2. 깊이별 지진 빈도 그래프 (Fig. 7.23) ⭐ 그릴 수 있어야!</div></div></div>
+    <div style="margin:10px 0">
+      <div class="depth-row"><div class="depth-lbl">천발 (Shallow)</div><div class="depth-wrap"><div class="depth-bar" style="width:40%;background:linear-gradient(90deg,#ef4444,#f97316)">가장 많음 ↑↑↑</div></div><div class="depth-val" style="color:#ef4444">0~50 km</div></div>
+      <div class="depth-row"><div class="depth-lbl">중발 (Intermediate)</div><div class="depth-wrap"><div class="depth-bar" style="width:18%;background:linear-gradient(90deg,#a78bfa,#7c3aed)">중간 ↑</div></div><div class="depth-val" style="color:#a78bfa">50~350 km</div></div>
+      <div class="depth-row"><div class="depth-lbl">골짜기 (전이 구간)</div><div class="depth-wrap"><div class="depth-bar" style="width:6%;background:#2a3550)">거의 없음</div></div><div class="depth-val" style="color:#4ade80">~100~350 km</div></div>
+      <div class="depth-row"><div class="depth-lbl">심발 (Deep)</div><div class="depth-wrap"><div class="depth-bar" style="width:14%;background:linear-gradient(90deg,#22d3ee,#0891b2)">적음</div></div><div class="depth-val" style="color:#22d3ee">350~670 km</div></div>
+    </div>
+    <div class="fig"><div class="fig-t">📊 Fig. 7.23 — 그래프 구조 암기법</div>
+    <div class="fig-d">
+      X축 = log scale 연간 지진 횟수(1, 10, 100+). Y축 = 깊이 0→700 km (아래 방향)<br><br>
+      <b>왼쪽 레이블 위치:</b><br>
+      • 상단: "dehydration of serpentine" → 중발지진 구간 레이블<br>
+      • 중간: 화살표로 "shear fracture" (천발), "anticrack shear" (심발)<br>
+      • 하단: "formation of anticracks" → 심발지진 구간 레이블<br><br>
+      <b>피크 3개:</b> 0~100 km(천발, 가장 큰 피크) → ~150~200 km(중발, 중간) → ~500 km(심발, 가장 작은 피크).<br>
+      중간 ~300~400 km에 골짜기(valley) 존재 = 두 메커니즘 전환 구간
+    </div></div>
+  </div>
+
+  <!-- 3. 지진 메커니즘 3가지 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(167,139,250,.2)">🔩</div><div><div class="ct">3. 지진 메커니즘 3가지 상세 ⭐⭐ 가장 중요!</div></div></div>
+    <table class="tbl">
+      <tr><th>지진</th><th>깊이</th><th>메커니즘</th><th>상세 원리</th></tr>
+      <tr>
+        <td><strong style="color:#ef4444">① 천발 지진</strong><br>Shallow</td>
+        <td>0~50 km</td>
+        <td><strong>Shear fracture</strong><br>(전단파괴 → 단층)</td>
+        <td>두 판이 만나는 경계에서 <em>수평 압축력(compression)과 마찰력(friction)</em>에 의해 발생. Deviatoric stress가 Coulomb 파괴 기준을 초과하면 전단파괴 → 단층 형성. 쓰나미 유발의 주범. 대표: 2004 수마트라(Mw 9.1), 2011 도호쿠(Mw 9.0)</td>
+      </tr>
+      <tr>
+        <td><strong style="color:#a78bfa">② 중발 지진</strong><br>Intermediate</td>
+        <td>50~350 km</td>
+        <td><strong>Dehydration embrittlement</strong><br>(탈수취화)</td>
+        <td>슬랩이 차갑고 무거워서 주변 연약권보다 빠르게 침강 → 슬랩 내부에 <em>신장력(tension)</em>이 작용. 동시에 올리빈(olivine), 휘석(pyroxene)이 수화되어 만들어진 <em>사문석(serpentine)이 탈수반응</em>을 하면서 H₂O 방출 → <em>Pf(유체압) 상승</em> → 유효응력 감소(Coulomb criterion) → 취성파괴. <strong>사문석의 양이 깊이에 따라 감소</strong>하기 때문에 지진 빈도도 감소 (Jung et al., 2004, Nature - 실험적 증명). 남부 티베트(Shi et al., 2018): 100 km 이상에서 eclogite화 구간에서 지진 밀집 관찰</td>
+      </tr>
+      <tr>
+        <td><strong style="color:#22d3ee">③ 심발 지진</strong><br>Deep</td>
+        <td>350~670 km</td>
+        <td><strong>Phase transition → Anticrack</strong><br>(광물 상변이 → 반균열)</td>
+        <td>~400 km에서 <em>olivine(α상) → wadsleyite(β상) → ringwoodite(γ상)</em> 순으로 상변이 발생. 부피 급감 → <em>anticrack(반균열)</em> 형성. Anticrack lenses들이 연결 → weak zone → continuous shear zone → 지진. ~660 km에서 또 다른 상변이(perovskite+magnesiowüstite) → 밀도 증가 → 저항력 증가 → 섭입 저해(섭입이 660 km 이하로 어려워짐)</td>
+      </tr>
+    </table>
+
+    <div class="call cw"><span class="call-icon">⚠️</span><span><strong>핵심 역설: 왜 깊은 곳(고압)에서도 취성 파괴(지진)가 가능한가?</strong><br>
+    일반적으로 ~100 km 이상 깊이에서는 맨틀이 <em>연성(ductile/plastic)</em>으로 흘러야 함 → 취성 파괴 불가. 그러나 섭입하는 슬랩은 주변 맨틀보다 <em>훨씬 차가움(cold slab)</em> → 온도가 낮으면 여전히 취성 거동 가능. 여기에 <em>탈수에 의한 유체압 증가(Coulomb 기준)</em>가 더해지면 중압 환경에서도 취성 파괴 발생 가능!</span></div>
+
+    <div class="call ck"><span class="call-icon">🗝️</span><span><strong>Fig. 7.20 — 섭입대 지진 메커니즘 단면도 (Green, 1994) 핵심 읽기!</strong><br>
+    • <strong style="color:#ef4444">천발지진 (focal mechanism: 역단층형)</strong>: 최상단. 수평 압축 → 역단층(thrust). 베이치볼(beach ball)이 역단층 패턴(compressional)<br>
+    • <strong style="color:#a78bfa">중발지진 (focal mechanism: 정단층/사교형)</strong>: 슬랩 내부 신장력 → 정단층(extensional). 슬랩이 빠르게 침강할 때 내부 신장. Beach ball이 extensional 패턴<br>
+    • <strong style="color:#22d3ee">심발지진 (focal mechanism: 압축형)</strong>: 400~660 km에서 저항력 증가 → 슬랩 내부 압축력 → 압축 지진. Beach ball이 compressional 패턴<br>
+    • 660 km 이하: 슬랩이 체류(stagnant) 가능성</span></div>
+  </div>
+
+  <!-- 4. Fig. 7.21 — 중발/심발 응력 상태 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(167,139,250,.2)">📈</div><div><div class="ct">4. 중발·심발 지진의 슬랩 내부 응력 상태 (Fig. 7.21, Isacks & Molnar, 1969)</div></div></div>
+    <div class="fig"><div class="fig-t">📊 Fig. 7.21 — 4가지 섭입 시나리오별 응력 분포</div>
+    <div class="fig-d">
+      각 패널(a, b, c, d)은 섭입각과 저항력(resistance)에 따른 슬랩 내부 응력 변화를 보여줌.<br>
+      검은 원 = <b>extension(신장)</b>, 흰 원 = <b>compression(압축)</b>. 오른쪽 화살표 = increasing resistance<br><br>
+      <b>패널(a): 저항 없음, 100 km까지만 지진</b> — 슬랩 상부는 extension, 하부는 연약권에 의해 저항 없음<br>
+      <b>패널(b): 중간 저항, 400 km까지 지진</b> — 슬랩 내부에 extension 상부 + compression 하부<br>
+      <b>패널(c): 강한 저항, 660 km까지 지진</b> — 상부 extension + 하부 compression이 뚜렷<br>
+      <b>패널(d): 660 km에서 막힘</b> — 슬랩이 하부맨틀에 막혀 stagnant. 끝부분에 compression 집중<br><br>
+      → <strong>슬랩 내부의 응력 패턴(extension/compression)을 지진 focal mechanism으로 추정 가능!</strong>
+    </div></div>
+
+    <div class="call ci2"><span class="call-icon">💡</span><span><strong>섭입대 phase change 단면도 (NE Japan, 슬라이드):</strong><br>
+    슬랩 표면(파란 선)을 따라 위에서 아래로: BS(blueschist) → EC(eclogite) → eclogite+lawsonite → dry eclogite 순서로 변성상 전이. α+H₂O(olivine+water) 구간이 400 km까지 존재 → 이 구간에서 물 공급 → 중발지진 유발. ~410 km에서 α(olivine) → β(wadsleyite) 상변이, ~660 km에서 γ(ringwoodite) → perovskite+magnesiowüstite 상변이.</span></div>
+  </div>
+
+  <!-- 5. 탈수취화 실험 증거 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(167,139,250,.2)">🔬</div><div><div class="ct">5. 탈수취화(Dehydration Embrittlement) 실험적 증거 (Jung et al., 2004, Nature)</div></div></div>
+    <ul class="topic-tree">
+      <li>
+        <div class="tm" style="--tc:var(--a3)" onclick="tog(this)"><span class="ti">⚗️</span><span class="tt">사문석 탈수 실험 결과 3가지 비교</span></div>
+        <div class="td">
+          <strong>실험 설계:</strong> 사문석(serpentine) 샘플을 고압 변형 실험기(Griggs apparatus)로 가압·가열<br><br>
+          <strong>1.7 GPa 실험 (Fig. 슬라이드 a):</strong> 사문석 탈수 → H₂O 방출 → <em>단층 형성 관찰!</em> 탈수취화 성공<br>
+          <strong>1.0 GPa 실험 (Fig. 슬라이드 b):</strong> Thin Ni layer(Ni 박막 경계)를 따라 단층 발달. H₂O 방출로 취성 파괴<br>
+          <strong>3.3 GPa 실험 (Fig. 슬라이드 c):</strong> 더 높은 압력 → 단층 형성 확인<br><br>
+          <strong>핵심 결론:</strong> 압력이 높은 조건에서도 사문석이 탈수되면 취성 파괴(지진) 발생 가능 → 섭입대 <em>중발지진의 실험적 증거</em>!<br><br>
+          <strong>별도 대조실험:</strong> 압력 1.0 GPa, 650°C에서 탈수 없이 가열(annealing)만 한 경우 → <em>"No faults generated"</em> → 탈수 없이는 파괴 없음 → 물의 역할 결정적으로 확인!<br><br>
+          <strong>사문석의 양 감소 → 지진 빈도 감소:</strong> 사문석은 특정 온도·압력 이상에서 분해됨 → 깊이 증가할수록 사문석 잔류량 감소 → 탈수취화 원인이 줄어듦 → 중발지진 빈도 감소
+        </div>
+      </li>
+    </ul>
+    <div class="call cw"><span class="call-icon">⚠️</span><span><strong>경주·포항 지진과의 연결 (대륙내부 천발지진):</strong><br>
+    2016.9.12 경주 Mw 5.8, 2017.11.15 포항 Mw 5.5 — <em>양산단층</em>을 따라 발생한 대륙내부 천발지진. 국내 역대 최대 규모. 섭입대 지진이 아닌 판 내부 지진이지만 shear fracture 메커니즘은 동일. 해남 지역 지진도 깊이 20~21 km의 천발지진(Son et al., 2021). 한국이 지진 안전지대가 아님을 보여줌!</span></div>
+  </div>
+
+  <!-- 6. Slow Earthquake -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(167,139,250,.2)">🌊</div><div><div class="ct">6. Slow Earthquake (느린 지진) — 섭입대의 숨겨진 지진 (Obara & Kato, 2016)</div></div></div>
+    <ul class="topic-tree">
+      <li>
+        <div class="tm" style="--tc:var(--a3)" onclick="tog(this)"><span class="ti">🐢</span><span class="tt">Slow earthquake = 파열 속도가 일반 지진보다 훨씬 느린 지진</span></div>
+        <div class="td">
+          <strong>일반 지진 vs Slow earthquake:</strong><br>
+          일반 지진: 파열 속도 km/s, 지속 시간 수 초~수 분, 진폭 큼<br>
+          Slow earthquake: 파열 속도 cm/day ~ km/year, 지속 시간 수 초~수 년<br><br>
+          <strong>Nankai Trough 일본 사례 지진파 비교 (슬라이드):</strong><br>
+          1. <em>Very low-frequency earthquake</em>: 매우 낮은 주파수, 수백 초 지속<br>
+          2. <em>Low-frequency tremor</em>: 저주파 연속 진동, 수십 초 지속<br>
+          3. <em>Ordinary earthquake(M3.8)</em>: 일반 지진, 수십 초 지속, 진폭 매우 큼<br><br>
+          <strong>Nankai Trough 단면도 (슬라이드, Obara & Kato, 2016):</strong><br>
+          판 경계면 따라 3개 구역:<br>
+          • <em>Seismogenic zone (빨강)</em>: 일반 지진 + megathrust 발생 구역<br>
+          • <em>Transition zone (노랑)</em>: Shallow VLF + tremor 구역<br>
+          • <em>Stable sliding zone (파랑)</em>: Deep ETS + Long-term SSE 구역<br><br>
+          <strong>Slow earthquake 종류:</strong><br>
+          • SSE (Slow Slip Event): 수일~수년에 걸쳐 천천히 미끄러짐<br>
+          • ETS (Episodic Tremor and Slip): 규칙적으로 반복되는 tremor+slip<br>
+          • VLF (Very Low Frequency) earthquake: 저주파 지진<br>
+          • Deep/Shallow tremor: 깊은/얕은 연속 떨림<br><br>
+          <strong>분포:</strong> Nankai, Ryukyu, Cascadia, Alaska, New Zealand, Chile 등 전 세계 섭입대에서 관찰됨<br><br>
+          <strong>의의:</strong> 판 경계의 응력 축적 과정 이해. Slow slip이 누적되면 megathrust 지진의 전조 현상일 수 있음!
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 7. 쓰나미 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(167,139,250,.2)">🌊</div><div><div class="ct">7. Megathrust 지진 & 쓰나미 메커니즘</div></div></div>
+    <div class="fig"><div class="fig-t">📊 쓰나미 형성 단계 (Fig. 슬라이드)</div>
+    <div class="fig-d">
+      ① 해저 지진으로 해저면이 <b>수직으로 수 미터 변위</b> → 수백 km의 해수를 순간 이동시킴<br>
+      ② 깊은 바다에서 파장 <b>500 km 이상</b>, 속도 <b>~800 km/h</b>의 파로 전파 (비행기 속도!)<br>
+      ③ 얕은 해안가에 도달 → 속도 유지되나 파장 급격히 감소 → <b>진폭(amplitude) ~30 m까지</b> 증가 → 해안가 쓸어버림<br><br>
+      <b>쓰나미 발생 조건:</b> 천발 지진 + 해저 <em>수직 변위</em>(vertical displacement) + 대규모. 수평 strike-slip 단층은 수직 변위 없어 쓰나미 약함.
+    </div></div>
+    <table class="tbl">
+      <tr><th>지진</th><th>규모</th><th>연도</th><th>특징</th></tr>
+      <tr><td>칠레 지진</td><td><strong>Mw 9.5</strong></td><td>1960</td><td>역대 최대 규모. Indo-Australian판 섭입</td></tr>
+      <tr><td>알래스카 Prince William Sound</td><td>Mw 9.2</td><td>1964</td><td>북미 최대</td></tr>
+      <tr><td>수마트라 지진</td><td>Mw 9.1~9.3</td><td>2004.12.26</td><td>인도양 대쓰나미, ~23만명 사망. Indo-Australian판→Eurasian판 섭입</td></tr>
+      <tr><td>도호쿠(東北) 지진</td><td><strong>Mw 9.0~9.1</strong></td><td>2011.3.11</td><td>깊이 29 km, 후쿠시마 원전 사고. 태평양판→북미판 섭입 9 cm/yr</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===== SECTION 4: 11강 Mantle Flow ===== -->
+<div id="s4" class="section">
+  <div class="sec-h"><div class="sec-dot" style="background:var(--a4)"></div><div><div class="sec-title">11강. 조산운동 & Mantle Flow</div><div class="sec-desc">CPO/LPO · Olivine A~E type · 지진파 이방성 · AVP·AVS 공식 · 수화광물</div></div></div>
+
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(74,222,128,.2)">🌀</div><div><div class="ct">1. 맨틀 플로우와 지진파 이방성 — 왜 중요한가?</div></div></div>
+    <ul class="topic-tree">
+      <li>
+        <div class="tm" style="--tc:var(--a4)" onclick="tog(this)"><span class="ti">🧲</span><span class="tt">CPO = LPO: 결정선호방향 → 지진파 이방성의 원인</span></div>
+        <div class="td">
+          <strong>연결고리:</strong> 판구조 운동 → 맨틀 암석 변형 → 광물(특히 olivine)의 <em>CPO (Crystallographic Preferred Orientation = LPO, Lattice Preferred Orientation)</em> 형성 → <em>지진파 이방성(seismic anisotropy)</em> 발생<br><br>
+          <strong>지진파 이방성이란?</strong> 지진파가 <em>방향에 따라 속도가 다름</em> (fast direction vs slow direction). 편광분리(shear-wave splitting)으로 측정 가능<br><br>
+          <strong>활용:</strong> 표면에서 지진파 이방성을 측정 → fast direction 분석 → 지하 맨틀 유동 방향 추정! 지표에서 볼 수 없는 맨틀을 간접 관찰하는 유일한 방법<br><br>
+          <strong>AVP, AVS 공식:</strong><br>
+          AVP = [(Vp_max - Vp_min) / Vp_mean] × 100 (%)<br>
+          AVS = [(Vs₁ - Vs₂) / Vs_mean] × 100 (%)
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(74,222,128,.2)">💎</div><div><div class="ct">2. Olivine CPO 타입 A~E ⭐ 핵심 비교!</div><div class="cs">슬립계와 환경 조건이 핵심!</div></div></div>
+    <table class="tbl">
+      <tr><th>타입</th><th>주 슬립계</th><th>형성 조건</th><th>지진파 이방성 해석</th></tr>
+      <tr><td><strong style="color:#4ade80">A-type</strong></td><td>[100](010)</td><td>건조(dry), 저온, 저응력. 가장 일반적</td><td>Fast direction <strong>∥</strong> 유동 방향. 표준 해석</td></tr>
+      <tr><td><strong style="color:#22d3ee">B-type</strong></td><td>[001](010)</td><td><strong>고수압(H₂O 많음)</strong>, 저온, 고응력. 섭입대 cold corner!</td><td>Fast direction <strong>⊥</strong> 유동 방향 (<strong style="color:#ef4444">90° 틀어짐!</strong>). A-type으로 잘못 해석하면 맨틀 플로우 방향 180° 오류!</td></tr>
+      <tr><td><strong style="color:#a78bfa">C-type</strong></td><td>[001](100)</td><td>고수압, 고온. 북서중국 초고압 충돌대에서 발견</td><td>Fast direction ∥ 유동 방향 (A-type과 유사하게 해석)</td></tr>
+      <tr><td><strong style="color:#f97316">D-type</strong></td><td>혼합</td><td>고응력, 큰 전단 변형(high strain)</td><td>약한 CPO 패턴. 어느 방향 집중도 낮음</td></tr>
+      <tr><td><strong style="color:#fb7185">E-type</strong></td><td>[100](001)</td><td>수분 존재, 저응력</td><td>Fast direction ∥ 유동 방향 (A-type 유사)</td></tr>
+    </table>
+    <div class="call cw"><span class="call-icon">⚠️</span><span><strong>B-type의 지구조적 중요성 (실험 11, 유구 페리도타이트):</strong> 섭입대 차가운 cold corner(forearc mantle wedge)에서 B-type 형성. Fast direction이 유동 방향과 수직(⊥) → A-type으로 잘못 해석하면 <em>맨틀 플로우 방향을 완전히 반대(180°)로 추정</em>하는 심각한 오류 발생. 유구 페리도타이트에서는 수화작용으로 A-type→D-type→E-type으로 CPO가 전이됨을 관찰!</span></div>
+    <div class="fig"><div class="fig-t">📊 A-type vs B-type 비교 (Long & Becker, 2010)</div>
+    <div class="fig-d">
+      (a) A/C/E-type: 맨틀 유동(수평 화살표)과 fast direction(지진대 위 삼각형 방향)이 <b>평행(||)</b><br>
+      (b) B-type: 맨틀 유동 방향과 fast direction이 <b>수직(⊥)</b><br><br>
+      Pole figure 해석: A-type = [100]축이 lineation 방향에 집중. B-type = [001]축이 lineation 방향에 집중, [100]은 lineation에 수직 방향에 집중.
+    </div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(74,222,128,.2)">🐍</div><div><div class="ct">3. 수화광물의 역할: Serpentine, Chlorite, Amphibole</div></div></div>
+    <ul class="topic-tree">
+      <li>
+        <div class="tm" style="--tc:var(--a4)" onclick="tog(this)"><span class="ti">💧</span><span class="tt">Mantle wedge 내 수화광물의 분포와 CPO → 지진파 이방성</span></div>
+        <div class="td">
+          <strong>섭입대 mantle wedge의 수화:</strong> 슬랩에서 탈수된 H₂O가 mantle wedge로 공급 → serpentinization(사문암화) 발생<br><br>
+          <strong>광물별 안정 온도:</strong> Serpentine 낮은 온도(차가운 forearc corner) → Chlorite 중간 → Amphibole 높은 온도 영역에서 안정<br><br>
+          <strong>CPO와 이방성:</strong><br>
+          • Serpentine: 독립적 CPO → 지진파 이방성에 영향. 슬랩 표면 serpentinization이 중요<br>
+          • Chlorite: 층상 규산염 → 독특한 CPO 패턴<br>
+          • Amphibole (각섬석): hornblende 등 → CPO가 지진파 이방성에 큰 영향<br><br>
+          <strong>복잡성:</strong> Mantle wedge = olivine + serpentine + chlorite + amphibole 혼재 → 각각의 CPO가 복합적으로 작용 → 단순 olivine A-type 가정으로는 해석 오류 가능
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== SECTION 5: 12강 Caledonian ===== -->
+<div id="s5" class="section">
+  <div class="sec-h"><div class="sec-dot" style="background:var(--a5)"></div><div><div class="sec-title">12강. Caledonian Orogeny & 취성변형</div><div class="sec-desc">Iapetus Ocean · Bergen arc · Lawsonite blueschist 실험 · Pseudotachylyte · Hornblende CPO</div></div></div>
+
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(251,113,133,.2)">⛰️</div><div><div class="ct">1. Caledonian Orogeny 개요 — Iapetus Ocean의 닫힘</div></div></div>
+    <ul class="topic-tree">
+      <li>
+        <div class="tm" style="--tc:var(--a5)" onclick="tog(this)"><span class="ti">🗺️</span><span class="tt">Supercontinent cycle & Iapetus Ocean (460 Ma 슬라이드)</span></div>
+        <div class="td">
+          <strong>시기:</strong> ~490~390 Ma (Early Ordovician ~ Late Devonian)<br>
+          <strong>지역:</strong> 노르웨이, 스코틀랜드, 그린란드, 북아메리카 동부 (Appalachians)<br><br>
+          <strong>460 Ma 지도 (Middle Ordovician):</strong><br>
+          • <em>IO (Iapetus Ocean)</em>: 좁아지는 중. 북아메리카와 발틱판 사이<br>
+          • <em>RO (Rheic Ocean)</em>: 새로 형성되는 중 (곤드와나 남쪽)<br>
+          → Iapetus가 완전히 닫히면서 Caledonian orogeny 발생 → 이후 Pangea 형성의 일부<br><br>
+          <strong>Bergen arc (SW Norway):</strong> Caledonian 충돌로 형성된 nappes(충상층). 다양한 고압 암석 보존 — eclogite, peridotite, granulite. 이 암석들이 exhumation되어 지표에 노출 → 지구조 역사 연구의 보고
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(251,113,133,.2)">⚡</div><div><div class="ct">2. 취성변형 & 단층 발생 원인 — 어떤 암석이 지진을 일으키는가?</div></div></div>
+    <table class="tbl">
+      <tr><th>암석</th><th>단층 발생 메커니즘</th><th>연구 증거</th></tr>
+      <tr><td><strong>각섬암(amphibolite)</strong></td><td>각섬석(amphibole) 변형 중 취성 파괴. 각섬석 CPO 형성 중 shear fracture</td><td>Hb+Pl+Il 조성 박편에서 전단면 관찰</td></tr>
+      <tr><td><strong>사문암(serpentinite)</strong></td><td>Serpentine 탈수취화 (dehydration embrittlement). H₂O 방출로 취성 전환</td><td>경기도 가평 사문암 노두에서 사문암화 밴드와 단층 공존 관찰</td></tr>
+      <tr><td><strong>청색편암(blueschist)</strong></td><td>Lawsonite → Glaucophane 상변이 시 취성 파괴. Nanocrystal 형성 → 약대</td><td>Incel et al. (2017); Choi et al. (2025)</td></tr>
+    </table>
+
+    <div class="call ck"><span class="call-icon">🗝️</span><span><strong>Choi et al. (2025, JSG) 실험 상세 — Lawsonite Blueschist 전단 실험:</strong><br>
+    시작 물질: California Panoche Pass Road의 자연 lawsonite blueschist (Gln ~55% + Lws ~35% + Ttn 등)<br>
+    BSE 이미지에서 Gln(glaucophane), Lws(lawsonite), Ttn(titanite) 확인<br>
+    실험 장치: Griggs apparatus (고압 변형 실험기)<br>
+    Low strain (γ=1.1~1.2): Lws 결정 보존, foliation 초기 형성<br>
+    High strain (γ=4.0): <em>Synthetic shear fracture</em> 발달 (취성 파괴!). 연속적인 전단면 형성<br>
+    → <strong>결론: 청색편암의 변형이 지진(취성 파괴) 발생 원인이 될 수 있음!</strong></span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(251,113,133,.2)">💥</div><div><div class="ct">3. Pseudotachylyte — 고대 지진의 직접적 물리적 증거</div></div></div>
+    <ul class="topic-tree">
+      <li>
+        <div class="tm" style="--tc:var(--a5)" onclick="tog(this)"><span class="ti">🔥</span><span class="tt">Pseudotachylyte = 지진 시 마찰 용융(frictional melt)이 급냉된 것</span></div>
+        <div class="td">
+          <strong>형성 메커니즘:</strong> 지진 → 단층면에서 급격한 미끄러짐(수 m/s) → 마찰열 발생 → 단층면 국소 용융(frictional melting) → 급냉 → <em>검은색 유리질(glass-like) 암석</em> 형성<br><br>
+          <strong>외관:</strong> 단층면을 따라 발달한 얇은 검은색~짙은 색 vein. 두께 mm~cm. 미세 입자의 기질(matrix)에 원래 암석의 광물 파편(clast) 포함<br><br>
+          <strong>실험 10 주제 — SW Norway granulite의 pseudotachylyte:</strong><br>
+          Granulite는 하부지각 조건(high T/P)에서 형성. <em>연성(ductile) 변형</em>이 지배해야 할 환경인데 pseudotachylyte(취성 지진의 증거) 발견 → <strong>하부지각에서도 지진 발생 가능!<br></strong>
+          → Paleo-earthquake(고대 지진)의 직접 증거<br><br>
+          <strong>의의:</strong> 지각의 연성-취성 전이대(brittle-ductile transition)가 단순하지 않음. 환경 조건에 따라 취성 지진이 더 깊은 곳에서도 발생 가능
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(251,113,133,.2)">🎸</div><div><div class="ct">4. Amphibole CPO와 지진파 이방성 (Lee & Jung, 2023)</div></div></div>
+    <ul class="topic-tree">
+      <li>
+        <div class="tm" style="--tc:var(--a5)" onclick="tog(this)"><span class="ti">📊</span><span class="tt">Hornblendite 비율과 P파 이방성(AVP) 관계</span></div>
+        <div class="td">
+          <strong>실험 설계:</strong> Amp peridotite(2658번) + hornblendite를 비율 변화시켜 AVP 측정<br><br>
+          <strong>결과 (그래프):</strong><br>
+          • <em>Type-III LPO 각섬석</em> 포함 시: hornblendite 비율 증가에 비례해 AVP <strong>증가</strong> (선형 증가)<br>
+          • <em>Type-IV LPO 각섬석</em> 포함 시: hornblendite 비율 변해도 AVP <strong>거의 불변</strong> (flat curve)<br><br>
+          <strong>의미:</strong> 각섬석의 CPO 타입에 따라 mantle wedge 지진파 이방성이 크게 달라짐. 각섬석이 단순히 olivine의 이방성을 희석시키는 것이 아니라 독립적으로 이방성에 기여. 섭입대 지진파 해석 시 각섬석 CPO 고려 필수!
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== SECTION 6: 실험·필드 ===== -->
+<div id="s6" class="section">
+  <div class="sec-h"><div class="sec-dot" style="background:var(--gold)"></div><div><div class="sec-title">실험 & 필드 보고서 완전 정리</div><div class="sec-desc">비봉 Eclogite · 유구 Peridotite · 아산 현무암 · 실험 7~11 박편 포인트</div></div></div>
+
+  <!-- 필드 보고서 상세 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(251,191,36,.2)">🗺️</div><div><div class="ct">필드 보고서: 충남 지역 변성·화성 활동 (배건형, 2026)</div><div class="cs">Stop 1: 비봉 Eclogite / Stop 2: 유구 Peridotite / Stop 3: 아산 현무암</div></div></div>
+
+    <div class="call ci2"><span class="call-icon">🌏</span><span><strong>지역 지체구조 배경:</strong> 경기지괴(Gyeonggi Massif)는 <em>북중국 지괴(Sino-Korean/North China Block)</em>와 <em>남중국 지괴(South China Block/Yangtze)</em> 사이 충돌 — 다비-술루 벨트(Dabie-Sulu belt, 트라이아스기 충돌대)의 동쪽 연장선. <strong>홍성 에클로자이트 = 대륙 충돌의 직접 증거!</strong></span></div>
+
+    <ul class="topic-tree">
+      <li>
+        <div class="tm" style="--tc:var(--gold)" onclick="tog(this)"><span class="ti">🔴</span><span class="tt">Stop 1. 비봉 Eclogite (홍성군 비봉면)</span></div>
+        <div class="td">
+          <strong>산출 환경:</strong> 선캄브리아기 편마암 복합체 내에 <em>렌즈상(lens-shaped)으로</em> 분포. 주변 암석은 사문암화된 하즈버자이트(serpentinized harzburgite)<br><br>
+          <strong>야외 관찰 (Fig. 2):</strong><br>
+          (a) massive~약한 엽리를 보이는 에클로자이트 블록. 풍화면에서 <em>적색 석류석 반정</em>이 부분적으로 확인됨. 신선한 면에서는 전구체 omphacite로부터 Na 이탈로 형성된 <em>연녹색 단사휘석</em>, 흑색 각섬석, 담색 사장석 광물 조합 관찰<br>
+          (b) 비교적 신선한 면: pale-green clinopyroxene + black amphibole + light-colored plagioclase. <em>흑색 각섬석 = 후퇴 변성(retrograde) 단계의 각섬암상으로의 과성장!</em><br><br>
+          <strong>변성 조건:</strong> 온도 775~860°C, 압력 16.5~20.9 kbar 조건에서 정점 변성작용 → 이후 빠른 상승 → <em>등온 감압(Isothermal Decompression)</em> → 고압 백립암상-각섬암상으로의 후퇴 변성 (Kim et al. 2006; Oh et al. 2005)<br><br>
+          <strong>Fig. 3 (비봉 인근 암석들):</strong><br>
+          (a) 사문암화 밴드가 균열면을 따라 발달 — 수화작용 중 유체 침투 경로<br>
+          (b) 균열면을 따른 뚜렷한 serpentinization bands<br>
+          (c) L-tectonite 조직: 전반적인 광물 선구조(mineral lineation) 발달 — 지구조 응력과 변형의 흔적<br>
+          (d) <em>Porphyroclastic texture</em>: 기질 내에 <strong>orthopyroxene(Opx) 반정쇄립(porphyroclast)</strong>이 밝은 색 입자로 뚜렷하게 산출 → 맨틀 전단대 내 연성 변형의 기록
+        </div>
+      </li>
+      <li>
+        <div class="tm" style="--tc:var(--gold)" onclick="tog(this)"><span class="ti">🟢</span><span class="tt">Stop 2. 유구 Serpentinized Peridotite (경기지괴 남서부)</span></div>
+        <div class="td">
+          <strong>암석:</strong> 주로 <em>사문암화된 하즈버자이트(serpentinized harzburgite)</em>로 구성. 흑색~담녹색의 색조 변화 (원래 광물 조성과 사문암화 정도 반영)<br><br>
+          <strong>야외 관찰:</strong><br>
+          • L-tectonite 조직: 전반적 광물 선구조 발달 (Fig. 3c)<br>
+          • Porphyroclastic texture: Opx porphyroclast가 기질 내에 밝은 색 입자로 뚜렷 (Fig. 3d)<br>
+          • 사문암화 밴드: 균열면을 따라 발달 — 수화작용 중 유체 침투 경로<br><br>
+          <strong>지체구조적 의미 (Park & Jung, 2017 연구):</strong><br>
+          유구 페리도타이트는 맨틀 전단대 내에서 <em>proto-mylonite → mylonite → ultra-mylonite</em>로 연속적 조직 변화를 보임<br>
+          지표로 상승하며 전단 변형이 진행됨에 따라 응력은 최대 <strong>108~141 MPa (건조 조건) 혹은 280~310 MPa (수화 조건)</strong>까지 증가<br>
+          Olivine LPO 전이: <em>A-type (고온·건조 dislocation creep)</em> → D-type → <em>E-type (저온 + 강한 수화작용 + 높은 변형률)</em><br>
+          E-type은 저온 + 수화작용 + 높은 변형이 결합된 환경 지시<br><br>
+          <strong>한반도 맨틀 하부 해석:</strong> 대륙 충돌 이후 연약권 맨틀이 <em>수화작용과 전단 변형이 복합적으로 작용</em>하면서 지표로 상승. 사문암화 조직과 mylonite 발달이 그 증거<br><br>
+          <span class="key">반정발견!</span> <strong>Opx porphyroclast</strong>: 기질이 재결정화되는 동안 큰 Opx 결정이 살아남은 것. 연성 변형이 일어나도 단단한 Opx은 깨지지 않고 porphyroclast로 남음 → <em>연성 변형 환경의 직접 증거</em>
+        </div>
+      </li>
+      <li>
+        <div class="tm" style="--tc:var(--gold)" onclick="tog(this)"><span class="ti">🔵</span><span class="tt">Stop 3. 아산 신생대 현무암 (Asan Cenozoic Basalt)</span></div>
+        <div class="td">
+          <strong>산출:</strong> 아산 지역. <em>마이오세(Miocene, ~18.9 Ma)</em> 형성. 인장 응력 환경에서 판 내부 화산활동 → <em>intraplate alkalic basalt</em><br><br>
+          <strong>야외 특징 (Fig. 4):</strong><br>
+          • 조잡한 주상절리(crude columnar jointing) 발달<br>
+          • 기질 내에 담색의 <em>포획암(xenolith)</em> 포함 — 동그라미 표시. 크기 cm~dm급<br><br>
+          <strong>지화학 특성 (Kim & Choi, 2021):</strong><br>
+          • Spider diagram: HFSE(High Field Strength Elements — Nb, Ta, Zr, Hf, Ti) 결핍 없음 → <em>OIB (Ocean Island Basalt) 유사 패턴</em><br>
+          • K, Ba, Zr, Hf, Ti 이상 및 Sr, P, Pb 양의 이상 공존 → <em>DMM-EM1 혼합</em>이 아닌 복잡한 맨틀 소스 지시<br>
+          • 재순환된 에클로자이트 + K-hollandite 함유 고기 심해 퇴적물 + 탄산염 성분이 복합적으로 유입된 결과<br><br>
+          <strong>포획암 (Fig. 4 동그라미 담색 입자):</strong><br>
+          • 기질보다 밝은 색 → <em>지각 포획암(crustal xenolith)</em> — EM1 친화성의 암석학적 특성이 상대적으로 규장질 조성과 부합<br>
+          • 마그마 상승 시 지각 물질을 포획했음을 지시 (<em>crustal contamination 최소화</em>하며 연약권에서 빠르게 상승)<br>
+          • <em>Spinel peridotite 조성의 맨틀 포획암(mantle xenolith)도 문헌 보고</em> (Choi et al., 2006) → 빠른 상승의 증거
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 실험 요약표 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(251,191,36,.2)">🧪</div><div><div class="ct">실험 7~11 요약 & 박편 관찰 핵심</div></div></div>
+    <table class="tbl">
+      <tr><th>실험</th><th>샘플</th><th>주제</th><th>박편 핵심 관찰 포인트</th></tr>
+      <tr><td><strong style="color:#fbbf24">실험 7</strong><br>2026.04.23</td><td>Norway peridotite mylonite<br>(Bergen arc, SW Norway)</td><td>Caledonian orogeny, 감람암 박편, olivine CPO</td><td>Olivine A-type CPO (proto-mylonite), 연성변형 조직(mylonite), 수분 함량 측정(FTIR). Olivine(Ol)+Opx+Cpx+Sp 조성</td></tr>
+      <tr><td><strong style="color:#22d3ee">실험 8</strong></td><td>Norway peridotite</td><td>페리도타이트 박편 관찰 심화</td><td>Olivine + orthopyroxene(Opx) + serpentine(Srp) 구별. Porphyroclastic texture. Sp(spinel) 식별</td></tr>
+      <tr><td><strong style="color:#4ade80">실험 9</strong><br>2026.05.19</td><td>Mylonitic Granite<br>(Kyeonggi Shear Zone, 경기전단대)</td><td>경기전단대 압쇄암질 화강암</td><td>Quartz ribbon (연성변형). Feldspar porphyroclast. σ/δ porphyroclast (shear sense indicator). Undulatory extinction (파상소광, 변형된 quartz)</td></tr>
+      <tr><td><strong style="color:#a78bfa">실험 10</strong><br>2026.05.21</td><td>Norway granulite<br>with pseudotachylyte</td><td>하부지각 고대 지진(paleo-earthquake) 증거</td><td>Pseudotachylyte vein (검은색 유리질). Granulite 조직 (pyroxene 주 광물, 물 없음). Hb+Pl+Il 조성. 전단면 방향</td></tr>
+      <tr><td><strong style="color:#fb7185">실험 11</strong><br>2026.05.28</td><td>충남 유구 peridotite<br>(mylonitic)</td><td>유구 감람암, olivine CPO 전이</td><td>Proto-mylonite (Ol 300-315 μm) vs Mylonite (Ol 164-170 μm): 결정 크기 감소 확인. Opx porphyroclast. Amp 발달. XZ 단면 관찰</td></tr>
+    </table>
+
+    <div class="card" style="margin-top:12px">
+      <div class="ct" style="margin-bottom:10px">🔬 Mylonite 분류법 (실험 11에서 중요!)</div>
+      <table class="tbl">
+        <tr><th>용어</th><th>정의</th><th>Matrix 비율</th><th>혼동 주의!</th></tr>
+        <tr><td><strong>Proto-mylonite</strong></td><td>초기 압쇄암</td><td>10~50% matrix</td><td rowspan="3"><strong style="color:#ef4444">Porphyroclast ≠ Porphyroblast!</strong><br>Porphyroclast: 연성 변형에서 살아남은 큰 결정 (e.g., feldspar, pyroxene)<br>Porphyroblast: 변형·변성 중 새로 성장한 큰 결정<br>Detrital clast: 퇴적물의 파편</td></tr>
+        <tr><td><strong>Mylonite</strong></td><td>압쇄암</td><td>50~90% matrix</td></tr>
+        <tr><td><strong>Ultra-mylonite</strong></td><td>초압쇄암</td><td>&gt;90% matrix</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 7: 예상문제 ===== -->
+<div id="s7" class="section">
+  <div class="sec-h"><div class="sec-dot" style="background:var(--a3)"></div><div><div class="sec-title">예상 문제 모음 ❓</div><div class="sec-desc">개념·메커니즘·사진추론·그리기 유형별 정리</div></div></div>
+  <div class="call ci2"><span class="call-icon">💡</span><span>"정답 보기" 전에 먼저 스스로 3분 생각해보기! 그게 진짜 공부야.</span></div>
+
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(249,115,22,.2)">📝</div><div><div class="ct">A. 개념 문제</div></div></div>
+    <div class="qcard"><div class="qq"><div class="qn">1</div>마리아나 타입과 칠레 타입 섭입대를 비교하시오. 각각의 해양판 나이, 섭입 방식, 판 커플링, 배호분지 형성 여부를 포함하여 서술하시오.</div>
+    <button class="qtog" onclick="qa(this)">정답 보기 ▼</button>
+    <div class="qa"><b>마리아나 타입:</b> 오래되고 차갑고 무거운 해양판 → 자발적 침강(free/spontaneous subduction) → 높은 섭입각 → decoupling 지배 → 상부판 변형 적음 → slab rollback → 신장력 → <b>배호분지 형성</b> (동해 대표). 예: 마리아나, 소앤틸리스, 알류샨<br><br>
+    <b>칠레 타입:</b> 젊고 뜨겁고 가벼운 해양판 → 강제 섭입(forced subduction) → 낮은 섭입각(shallow subduction) → coupling 지배 → 상부판에 압축력 → 조산운동+역단층 → 두꺼운 대륙지각(~70 km) → 배호분지 없음. 예: 안데스, 수마트라-자바. 쓰나미 발생 위험 높음!</div></div>
+
+    <div class="qcard"><div class="qq"><div class="qn">2</div>Arc-trench gap이 100~250 km인 이유를 설명하시오. 왜 화산이 해구 바로 위에 생기지 않는가?</div>
+    <button class="qtog" onclick="qa(this)">정답 보기 ▼</button>
+    <div class="qa">마그마가 생성되려면 슬랩에서 탈수된 H₂O가 mantle wedge의 <b>융점을 낮추어 부분용융</b>이 발생해야 함. 이를 위해 슬랩이 충분한 깊이(~100 km)까지 내려가야 하며, 이 깊이에서 탈수 반응이 활발히 일어나 물이 방출됨. 슬랩이 100 km 깊이에 도달하는 수평 거리가 섭입각에 따라 다르지만 대략 100~250 km → 이 위치의 지표에 화산호 형성 → 해구로부터의 거리 = arc-trench gap.</div></div>
+
+    <div class="qcard"><div class="qq"><div class="qn">3</div>Coesite가 garnet 내에서 발견되면 무엇을 지시하는가? garnet에 균열이 생기는 이유는?</div>
+    <button class="qtog" onclick="qa(this)">정답 보기 ▼</button>
+    <div class="qa"><b>UHP(초고압) 환경</b>에서 변성되었음을 지시. Coesite는 P ≥ ~2.8 GPa(약 85 km 이상)에서만 안정한 quartz의 고압 다형체. Garnet 내에 포유물(inclusion)로 보존되어 있다는 것은 garnet이 그 고압 상태에서 coesite를 감쌌음을 의미.<br><br><b>균열 이유:</b> exhumation(지표로 상승) 시 압력 감소 → coesite가 quartz로 전환. 이 전환에서 <em>부피 팽창</em> 발생 → garnet 내부에서 방사상 균열(fracture) 형성.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(34,211,238,.2)">⚙️</div><div><div class="ct">B. 메커니즘 설명</div></div></div>
+    <div class="qcard"><div class="qq"><div class="qn">4</div>심발지진의 anticrack 메커니즘을 단계별로 설명하시오. (Fig. 슬라이드의 3개 그림 참조)</div>
+    <button class="qtog" onclick="qa(this)">정답 보기 ▼</button>
+    <div class="qa">①~350 km 이하: olivine이 spinel 구조로 <b>phase transition(상변이)</b>이 일어남<br>
+    ②이 전환에서 <b>부피 급격히 감소</b> → 압축 방향(compression)으로 렌즈형 spinel lens 형성<br>
+    ③이 spinel lenses들이 연결되어 <b>약대(weak zone) 형성</b><br>
+    ④약대들이 연속되어 <b>shear zone 형성</b> → 갑작스러운 미끄러짐 → <b>지진 발생</b><br><br>이를 "anticrack"이라고 부르는 이유: 일반 균열(crack)은 인장(tension)으로 열리는데, 여기서는 <em>압축(compression)</em>으로 렌즈형 공간이 닫히는 방향이기 때문에 반대 개념.</div></div>
+
+    <div class="qcard"><div class="qq"><div class="qn">5</div>B-type olivine CPO가 섭입대 지진파 이방성 해석에서 문제를 일으키는 이유와 그 해결 방향을 논하시오.</div>
+    <button class="qtog" onclick="qa(this)">정답 보기 ▼</button>
+    <div class="qa"><b>문제:</b> A/C/E-type olivine에서는 fast direction이 유동 방향과 평행(||). 그러나 섭입대 cold corner(저온 + 고수압)에서 B-type이 형성되면 fast direction이 유동 방향과 <em>수직(⊥), 즉 90° 틀어짐</em>. B-type을 A-type으로 잘못 가정하면 맨틀 유동 방향을 <b>180° 반대</b>로 추정하는 오류 발생.<br><br><b>해결:</b> ①지역의 온도-수분 조건 파악 → B-type 가능성 평가. ②실제 암석(자연 암석, 실험 암석) CPO 측정으로 타입 결정. ③Serpentine, chlorite 등 수화광물 CPO도 함께 고려하여 종합적 이방성 모델 구축.</div></div>
+
+    <div class="qcard"><div class="qq"><div class="qn">6</div>유구 페리도타이트에서 olivine LPO가 A-type → D-type → E-type으로 전이하는 이유를 지체구조적 환경 변화와 연결하여 설명하시오.</div>
+    <button class="qtog" onclick="qa(this)">정답 보기 ▼</button>
+    <div class="qa"><b>A-type (초기, proto-mylonite):</b> 고온·건조·저응력 환경 → dislocation creep 지배 → [100](010) 슬립 → A-type CPO. 이 단계에서 olivine 입자 크기 크고(300-315 μm) 변형 약함.<br><br><b>D-type (중간):</b> 응력 증가 + 변형률 증가 → 여러 슬립계 활성화 → CPO 혼합·약화<br><br><b>E-type (최종, mylonite):</b> 수화작용(hydration)에 의해 H₂O가 olivine에 유입 + 낮은 온도 + 높은 변형률 → [100](001) 슬립 활성화 → E-type CPO. 입자 크기 감소(164-170 μm). 사문석화도 동반.<br><br>이는 대륙 충돌 후 연약권 맨틀이 지표로 상승하면서 온도 감소 + 유체 유입이 복합적으로 작용하는 지체구조 환경 변화를 반영.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(167,139,250,.2)">📸</div><div><div class="ct">C. 현장/박편 사진 보고 추론</div></div></div>
+    <div class="qcard"><div class="qq"><div class="qn">7</div>야외에서 암석의 기질(matrix) 내에 orthopyroxene(Opx)이 밝은 색 입자(porphyroclast)로 뚜렷하게 산출된다. 이 암석의 이름과 지체구조적 의미를 쓰시오.</div>
+    <button class="qtog" onclick="qa(this)">정답 보기 ▼</button>
+    <div class="qa"><b>암석명:</b> Serpentinized harzburgite with porphyroclastic texture (사문암화된 하즈버자이트)<br><b>Opx porphyroclast 의미:</b> 주변 기질이 연성 변형과 재결정화로 세립화되는 동안 경도가 높은 Opx은 깨지지 않고 큰 결정(porphyroclast)으로 살아남음 → <em>맨틀 전단대(mantle shear zone) 내 연성 변형</em>의 직접 증거. 유구 peridotite(Fig. 3d)의 경우 대륙 충돌 후 맨틀 상승 과정에서 강한 전단 변형이 일어났음을 지시.</div></div>
+
+    <div class="qcard"><div class="qq"><div class="qn">8</div>비봉 에클로자이트의 신선한 면에서 연녹색 단사휘석 + 흑색 각섬석 + 담색 사장석의 광물 조합이 관찰된다. 각 광물의 형성 환경과 지시하는 변성 단계를 설명하시오.</div>
+    <button class="qtog" onclick="qa(this)">정답 보기 ▼</button>
+    <div class="qa"><b>연녹색 단사휘석(pale-green Cpx):</b> 전구체 omphacite에서 <em>Na 이탈(Na loss)</em>로 형성된 것. Na가 빠져나가면서 omphacite(Na-Al Cpx) → 일반 Cpx로 변환. 후퇴 변성 초기 단계 지시.<br><br><b>흑색 각섬석(black amphibole):</b> 에클로자이트상 이후 <em>각섬암상(amphibolite facies)으로의 후퇴 변성</em>을 지시. 온도·압력 감소로 amphibole이 Cpx와 Pl을 대체하며 성장. 각섬암상 조건(~600-700°C, 0.5-1.0 GPa).<br><br><b>담색 사장석(light-colored Pl):</b> 역시 후퇴 변성의 산물. 고압 상태에서는 사장석이 불안정하여 Jd(jadeite)+Qz 또는 omphacite 조합으로 존재하다가 압력 감소 시 사장석으로 전환.<br><br><b>전체 해석:</b> 정점 변성(eclogite facies, >16 kbar) 이후 등온 감압(Isothermal Decompression)을 거치며 후퇴 변성이 일어난 것.</div></div>
+
+    <div class="qcard"><div class="qq"><div class="qn">9</div>단층면을 따라 검은색 유리질의 얇은 층(vein)이 관찰된다. 이 구조의 이름과 형성 과정, 지체구조적 의미를 설명하시오.</div>
+    <button class="qtog" onclick="qa(this)">정답 보기 ▼</button>
+    <div class="qa"><b>정체:</b> Pseudotachylyte(의유리암/유사유문암)<br><b>형성 과정:</b> 지진 발생 → 단층면에서 급격한 미끄러짐(수 m/s) → 마찰열 발생 → 국소 용융(frictional melt) → 빠른 급냉 → 유리질(glass-like) 암석 형성. 미세 입자 기질 + 원래 암석 광물 파편(clast) 포함<br><b>지체구조적 의미:</b> 고대 지진(paleo-earthquake)의 직접 증거. 특히 하부지각 granulite에서 발견되면 → 연성 변형이 지배해야 할 환경에서도 취성 지진 발생 가능. 연성-취성 전이대가 단순하지 않음을 증명.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(74,222,128,.2)">✏️</div><div><div class="ct">D. 그래프/모델 그리기</div></div></div>
+    <div class="qcard"><div class="qq"><div class="qn">10</div>섭입대 지진 빈도 vs 깊이 그래프를 그리고 각 피크에서의 메커니즘을 표시하시오.</div>
+    <button class="qtog" onclick="qa(this)">정답 보기 ▼</button>
+    <div class="qa"><b>그리는 방법:</b> X축 = 연간 지진 횟수(log scale: 1, 10, 100). Y축 = 깊이 0~700 km (아래 방향이 깊음)<br><br>
+    ① 0~100 km: 가장 크고 넓은 피크. 왼쪽 레이블: "dehydration of serpentine (위쪽)". 메커니즘: <b>Shear fracture</b><br>
+    ② ~150~200 km: 중간 크기 피크. 메커니즘: <b>Dehydration embrittlement</b> (serpentine 탈수)<br>
+    ③ ~500 km: 작은 피크. 왼쪽 레이블: "formation of anticracks". 메커니즘: <b>Olivine→Spinel 상변이 → anticrack shear</b><br>
+    ~300~400 km 구간: 골짜기 (전이 구간, 지진 적음)</div></div>
+
+    <div class="qcard"><div class="qq"><div class="qn">11</div>Schematic subduction zone 단면 모델을 그리고 다음을 모두 표시하시오: trench, accretionary wedge, outer ridge, forearc basin, volcanic arc, backarc basin, mantle wedge, subducting slab, dehydration zone (~100 km), magma generation, blueschist/eclogite facies 위치.</div>
+    <button class="qtog" onclick="qa(this)">정답 보기 ▼</button>
+    <div class="qa"><b>배치 (왼쪽→오른쪽, 위→아래):</b><br>
+    [해양] → trench(V자 해구) → accretionary wedge(삼각형) → outer ridge → forearc basin → volcanic arc(화산) → backarc basin → [대륙]<br><br>
+    <b>지하 단면:</b><br>
+    • 해양판이 좌하방으로 섭입 (약 30~45° 경사)<br>
+    • 섭입판 상면 표시: ~50 km = blueschist 영역, ~100 km = eclogite 영역<br>
+    • ~100 km 깊이에서 슬랩 상면: dehydration zone (물방울 화살표 위로)<br>
+    • Mantle wedge (섭입판과 상부판 사이): 뒤집힌 삼각형 영역<br>
+    • Mantle wedge 내: H₂O 공급 → 부분용융 → magma 생성 → 상승 화살표 → 화산<br>
+    • 화산호 하부: Abukuma-type metamorphism (high T/low P)<br>
+    • Asthenosphere: 아래 열린 부분</div></div>
+  </div>
+</div>
+
+<!-- ===== SECTION 8: 광물구별법 ===== -->
+<div id="s8" class="section">
+  <div class="sec-h"><div class="sec-dot" style="background:var(--a2)"></div><div><div class="sec-title">광물 구별법 💎 박편 관찰 완전 정복</div><div class="sec-desc">Pyroxene vs Amphibole · Cpx vs Opx · 주요 광물 카드 · 편광현미경 요령</div></div></div>
+
+  <!-- CPX vs OPX vs Amphibole 핵심 비교 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(34,211,238,.2)">🔬</div><div><div class="ct">⭐ 핵심 1: Cpx vs Opx vs Amphibole 3자 비교</div><div class="cs">쪼개짐 각도 + 소광각 + 색이 핵심!</div></div></div>
+    <table class="tbl">
+      <tr><th>특성</th><th style="color:#f97316">Clinopyroxene (Cpx, 단사휘석)</th><th style="color:#4ade80">Orthopyroxene (Opx, 사방휘석)</th><th style="color:#22d3ee">Amphibole (각섬석)</th></tr>
+      <tr><td><strong>쪼개짐 각도</strong></td><td><span class="tag to">~87°/93°</span><br>거의 직각! 단면에서 수직 교차</td><td><span class="tag tg">~88°/92°</span><br>거의 직각 (Cpx와 유사)</td><td><span class="tag tc">~56°/124°</span><br>다이아몬드 모양으로 예각 교차!</td></tr>
+      <tr><td><strong>단면 형태</strong></td><td>8면형, 약간 직사각형</td><td>8면형, Cpx보다 더 직사각형</td><td>6면형, 뾰족한 모서리 있음</td></tr>
+      <tr><td><strong>PP 색깔</strong></td><td>무색~연초록~갈색.<br><em>Omphacite = 진한 초록색!</em><br>Augite = 연갈색~녹색</td><td>무색~연분홍~갈색.<br>Enstatite = 무색~연분홍<br>Bronzite = 갈색</td><td>초록~갈색~파란색.<br><em>Hornblende = 진한 갈~녹색</em><br><em>Glaucophane = 파란색/보라! (강한 다색성)</em></td></tr>
+      <tr><td><strong>다색성 (pleochroism)</strong></td><td>약함~중간</td><td>매우 약함</td><td><strong>강함!</strong> 방향 따라 색 뚜렷하게 변함. Glaucophane은 극단적으로 강함</td></tr>
+      <tr><td><strong>소광각 (extinction angle)</strong></td><td><strong>~35~45°</strong> (사소광, inclined extinction). Cpx의 중요 특징!</td><td><strong>직소광(0°)</strong> 또는 매우 작은 소광각. Opx 구분의 핵심!</td><td><strong>~15~25°</strong> (사소광). Cpx보다 작음</td></tr>
+      <tr><td><strong>XP 간섭색</strong></td><td>높음 (2~3차 색, 청~붉은색)</td><td>중간~낮음 (1~2차 색)</td><td>중간 (1~2차 색)</td></tr>
+      <tr><td><strong>쌍정 (twinning)</strong></td><td>단순 쌍정 흔함 (simple twin). Polysynthetic 쌍정도 있음</td><td>드묾</td><td>단순 쌍정</td></tr>
+      <tr><td><strong>대표 광물</strong></td><td>Augite, Diopside, <em>Omphacite (Eclogite!)</em>, Enstatite (사방이지만 유사)</td><td>Enstatite, Bronzite, Hypersthene</td><td>Hornblende, <em>Glaucophane (Blueschist!)</em>, Tremolite, Actinolite</td></tr>
+    </table>
+
+    <!-- 시각 다이어그램 -->
+    <div class="svg-wrap">
+      <svg viewBox="0 0 500 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;">
+        <rect width="500" height="220" fill="#111827"/>
+        <!-- Cpx -->
+        <text x="85" y="22" fill="#f97316" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Cpx (단사휘석)</text>
+        <text x="85" y="36" fill="#94a3b8" font-size="9" text-anchor="middle" font-family="sans-serif">쪼개짐 ~87°, 소광각 ~35~45°</text>
+        <polygon points="50,75 65,55 105,55 120,75 120,130 105,150 65,150 50,130" fill="rgba(249,115,22,.1)" stroke="#f97316" stroke-width="1.5"/>
+        <line x1="50" y1="102" x2="120" y2="102" stroke="#f97316" stroke-width="1" stroke-dasharray="3,2" opacity=".6"/>
+        <line x1="85" y1="55" x2="85" y2="150" stroke="#f97316" stroke-width="1" stroke-dasharray="3,2" opacity=".6"/>
+        <path d="M85,108 L100,108 L100,93" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="97" y="103" fill="#fbbf24" font-size="8" font-family="sans-serif">~90°</text>
+        <!-- Opx -->
+        <text x="250" y="22" fill="#4ade80" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Opx (사방휘석)</text>
+        <text x="250" y="36" fill="#94a3b8" font-size="9" text-anchor="middle" font-family="sans-serif">쪼개짐 ~90°, 소광각 ~0° (직소광!)</text>
+        <polygon points="215,75 228,55 272,55 285,75 285,130 272,150 228,150 215,130" fill="rgba(74,222,128,.1)" stroke="#4ade80" stroke-width="1.5"/>
+        <line x1="215" y1="102" x2="285" y2="102" stroke="#4ade80" stroke-width="1" stroke-dasharray="3,2" opacity=".6"/>
+        <line x1="250" y1="55" x2="250" y2="150" stroke="#4ade80" stroke-width="1" stroke-dasharray="3,2" opacity=".6"/>
+        <path d="M250,108 L263,108 L263,95" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="260" y="104" fill="#fbbf24" font-size="8" font-family="sans-serif">90°</text>
+        <text x="250" y="172" fill="#4ade80" font-size="9" text-anchor="middle" font-family="sans-serif">직소광 = XP에서 결정축과 편광 평행 시 꺼짐</text>
+        <!-- Amphibole -->
+        <text x="415" y="22" fill="#22d3ee" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">Amphibole (각섬석)</text>
+        <text x="415" y="36" fill="#94a3b8" font-size="9" text-anchor="middle" font-family="sans-serif">쪼개짐 ~56°/124°, 소광각 ~15~25°</text>
+        <polygon points="415,55 450,75 450,130 415,150 380,130 380,75" fill="rgba(34,211,238,.1)" stroke="#22d3ee" stroke-width="1.5"/>
+        <line x1="380" y1="90" x2="450" y2="115" stroke="#22d3ee" stroke-width="1" stroke-dasharray="3,2" opacity=".7"/>
+        <line x1="380" y1="115" x2="450" y2="90" stroke="#22d3ee" stroke-width="1" stroke-dasharray="3,2" opacity=".7"/>
+        <path d="M405,105 Q415,88 425,105" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="408" y="99" fill="#fbbf24" font-size="8" font-family="sans-serif">~56°</text>
+        <text x="415" y="190" fill="#22d3ee" font-size="9" text-anchor="middle" font-family="sans-serif">다이아몬드 모양으로 쪼개짐!</text>
+        <!-- 공통 레이블 -->
+        <text x="250" y="208" fill="#94a3b8" font-size="9" text-anchor="middle" font-family="sans-serif">단면에서 쪼개짐 방향 비교 — 각도가 핵심!</text>
+      </svg>
+    </div>
+
+    <div class="call cw"><span class="call-icon">⚠️</span><span>
+      <strong>Cpx vs Opx 가장 빠른 구별법:</strong><br>
+      XP에서 회전 → <em>직소광(0°) = Opx!</em> 사소광(기울어진 소광) = Cpx!<br>
+      Opx는 결정계가 사방정계(orthorhombic) → 결정축과 편광 방향이 일치할 때 꺼짐 → 소광각 0° (또는 아주 작음)<br>
+      Cpx는 단사정계(monoclinic) → 결정 c축이 편광과 기울어짐 → 소광각 ~35~45°
+    </span></div>
+  </div>
+
+  <!-- 광물 카드 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(34,211,238,.2)">💎</div><div><div class="ct">주요 광물 특성 카드</div></div></div>
+    <div class="mgrid">
+      <div class="mcard"><div class="mname">Olivine (감람석)</div><div class="mprop">PP색: <span>무색~연한 노랑</span><br>쪼개짐: <span>불완전 2방향 (~90°)</span><br>XP: <span>높은 간섭색 (2~3차)</span><br>형태: <span>짧은 주상~타원형</span><br>특징: <span>균열 발달, serpentine화 흔함. 고온 맨틀 광물</span></div></div>
+      <div class="mcard"><div class="mname">Garnet (석류석)</div><div class="mprop">PP색: <span>분홍~붉은색~무색</span><br>쪼개짐: <span>없음!</span><br>XP: <span>완전 암흑! (등방성, isotropic)</span><br>형태: <span>12면체, 둥근 편</span><br>특징: <span>XP 꺼짐 → 등방체계. Eclogite의 지시 광물</span></div></div>
+      <div class="mcard"><div class="mname">Glaucophane (남섬석)</div><div class="mprop">PP색: <span>파란색/보라색 → 강한 다색성!</span><br>쪼개짐: <span>각섬석 56°</span><br>특징: <span>Blueschist의 지시 광물. PP에서 파란색이면 glaucophane!</span><br>환경: <span>고압 저온 (subduction)</span></div></div>
+      <div class="mcard"><div class="mname">Omphacite (옴파사이트)</div><div class="mprop">PP색: <span>진한 초록색</span><br>쪼개짐: <span>Cpx처럼 ~87°</span><br>소광각: <span>~35~45°</span><br>특징: <span>Na-Al성분 Cpx. Eclogite 지시 광물!</span><br>환경: <span>초고압 환경</span></div></div>
+      <div class="mcard"><div class="mname">Serpentine (사문석)</div><div class="mprop">PP색: <span>연녹색~노랑</span><br>형태: <span>섬유상, 비늘 모양</span><br>XP: <span>낮은 간섭색 (1차 회색~황색)</span><br>특징: <span>Olivine 수화산물 (hydrous). 섭입대 수화광물 대표</span></div></div>
+      <div class="mcard"><div class="mname">Hornblende (혼블렌드)</div><div class="mprop">PP색: <span>진한 갈색~녹색~검정</span><br>다색성: <span>강함</span><br>쪼개짐: <span>각섬석 56°</span><br>특징: <span>각섬암(amphibolite)의 주 광물. 중압 변성 환경</span></div></div>
+      <div class="mcard"><div class="mname">Plagioclase (사장석)</div><div class="mprop">PP색: <span>무색</span><br>XP: <span>반복 쌍정(polysynthetic twinning) = 줄무늬!</span><br>특징: <span>줄무늬 = plagioclase 확인 방법. 소광각으로 성분 추정 가능</span></div></div>
+      <div class="mcard"><div class="mname">Quartz (석영)</div><div class="mprop">PP색: <span>무색</span><br>쪼개짐: <span>없음 (패각상 단구)</span><br>XP: <span>낮은 간섭색 (1차 회색~황색)</span><br>특징: <span>Undulatory extinction (파상소광) = 변형된 석영! 전단대(shear zone)에서 중요 변형 지시자</span></div></div>
+      <div class="mcard"><div class="mname">Lawsonite (로손석)</div><div class="mprop">PP색: <span>무색~연파랑</span><br>형태: <span>장방형, 뚜렷한 쪼개짐</span><br>XP: <span>높은 간섭색</span><br>특징: <span>고압 저온(HP/LT) 지시 광물. Blueschist의 핵심. 차가운 슬랩!</span></div></div>
+      <div class="mcard"><div class="mname">Orthopyroxene (Opx)</div><div class="mprop">PP색: <span>무색~연분홍~갈색</span><br>소광각: <span>직소광(0°)! ← 핵심</span><br>쪼개짐: <span>~88° (거의 직각)</span><br>특징: <span>Peridotite에서 olivine과 공존. Porphyroclast로 자주 산출</span></div></div>
+      <div class="mcard"><div class="mname">Clinopyroxene (Cpx)</div><div class="mprop">PP색: <span>무색~연초록~갈색</span><br>소광각: <span>사소광 ~35~45°</span><br>쪼개짐: <span>~87°</span><br>특징: <span>단순 쌍정 흔함. Eclogite: omphacite. 일반: augite, diopside</span></div></div>
+      <div class="mcard"><div class="mname">Spinel (첨정석)</div><div class="mprop">PP색: <span>붉은색~갈색~불투명</span><br>쪼개짐: <span>없음</span><br>XP: <span>등방성 → 암흑 (garnet처럼)</span><br>특징: <span>Peridotite에서 소량. 작고 불규칙 형태. Sp로 표기</span></div></div>
+    </div>
+  </div>
+
+  <!-- 편광현미경 요령 -->
+  <div class="card">
+    <div class="card-h"><div class="ci" style="background:rgba(34,211,238,.2)">🔭</div><div><div class="ct">편광현미경 관찰 요령 — PP vs XP</div></div></div>
+    <div class="grid2">
+      <div>
+        <div style="color:var(--a1);font-weight:700;margin-bottom:8px;font-size:.88rem">PP (단편광, Plane-polarized light)</div>
+        <ul style="font-size:.83rem;line-height:2;color:var(--muted);padding-left:14px;">
+          <li>광물 고유 색깔 확인</li>
+          <li>다색성(pleochroism) 확인 → 회전 시 색 변하면 多色성 강함</li>
+          <li>쪼개짐(cleavage) 방향 확인</li>
+          <li>굴절률 대략 비교 (Becke line)</li>
+          <li>포유물(inclusion) 관찰</li>
+          <li>결정 형태(habit) 파악</li>
+        </ul>
+      </div>
+      <div>
+        <div style="color:var(--a2);font-weight:700;margin-bottom:8px;font-size:.88rem">XP (직교편광, Cross-polarized light)</div>
+        <ul style="font-size:.83rem;line-height:2;color:var(--muted);padding-left:14px;">
+          <li>간섭색 → 복굴절률(birefringence) 판단</li>
+          <li>소광각(extinction angle) 측정</li>
+          <li>등방성 광물 = 완전 암흑 (garnet, spinel)</li>
+          <li>쌍정(twinning) 확인 (Pl의 줄무늬)</li>
+          <li>파상소광(undulatory extinction) → 변형된 quartz!</li>
+          <li>광축 방향 분석 (CPO/LPO 분석)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="call ck"><span class="call-icon">🗝️</span><span>
+      <strong>빠른 구별 트릭 모음:</strong><br>
+      • <strong>XP에서 꺼짐(등방체)</strong> → Garnet 또는 Spinel (둘 다 cubic)<br>
+      • <strong>PP에서 파란색 + 강한 다색성</strong> → Glaucophane → <em>blueschist 환경!</em><br>
+      • <strong>XP에서 반복 줄무늬</strong> → Plagioclase (polysynthetic twinning)<br>
+      • <strong>XP 소광각 0° (직소광)</strong> → Opx (사방정계)<br>
+      • <strong>XP 소광각 ~35~45°</strong> → Cpx (단사정계)<br>
+      • <strong>파상소광(물결 모양 꺼짐)</strong> → 변형된 Quartz → 전단대!<br>
+      • <strong>PP 진한 초록색 + Cpx 소광각</strong> → Omphacite → <em>eclogite 환경!</em>
+    </span></div>
+  </div>
+</div>
+
+<div class="scroll-hint">탭을 눌러 섹션 이동 · 항목 클릭 시 상세 설명 펼침</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function tog(el){
+  const d=el.nextElementSibling;
+  if(d&&d.classList.contains('td')){d.classList.toggle('open');}
+}
+function qa(btn){
+  const a=btn.nextElementSibling;
+  if(a.classList.contains('show')){a.classList.remove('show');btn.textContent='정답 보기 ▼';}
+  else{a.classList.add('show');btn.textContent='정답 접기 ▲';}
+}
+document.querySelectorAll('.tm').forEach((el,i)=>{
+  if(i===0){const d=el.nextElementSibling;if(d&&d.classList.contains('td'))d.classList.add('open');}
+});
+</script>
+</body>
+</html>

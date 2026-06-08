@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physical Chemistry — 17E·17F·20G</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['$$', '$$']],
+    tags: 'none'
+  },
+  output: { font: 'mathjax-stix2' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/@mathjax/mathjax-stix2-font@4.0.0/tex-mml-chtml-mathjax-stix2.js"></script>
+
+<style>
+/* ─── CSS Variables ─── */
+:root {
+  --header-bg: #1a3a2a;
+  --accent: #2d7a4a;
+  --accent-light: #3a9a5e;
+  --bg: #f7f5f0;
+  --bg-card: #ffffff;
+  --bg-card2: #f0ede6;
+  --text: #1a1a1a;
+  --text-sub: #555;
+  --text-muted: #888;
+  --border: #d8d4cc;
+
+  /* concept box colors */
+  --blue: #1a5fa8;
+  --blue-bg: #e8f0fb;
+  --blue-border: #93bdf0;
+  --amber: #8a5c00;
+  --amber-bg: #fef3d0;
+  --amber-border: #f0c84a;
+  --green: #1a5c30;
+  --green-bg: #e6f5ec;
+  --green-border: #70c990;
+  --red: #a01a1a;
+  --red-bg: #fde8e8;
+  --red-border: #f09090;
+  --purple: #5a1a8a;
+  --purple-bg: #f0e8fc;
+  --purple-border: #c090f0;
+}
+
+[data-theme="dark"] {
+  --bg: #12110e;
+  --bg-card: #1e1c18;
+  --bg-card2: #252320;
+  --text: #e8e4dc;
+  --text-sub: #aaa;
+  --text-muted: #666;
+  --border: #3a3730;
+
+  --blue-bg: #0d1f38;
+  --blue-border: #2a5080;
+  --amber-bg: #2a1f00;
+  --amber-border: #806030;
+  --green-bg: #0d2018;
+  --green-border: #2a6040;
+  --red-bg: #2a0d0d;
+  --red-border: #802020;
+  --purple-bg: #1a0d2a;
+  --purple-border: #602080;
+}
+
+/* ─── Reset & Base ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.75;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* paper texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Header ─── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--header-bg);
+  color: #fff;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+.header-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #c8e8d4;
+}
+
+.header-sub {
+  font-size: 0.75rem;
+  color: #7aaa8a;
+  margin-left: 0.75rem;
+}
+
+.theme-btn {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #c8e8d4;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: 'IBM Plex Sans KR', sans-serif;
+}
+.theme-btn:hover { background: rgba(255,255,255,0.22); }
+
+/* ─── Layout ─── */
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* ─── Chapter tabs ─── */
+.chapter-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.ch-tab {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 2px solid var(--border);
+  background: var(--bg-card2);
+  color: var(--text-sub);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'IBM Plex Sans KR', sans-serif;
+}
+.ch-tab:hover { border-color: var(--accent); color: var(--accent); }
+.ch-tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* ─── Section (chapter) ─── */
+.ch-section { display: none; }
+.ch-section.active { display: block; }
+
+/* ─── Section tabs (within chapter) ─── */
+.sec-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+}
+.sec-tab {
+  padding: 8px 18px;
+  font-size: 0.83rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+  font-family: 'IBM Plex Sans KR', sans-serif;
+}
+.sec-tab:hover { color: var(--accent); }
+.sec-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.sec-panel { display: none; }
+.sec-panel.active { display: block; }
+
+/* ─── Typography ─── */
+h2 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.45rem;
+  color: var(--accent);
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--green-border);
+}
+
+h3 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.1rem;
+  color: var(--text);
+  margin: 1.8rem 0 0.8rem;
+}
+
+h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 1.2rem 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+p { margin-bottom: 0.9rem; color: var(--text-sub); }
+p:last-child { margin-bottom: 0; }
+
+/* ─── Concept boxes ─── */
+.box {
+  border-left: 4px solid;
+  border-radius: 0 8px 8px 0;
+  padding: 0.9rem 1.1rem;
+  margin: 1rem 0;
+  font-size: 0.92rem;
+}
+.box-title {
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.4rem;
+}
+
+.box.blue { background: var(--blue-bg); border-color: var(--blue); }
+.box.blue .box-title { color: var(--blue); }
+.box.amber { background: var(--amber-bg); border-color: var(--amber); }
+.box.amber .box-title { color: var(--amber); }
+.box.green { background: var(--green-bg); border-color: var(--accent); }
+.box.green .box-title { color: var(--green); }
+.box.red { background: var(--red-bg); border-color: var(--red); }
+.box.red .box-title { color: var(--red); }
+.box.purple { background: var(--purple-bg); border-color: var(--purple); }
+.box.purple .box-title { color: var(--purple); }
+
+/* ─── Derivation steps ─── */
+.deriv {
+  counter-reset: step;
+  margin: 1.2rem 0;
+}
+.step {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+  align-items: flex-start;
+}
+.step-num {
+  counter-increment: step;
+  min-width: 28px;
+  height: 28px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.78rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.step-body { flex: 1; }
+.step-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1px 7px;
+  border-radius: 4px;
+  margin-left: 6px;
+  background: var(--amber-bg);
+  color: var(--amber);
+  border: 1px solid var(--amber-border);
+  vertical-align: middle;
+}
+.step-tag.axiom { background: var(--blue-bg); color: var(--blue); border-color: var(--blue-border); }
+.step-tag.definition { background: var(--purple-bg); color: var(--purple); border-color: var(--purple-border); }
+.step-tag.result { background: var(--green-bg); color: var(--green); border-color: var(--green-border); }
+.step-tag.req { background: var(--red-bg); color: var(--red); border-color: var(--red-border); }
+
+/* ─── Math display ─── */
+.math-block {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  margin: 0.8rem 0;
+  overflow-x: auto;
+  font-size: 1.05em;
+}
+.math-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: 'IBM Plex Mono', monospace;
+  float: right;
+}
+
+/* ─── Comparison table ─── */
+.cmp-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.88rem;
+}
+.cmp-table th {
+  background: var(--header-bg);
+  color: #c8e8d4;
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 500;
+}
+.cmp-table td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-sub);
+  vertical-align: top;
+}
+.cmp-table tr:nth-child(even) td { background: var(--bg-card2); }
+.cmp-table code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85em;
+  background: var(--bg-card2);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* ─── Jablonski diagram ─── */
+.jablonski {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  line-height: 1.8;
+  overflow-x: auto;
+  color: var(--text-sub);
+}
+
+/* ─── Exam toggle ─── */
+.exam-q {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 0.8rem;
+  overflow: hidden;
+}
+.exam-q summary {
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-card2);
+  color: var(--text);
+  font-size: 0.9rem;
+  list-style: none;
+}
+.exam-q summary::-webkit-details-marker { display: none; }
+.exam-q summary::before {
+  content: '▶';
+  font-size: 0.65rem;
+  color: var(--accent);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.exam-q[open] summary::before { transform: rotate(90deg); }
+.exam-ans {
+  padding: 1rem 1.1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.88rem;
+  color: var(--text-sub);
+  background: var(--bg-card);
+}
+.answer-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 6px;
+}
+.answer-tag.deriv { background: #e8f0fb; color: #1a5fa8; border: 1px solid #93bdf0; }
+.answer-tag.concept { background: #fef3d0; color: #8a5c00; border: 1px solid #f0c84a; }
+.answer-tag.calc { background: #e6f5ec; color: #1a5c30; border: 1px solid #70c990; }
+
+.q-type {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.q-type.d { background: var(--blue-bg); color: var(--blue); }
+.q-type.c { background: var(--amber-bg); color: var(--amber); }
+.q-type.n { background: var(--green-bg); color: var(--green); }
+
+/* ─── Spin diagram SVG-style ─── */
+.spin-diagram {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1.5rem;
+  background: var(--bg-card2);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin: 1rem 0;
+}
+.spin-state {
+  text-align: center;
+}
+.spin-state-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.orb-row {
+  display: flex;
+  gap: 0.3rem;
+  justify-content: center;
+  margin: 3px 0;
+}
+.orb {
+  width: 36px;
+  height: 22px;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  background: var(--bg-card);
+}
+.orb-name {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 3px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.spin-state-name {
+  font-weight: 700;
+  color: var(--accent);
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+
+<body>
+<header>
+  <div style="display:flex;align-items:baseline;gap:4px">
+    <span class="header-title">Physical Chemistry 1</span>
+    <span class="header-sub">17E · 17F · 20G — Mechanisms, Enzymes, Photochemistry</span>
+  </div>
+  <button class="theme-btn" onclick="toggleTheme()">🌙 Dark</button>
+</header>
+
+<div class="container">
+
+  <!-- Chapter tabs -->
+  <div class="chapter-tabs">
+    <button class="ch-tab active" onclick="showCh('17e')">17E — Mechanisms</button>
+    <button class="ch-tab" onclick="showCh('17f')">17F / 20H — Enzymes</button>
+    <button class="ch-tab" onclick="showCh('20g')">20G — Photochemistry</button>
+    <button class="ch-tab" onclick="showCh('exam')">📝 출제 예상</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       17E — REACTION MECHANISMS
+  ═══════════════════════════════════════════════ -->
+  <div id="ch-17e" class="ch-section active">
+    <div class="sec-tabs">
+      <button class="sec-tab active" onclick="showSec('17e','overview')">개요</button>
+      <button class="sec-tab" onclick="showSec('17e','ssa')">Steady-State</button>
+      <button class="sec-tab" onclick="showSec('17e','preq')">Pre-equilibrium</button>
+      <button class="sec-tab" onclick="showSec('17e','kinterm')">Kinetic/Thermo Control</button>
+    </div>
+
+    <!-- Overview -->
+    <div id="17e-overview" class="sec-panel active">
+      <h2>17E — Reaction Mechanisms</h2>
+
+      <div class="box blue">
+        <div class="box-title">🔬 핵심 질문</div>
+        전체 반응의 rate law는 individual step들의 rate constant로 어떻게 표현되는가?
+      </div>
+
+      <h3>Elementary Reactions</h3>
+      <p>대부분의 반응은 더 단순한 <strong>elementary steps</strong>의 연속으로 일어나. Elementary reaction에서만 molecularity = order가 보장돼.</p>
+
+      <table class="cmp-table">
+        <tr><th>종류</th><th>예</th><th>Rate law</th><th>Order</th></tr>
+        <tr><td>Unimolecular</td><td>A → P</td><td>\(v = k_r[A]\)</td><td>1차</td></tr>
+        <tr><td>Bimolecular</td><td>A + B → P</td><td>\(v = k_r[A][B]\)</td><td>2차</td></tr>
+      </table>
+
+      <div class="box amber">
+        <div class="box-title">⚠️ 주의</div>
+        전체 반응의 rate law는 화학량론 계수에서 직접 쓸 수 <strong>없어</strong>. Elementary step에서만 가능.
+      </div>
+
+      <h3>세 가지 근사법</h3>
+      <table class="cmp-table">
+        <tr><th>근사법</th><th>조건</th><th>핵심 아이디어</th></tr>
+        <tr><td>Rate-determining step</td><td>한 step이 나머지보다 훨씬 느림</td><td>느린 step이 전체 속도를 결정</td></tr>
+        <tr><td>Steady-state (SSA)</td><td>중간체 농도가 낮고 일정</td><td>\(d[I]/dt \approx 0\)</td></tr>
+        <tr><td>Pre-equilibrium</td><td>앞 단계가 빠른 평형, 뒤가 느림</td><td>평형 상수로 \([I]\) 표현</td></tr>
+      </table>
+    </div>
+
+    <!-- SSA -->
+    <div id="17e-ssa" class="sec-panel">
+      <h2>Steady-State Approximation</h2>
+
+      <div class="box blue">
+        <div class="box-title">🔬 물리적 직관</div>
+        중간체 I가 생성되는 속도 ≈ 소모되는 속도. I가 생성되자마자 소비되어 쌓이지 못하는 상태. 깔때기에 물이 들어오는 속도 = 나가는 속도 → 수위(농도) 일정.
+      </div>
+
+      <h3>시스템: A →(k_a)→ I →(k_b)→ P</h3>
+      <h4>조건: k_a ≪ k_b</h4>
+
+      <p>이 조건이 없으면 SSA가 성립 안 해. k_b가 작으면 I가 빠르게 쌓이니까.</p>
+
+      <h3>유도</h3>
+      <div class="deriv">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            ODE 세우기 <span class="step-tag axiom">ODE</span>
+            <div class="math-block">
+              $$\frac{d[A]}{dt} = -k_a[A], \quad \frac{d[I]}{dt} = k_a[A] - k_b[I], \quad \frac{d[P]}{dt} = k_b[I]$$
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            SSA 적용: [I]를 [A]로 표현 <span class="step-tag definition">SSA</span>
+            <div class="math-block">
+              $$\frac{d[I]}{dt} \approx 0 \implies k_a[A] = k_b[I] \implies [I] = \frac{k_a}{k_b}[A]$$
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            생성물 속도 <span class="step-tag result">Result</span>
+            <div class="math-block">
+              $$\frac{d[P]}{dt} = k_b[I] = k_b \cdot \frac{k_a}{k_b}[A] = k_a[A] = k_a[A]_0 e^{-k_a t}$$
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            [P] 적분 <span class="step-tag">Integration</span>
+            <div class="math-block">
+              $$[P] = k_a[A]_0 \int_0^t e^{-k_a t'} dt' = (1 - e^{-k_a t})[A]_0$$
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box green">
+        <div class="box-title">✅ 결론</div>
+        SSA에서 [P]는 마치 A → P인 직접 1차 반응처럼 보여. 중간체 I의 존재가 숨겨진 거야. 이게 많은 복잡한 메커니즘이 겉으로는 단순한 rate law를 보이는 이유.
+      </div>
+
+      <div class="box amber">
+        <div class="box-title">⚠️ SSA 성립 조건</div>
+        k_b ≫ k_a일 때만 유효. k_b가 작으면 I가 쌓여서 d[I]/dt ≈ 0 가정이 깨짐. 정확한 해(consecutive reaction 공식)와 비교하면 k_b/k_a가 클수록 SSA가 더 정확.
+      </div>
+    </div>
+
+    <!-- Pre-equilibrium -->
+    <div id="17e-preq" class="sec-panel">
+      <h2>Pre-equilibrium</h2>
+
+      <div class="box blue">
+        <div class="box-title">🔬 아이디어</div>
+        A + B ⇌ I (빠른 평형, k_a, k_a') 먼저 설립된 후 I → P (느린 단계, k_b). 조건: k_b ≪ k_a, k_a'. 중간체 [I]를 평형 상수로 표현 가능.
+      </div>
+
+      <h3>스킴: A + B ⇌ I → P</h3>
+
+      <div class="deriv">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            Pre-equilibrium 조건: [I]를 K로 표현 <span class="step-tag definition">Pre-eq</span>
+            <div class="math-block">
+              $$K = \frac{[I]}{[A][B]} = \frac{k_a}{k_{a'}} \implies [I] = K[A][B]$$
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            전체 rate <span class="step-tag result">Result</span>
+            <div class="math-block">
+              $$v = k_b[I] = k_b K[A][B] = \frac{k_a k_b}{k_{a'}}[A][B]$$
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box green">
+        <div class="box-title">✅ 결론</div>
+        전체 rate law는 2차(\([A][B]\))처럼 보이지만, rate constant는 세 elementary constants의 조합. 실험으로 측정한 k_obs = k_a k_b / k_a'.
+      </div>
+
+      <h3>SSA vs Pre-equilibrium 비교</h3>
+      <table class="cmp-table">
+        <tr><th>항목</th><th>SSA</th><th>Pre-equilibrium</th></tr>
+        <tr><td>조건</td><td>k_b ≫ k_a (중간체 빨리 소비)</td><td>k_b ≪ k_a' (앞 단계가 훨씬 빠름)</td></tr>
+        <tr><td>[I] 결정</td><td>동적 균형(kinetic SSA)</td><td>열역학적 평형(K)</td></tr>
+        <tr><td>중간체 농도</td><td>낮고 일정</td><td>낮지만 평형값</td></tr>
+        <tr><td>적용 예</td><td>효소 반응 (MM)</td><td>분자 반응 중간체</td></tr>
+      </table>
+    </div>
+
+    <!-- Kinetic/Thermo Control -->
+    <div id="17e-kinterm" class="sec-panel">
+      <h2>Kinetic vs Thermodynamic Control</h2>
+
+      <div class="box blue">
+        <div class="box-title">🔬 상황</div>
+        A + B → P₁ (k_{r,1}) 과 A + B → P₂ (k_{r,2}) 두 경로가 경쟁할 때, 어떤 생성물이 우세한가?
+      </div>
+
+      <h3>Kinetic Control (초기, 비가역적)</h3>
+      <div class="math-block">
+        $$\frac{[P_2]}{[P_1]} = \frac{k_{r,2}}{k_{r,1}}$$
+        <div class="math-label">활성화 에너지가 낮은 경로 우세</div>
+      </div>
+      <p>반응 초기, 평형 도달 전. 더 빠른 경로(E_a 낮은 쪽)의 생성물이 우세. 반응이 비가역적이거나 시간이 짧을 때.</p>
+
+      <h3>Thermodynamic Control (충분한 시간, 평형)</h3>
+      <div class="math-block">
+        $$\frac{[P_2]}{[P_1]} = \frac{K_2}{K_1} = e^{-(\Delta G^\circ_{P_2} - \Delta G^\circ_{P_1})/RT}$$
+        <div class="math-label">더 안정한 생성물 우세</div>
+      </div>
+      <p>충분히 반응을 진행시키면 Gibbs 에너지가 낮은(더 안정한) 생성물이 우세.</p>
+
+      <div class="box amber">
+        <div class="box-title">⚠️ 핵심 포인트</div>
+        두 컨트롤이 <strong>다른 생성물</strong>을 선호할 수 있어! 빠른 경로(kinetic product)가 열역학적으로 덜 안정할 수 있음. 온도↑ → 반응 가역성↑ → thermodynamic control로 이동. 유기화학에서 1,2- vs 1,4-addition이 대표적 예시.
+      </div>
+
+      <table class="cmp-table">
+        <tr><th></th><th>Kinetic control</th><th>Thermodynamic control</th></tr>
+        <tr><td>조건</td><td>낮은 온도, 짧은 시간</td><td>높은 온도, 긴 반응 시간</td></tr>
+        <tr><td>결정 인자</td><td>활성화 에너지 (ΔG‡)</td><td>생성물 안정성 (ΔG°)</td></tr>
+        <tr><td>가역성</td><td>비가역적</td><td>가역적 (평형 도달)</td></tr>
+      </table>
+    </div>
+  </div><!-- /17e -->
+
+  <!-- ═══════════════════════════════════════════════
+       17F / 20H — ENZYMES
+  ═══════════════════════════════════════════════ -->
+  <div id="ch-17f" class="ch-section">
+    <div class="sec-tabs">
+      <button class="sec-tab active" onclick="showSec('17f','enzyme')">효소 기본</button>
+      <button class="sec-tab" onclick="showSec('17f','mm')">MM 메커니즘</button>
+      <button class="sec-tab" onclick="showSec('17f','lbplot')">LB Plot & 효율</button>
+    </div>
+
+    <!-- Enzyme basics -->
+    <div id="17f-enzyme" class="sec-panel active">
+      <h2>20H — Enzymes</h2>
+
+      <div class="box blue">
+        <div class="box-title">🔬 효소의 본질</div>
+        Homogeneous biological catalyst. E_a를 낮춰 k_r 증가. ΔG_rxn 불변 → K 불변. RDS를 우회하는 alternative path 제공.
+      </div>
+
+      <h3>기질 결합 모델</h3>
+      <table class="cmp-table">
+        <tr><th></th><th>Lock-and-key</th><th>Induced fit</th></tr>
+        <tr><td>아이디어</td><td>처음부터 딱 맞는 3D 구조</td><td>기질 결합 → 활성부위 구조 변화</td></tr>
+        <tr><td>비유</td><td>자물쇠-열쇠</td><td>손 → 장갑 모양 변형</td></tr>
+        <tr><td>실험 증거</td><td>❌</td><td>✅ (현재 정설)</td></tr>
+      </table>
+
+      <h3>실험 관찰 패턴</h3>
+      <div class="box amber">
+        <div class="box-title">📊 [S]₀ 변화에 따른 반응 속도</div>
+        <ul style="margin-left:1rem;margin-top:0.4rem;color:var(--text-sub)">
+          <li>[S]₀ 낮을 때: v ∝ [S]₀ → 1차 거동</li>
+          <li>[S]₀ 높을 때: v → v_max (포화, 0차 거동)</li>
+          <li>[E]₀ ↑: v_max 비례 증가</li>
+        </ul>
+        <p style="margin-top:0.5rem">이 hyperbolic 거동을 설명하는 메커니즘이 Michaelis-Menten.</p>
+      </div>
+    </div>
+
+    <!-- MM mechanism -->
+    <div id="17f-mm" class="sec-panel">
+      <h2>Michaelis-Menten 메커니즘 유도</h2>
+
+      <h3>메커니즘</h3>
+      <div class="math-block">
+        $$E + S \underset{k_a'}{\stackrel{k_a}{\rightleftharpoons}} ES \xrightarrow{k_b} P + E$$
+      </div>
+
+      <div class="deriv">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            관측 대상: v = k_b[ES] <span class="step-tag definition">목표</span>
+            <p style="margin-top:0.4rem">P가 만들어지는 속도. 문제는 [ES]를 모른다 → [E]₀, [S]₀로 표현 필요.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            ES에 SSA 적용 <span class="step-tag definition">SSA</span>
+            <div class="math-block">
+              $$\frac{d[ES]}{dt} = k_a[E][S] - k_a'[ES] - k_b[ES] \approx 0$$
+              $$[ES] = \frac{k_a[E][S]}{k_a' + k_b} = \frac{[E][S]}{K_M}, \quad K_M = \frac{k_a' + k_b}{k_a}$$
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            효소 보존: [E]₀ = [E] + [ES] → [E] = [E]₀ − [ES] 대입 <span class="step-tag req">Conservation</span>
+            <div class="math-block">
+              $$[ES] = \frac{([E]_0 - [ES])[S]}{K_M} \implies [ES](K_M + [S]) = [E]_0[S]$$
+              $$[ES] = \frac{[E]_0[S]}{K_M + [S]}$$
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            [S] ≈ [S]₀ 근사 (기질이 효소보다 훨씬 많음) 후 최종 식 <span class="step-tag result">MM 식</span>
+            <div class="math-block">
+              $$\boxed{v = \frac{k_b[E]_0}{1 + K_M/[S]_0} = \frac{v_{max}}{1 + K_M/[S]_0}}, \quad v_{max} = k_b[E]_0$$
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>K_M의 물리적 의미</h3>
+      <div class="box purple">
+        <div class="box-title">📐 K_M 정의</div>
+        <strong>v = v_max/2 가 되는 [S]₀ 값.</strong> K_M이 작을수록 낮은 기질 농도에서 효소가 포화됨 = 기질에 대한 affinity가 높다.
+        <br><br>
+        K_M = (k_a' + k_b)/k_a. 만약 k_b ≪ k_a'이면 K_M ≈ k_a'/k_a = 1/K_binding. 즉 결합 상수의 역수.
+      </div>
+
+      <h3>극한 분석</h3>
+      <table class="cmp-table">
+        <tr><th>조건</th><th>근사</th><th>결과</th><th>해석</th></tr>
+        <tr><td>[S]₀ ≪ K_M</td><td>분모 ≈ K_M/[S]₀</td><td>\(v \approx \frac{k_b}{K_M}[S]_0[E]_0\)</td><td>1차 in [S]₀, 효소 항상 비어있음</td></tr>
+        <tr><td>[S]₀ ≫ K_M</td><td>분모 ≈ 1</td><td>\(v \approx k_b[E]_0 = v_{max}\)</td><td>0차 in [S]₀, 효소 완전 포화</td></tr>
+      </table>
+    </div>
+
+    <!-- LB plot & efficiency -->
+    <div id="17f-lbplot" class="sec-panel">
+      <h2>Lineweaver-Burk Plot & 촉매 효율</h2>
+
+      <h3>Lineweaver-Burk 직선화</h3>
+      <p>MM 식의 역수를 취하면 직선 관계 도출:</p>
+      <div class="math-block">
+        $$\frac{1}{v} = \frac{1}{v_{max}} + \frac{K_M}{v_{max}} \cdot \frac{1}{[S]_0}$$
+        <div class="math-label">y = b + mx 형태</div>
+      </div>
+
+      <table class="cmp-table">
+        <tr><th>그래프 요소</th><th>값</th></tr>
+        <tr><td>기울기 (slope)</td><td>\(K_M / v_{max}\)</td></tr>
+        <tr><td>y절편</td><td>\(1/v_{max}\)</td></tr>
+        <tr><td>x절편</td><td>\(-1/K_M\)</td></tr>
+      </table>
+
+      <div class="box amber">
+        <div class="box-title">왜 직선화가 필요한가?</div>
+        Hyperbola fitting보다 선형 회귀가 훨씬 안정적. 실험 데이터에서 K_M, v_max를 간단하게 결정.
+        단점: 저농도([S]₀ 낮은) 데이터에서 오차가 증폭됨. 요즘은 비선형 fitting도 많이 씀.
+      </div>
+
+      <h3>Turnover frequency & 촉매 효율</h3>
+      <div class="math-block">
+        $$k_{cat} = k_b = \frac{v_{max}}{[E]_0} \qquad \text{(Turnover frequency)}$$
+      </div>
+      <p>단위 시간당 효소 하나의 활성부위가 처리하는 기질 수.</p>
+
+      <div class="math-block">
+        $$\eta = \frac{k_{cat}}{K_M} = \frac{k_a k_b}{k_a' + k_b} \qquad \text{(Catalytic efficiency)}$$
+      </div>
+
+      <div class="box purple">
+        <div class="box-title">📐 효율 상한선 — Diffusion limit</div>
+        k_b ≫ k_a' 극한에서:
+        $$\eta \to \frac{k_a k_b}{k_b} = k_a$$
+        k_a는 E+S → ES 결합 속도상수 = <strong>확산 속도</strong>에 해당. 효소가 완벽하면 기질이 확산으로 도달하는 속도만큼만 처리 가능. Catalase: η = 4.0 × 10⁸ dm³ mol⁻¹ s⁻¹ → "catalytic perfection".
+      </div>
+
+      <div class="box green">
+        <div class="box-title">✅ 왜 k_cat 대신 η를 쓰나?</div>
+        k_cat이 높아도 K_M이 크면(affinity 낮으면) 실제로는 비효율적. η = k_cat/K_M은 속도와 affinity를 동시에 반영하는 진짜 효율 지표.
+      </div>
+    </div>
+  </div><!-- /17f -->
+
+  <!-- ═══════════════════════════════════════════════
+       20G — PHOTOCHEMICAL KINETICS
+  ═══════════════════════════════════════════════ -->
+  <div id="ch-20g" class="ch-section">
+    <div class="sec-tabs">
+      <button class="sec-tab active" onclick="showSec('20g','spin')">스핀 & Singlet/Triplet</button>
+      <button class="sec-tab" onclick="showSec('20g','processes')">Photophysical 과정</button>
+      <button class="sec-tab" onclick="showSec('20g','qyield')">Quantum Yield</button>
+      <button class="sec-tab" onclick="showSec('20g','quench')">Quenching & Stern-Volmer</button>
+    </div>
+
+    <!-- Spin -->
+    <div id="20g-spin" class="sec-panel active">
+      <h2>스핀 & Singlet / Triplet</h2>
+
+      <h3>전자 스핀의 조합 규칙</h3>
+      <p>전자 하나: s = 1/2, m_s = ±1/2. 전자 두 개를 조합하면 S_total = 0 또는 1.</p>
+      <p><strong>다중도 = 2S_total + 1</strong></p>
+
+      <div class="spin-diagram">
+        <div class="spin-state">
+          <div class="spin-state-label">S₀ (ground)</div>
+          <div class="orb-row"><div class="orb">↑↓</div></div>
+          <div class="orb-name">HOMO</div>
+          <div class="spin-state-name">Singlet</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:3px">S_total = 0, 다중도 1</div>
+        </div>
+        <div class="spin-state">
+          <div class="spin-state-label">S* (excited singlet)</div>
+          <div class="orb-row"><div class="orb">↑</div></div>
+          <div class="orb-name">LUMO</div>
+          <div class="orb-row"><div class="orb">↓</div></div>
+          <div class="orb-name">HOMO</div>
+          <div class="spin-state-name">Singlet</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:3px">S_total = 0, 다중도 1</div>
+        </div>
+        <div class="spin-state">
+          <div class="spin-state-label">T* (excited triplet)</div>
+          <div class="orb-row"><div class="orb">↑</div></div>
+          <div class="orb-name">LUMO</div>
+          <div class="orb-row"><div class="orb">↑</div></div>
+          <div class="orb-name">HOMO</div>
+          <div class="spin-state-name" style="color:#c04a0a">Triplet</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:3px">S_total = 1, 다중도 3</div>
+        </div>
+      </div>
+
+      <h3>왜 ISC (S* → T*)는 forbidden인데 일어나나?</h3>
+      <div class="box amber">
+        <div class="box-title">⚠️ Selection Rule</div>
+        전자기 복사 전이에서 ΔS = 0만 허용. S* → T*는 ΔS = 1 → 금지.
+        <br><br>
+        그러나 ISC는 빛 흡수/방출이 <strong>아닌</strong> 비복사 과정. <strong>Spin-orbit coupling (SOC)</strong>이 스핀 상태를 혼합시켜 금지 전이를 부분적으로 허용. SOC ∝ Z⁴ → 무거운 원소(heavy atom)가 있으면 ISC가 빨라짐.
+      </div>
+
+      <h3>Fluorescence vs Phosphorescence</h3>
+      <table class="cmp-table">
+        <tr><th></th><th>Fluorescence</th><th>Phosphorescence</th></tr>
+        <tr><td>출발 상태</td><td>S* (singlet)</td><td>T* (triplet)</td></tr>
+        <tr><td>도착 상태</td><td>S₀</td><td>S₀</td></tr>
+        <tr><td>ΔS</td><td>0 (allowed)</td><td>1 (forbidden)</td></tr>
+        <tr><td>수명</td><td>ns (10⁻⁹ s)</td><td>ms ~ s</td></tr>
+        <tr><td>온도 의존</td><td>약함</td><td>강함 (충돌로 quench)</td></tr>
+        <tr><td>예</td><td>형광염료, GFP</td><td>야광 물질</td></tr>
+      </table>
+    </div>
+
+    <!-- Photophysical processes -->
+    <div id="20g-processes" class="sec-panel">
+      <h2>Photophysical Processes & Jablonski</h2>
+
+      <div class="box blue">
+        <div class="box-title">🔬 주요 과정 목록</div>
+        <table class="cmp-table" style="margin-top:0.5rem">
+          <tr><th>과정</th><th>식</th><th>특징</th></tr>
+          <tr><td>Absorption</td><td>S + hν → S*</td><td>빠름 (fs)</td></tr>
+          <tr><td>Fluorescence</td><td>S* → S + hν_f</td><td>ns, Stokes shift</td></tr>
+          <tr><td>Internal conversion (IC)</td><td>S* → S</td><td>ps, 비복사</td></tr>
+          <tr><td>Intersystem crossing (ISC)</td><td>S* → T*</td><td>ns~μs, SOC</td></tr>
+          <tr><td>Phosphorescence</td><td>T* → S + hν</td><td>ms~s, 느림</td></tr>
+          <tr><td>Collisional deactivation</td><td>S* + M → S + M</td><td>quenching</td></tr>
+          <tr><td>Singlet-singlet ET</td><td>S* + S → S + S*</td><td><strong>FRET의 기초</strong></td></tr>
+        </table>
+      </div>
+
+      <h3>Jablonski 다이어그램</h3>
+      <div class="jablonski">
+S₂  ─────────────────────
+     ↓ IC (ps, 매우 빠름)
+S₁ (= S*) ───────────────  ← 흡수 도착점
+     │ F (ns)    │ ISC (ns~μs)
+     ↓           ↓
+    S₀           T₁ (= T*)
+                  │ P (ms~s)
+                  ↓
+                 S₀
+
+F  = Fluorescence  (S*→S₀, allowed)
+P  = Phosphorescence (T*→S₀, forbidden but SOC)
+IC = Internal Conversion (vibrational relaxation)
+ISC= Intersystem Crossing (spin flip via SOC)
+      </div>
+
+      <div class="box amber">
+        <div class="box-title">🔗 FRET 연결</div>
+        Singlet-singlet energy transfer (S* + S → S + S*)가 Förster Resonance Energy Transfer(FRET)의 물리적 메커니즘. Donor S*의 여기 에너지가 dipole-dipole coupling으로 acceptor S에 전달. 이남기 교수님 smFRET 연구의 물화 기반.
+      </div>
+    </div>
+
+    <!-- Quantum yield -->
+    <div id="20g-qyield" class="sec-panel">
+      <h2>Primary Quantum Yield & φ_{F,0} 유도</h2>
+
+      <h3>Quantum yield 정의</h3>
+      <div class="math-block">
+        $$\phi = \frac{\text{number of events}}{\text{number of photons absorbed}} = \frac{v}{I_{abs}}$$
+      </div>
+
+      <div class="box green">
+        <div class="box-title">✅ 보존 법칙</div>
+        들뜬 상태는 어딘가로 반드시 가야 함:
+        $$\sum_i \phi_i = 1, \quad \phi_i = \frac{v_i}{\sum_j v_j}$$
+        예: \(\phi_F + \phi_{IC} + \phi_P + \phi_r = 1\)
+      </div>
+
+      <h3>φ_{F,0} 유도 — excited singlet state의 decay</h3>
+      <p>화학 반응 없이 흡수 + 형광 + IC + ISC만 있을 때:</p>
+
+      <div class="deriv">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            각 과정의 속도 정의 <span class="step-tag definition">Rate laws</span>
+            <div class="math-block">
+              $$v_{abs} = I_{abs}, \quad v_F = k_F[S^*], \quad v_{IC} = k_{IC}[S^*], \quad v_{ISC} = k_{ISC}[S^*]$$
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            S*에 SSA 적용 <span class="step-tag definition">SSA</span>
+            <div class="math-block">
+              $$\frac{d[S^*]}{dt} = I_{abs} - (k_F + k_{ISC} + k_{IC})[S^*] \approx 0$$
+              $$\therefore I_{abs} = (k_F + k_{ISC} + k_{IC})[S^*]$$
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            형광 quantum yield <span class="step-tag result">Result</span>
+            <div class="math-block">
+              $$\phi_{F,0} = \frac{v_F}{I_{abs}} = \frac{k_F[S^*]}{(k_F + k_{ISC} + k_{IC})[S^*]} = \boxed{\frac{k_F}{k_F + k_{ISC} + k_{IC}}}$$
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            관찰 수명 τ₀ (빛 끈 후 지수 감쇠) <span class="step-tag result">Lifetime</span>
+            <div class="math-block">
+              $$[S^*](t) = [S^*]_0 e^{-t/\tau_0}, \quad \tau_0 = \frac{1}{k_F + k_{ISC} + k_{IC}}$$
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            φ_{F,0}과 τ₀의 핵심 관계 <span class="step-tag result">Key relation</span>
+            <div class="math-block">
+              $$\tau_0 = \frac{\phi_{F,0}}{k_F} \implies k_F = \frac{\phi_{F,0}}{\tau_0}$$
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box green">
+        <div class="box-title">✅ 실험적 파워</div>
+        τ₀는 펄스 레이저로 측정 (형광 지수감쇠). φ_{F,0}은 형광 강도 측정. 두 개를 측정하면 k_F를 결정 가능. 나아가 τ₀에서 k_F + k_ISC + k_IC의 합, φ_{F,0}에서 비율 → 개별 rate constant 분리 가능.
+      </div>
+    </div>
+
+    <!-- Quenching & Stern-Volmer -->
+    <div id="20g-quench" class="sec-panel">
+      <h2>Quenching & Stern-Volmer 방정식</h2>
+
+      <h3>Quenching이란?</h3>
+      <div class="box blue">
+        <div class="box-title">🔬 정의</div>
+        외부 종 Q가 S*와 상호작용하여 들뜬 상태 수명을 <strong>단축</strong>. 에너지 또는 전자 전달, 충돌 비활성화 등의 메커니즘.
+        $$S^* + Q \to S + Q, \quad v_Q = k_Q[Q][S^*]$$
+      </div>
+
+      <h3>세 가지 quenching 메커니즘</h3>
+      <table class="cmp-table">
+        <tr><th>메커니즘</th><th>식</th><th>의미</th></tr>
+        <tr><td>Collisional deactivation</td><td>S* + Q → S + Q</td><td>충돌로 에너지 소산</td></tr>
+        <tr><td>Resonance energy transfer</td><td>S* + Q → S + Q*</td><td>에너지 Q로 전달 (FRET!)</td></tr>
+        <tr><td>Electron transfer</td><td>S* + Q → S⁺/⁻ + Q⁻/⁺</td><td>전자 주고받기</td></tr>
+      </table>
+
+      <h3>Stern-Volmer 방정식 유도</h3>
+
+      <div class="deriv">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            quenching 항 추가된 SSA <span class="step-tag definition">SSA + Q</span>
+            <div class="math-block">
+              $$\frac{d[S^*]}{dt} = I_{abs} - (k_F + k_{ISC} + k_{IC} + k_Q[Q])[S^*] \approx 0$$
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            Q 존재 시 형광 quantum yield <span class="step-tag">With Q</span>
+            <div class="math-block">
+              $$\phi_F = \frac{k_F}{k_F + k_{ISC} + k_{IC} + k_Q[Q]}$$
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            비율 φ_{F,0}/φ_F 계산 <span class="step-tag">Ratio</span>
+            <div class="math-block">
+              $$\frac{\phi_{F,0}}{\phi_F} = \frac{k_F + k_{ISC} + k_{IC} + k_Q[Q]}{k_F + k_{ISC} + k_{IC}} = 1 + \frac{k_Q[Q]}{k_F + k_{ISC} + k_{IC}}$$
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            τ₀ = 1/(k_F + k_ISC + k_IC) 대입 <span class="step-tag result">Stern-Volmer</span>
+            <div class="math-block">
+              $$\boxed{\frac{\phi_{F,0}}{\phi_F} = 1 + \tau_0 k_Q[Q]}$$
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Stern-Volmer Plot</h3>
+      <p>φ_{F,0}/φ_F vs [Q] → 직선</p>
+      <table class="cmp-table">
+        <tr><th>그래프 요소</th><th>값</th></tr>
+        <tr><td>기울기</td><td>\(\tau_0 k_Q\)</td></tr>
+        <tr><td>y절편</td><td>1</td></tr>
+      </table>
+
+      <div class="box green">
+        <div class="box-title">✅ 실험적 의의</div>
+        τ₀를 별도 측정 → 기울기에서 k_Q (quenching rate constant) 결정. k_Q가 확산 한계(~10¹⁰ M⁻¹s⁻¹)에 가까우면 충돌마다 quenching이 일어나는 것.
+      </div>
+
+      <div class="box amber">
+        <div class="box-title">🔗 smFRET 연결</div>
+        FRET는 "resonance energy transfer quenching"의 일종. Donor의 φ_F가 acceptor Q의 존재로 감소. Stern-Volmer 프레임워크로 FRET efficiency를 분석. 거리 r에 따라 k_Q ∝ r⁻⁶ (Förster, 14B에서 배운 dipole-dipole!) → 거리 자가 됨.
+      </div>
+    </div>
+  </div><!-- /20g -->
+
+  <!-- ═══════════════════════════════════════════════
+       EXAM PREDICTIONS
+  ═══════════════════════════════════════════════ -->
+  <div id="ch-exam" class="ch-section">
+    <h2>📝 출제 예상 문제</h2>
+
+    <p style="margin-bottom:1.5rem">유도형 40% / 원리·설명형 30% / 계산형 30% 기준. 답안 클릭하면 펼쳐져.</p>
+
+    <h3 style="margin-top:0">17E — Reaction Mechanisms</h3>
+
+    <details class="exam-q">
+      <summary>
+        A →(k_a)→ I →(k_b)→ P 시스템에서 SSA를 적용하여 [P](t)를 구하라. SSA 성립 조건도 설명하라.
+        <span class="q-type d">유도</span>
+      </summary>
+      <div class="exam-ans">
+        <span class="answer-tag deriv">유도</span>
+        <br><br>
+        d[I]/dt = k_a[A] − k_b[I] ≈ 0 → [I] = (k_a/k_b)[A] = (k_a/k_b)[A]₀e^{−k_a t}
+        <br>
+        d[P]/dt = k_b[I] = k_a[A]₀e^{−k_a t}
+        <br>
+        적분: [P] = (1 − e^{−k_a t})[A]₀
+        <br><br>
+        <strong>성립 조건:</strong> k_b ≫ k_a. k_b가 작으면 I가 쌓여 d[I]/dt ≈ 0 가정이 깨짐.
+      </div>
+    </details>
+
+    <details class="exam-q">
+      <summary>
+        Pre-equilibrium과 SSA의 차이를 메커니즘, 조건, [I] 결정 방식 측면에서 비교하라.
+        <span class="q-type c">원리</span>
+      </summary>
+      <div class="exam-ans">
+        <span class="answer-tag concept">원리</span>
+        <br><br>
+        SSA: k_b ≫ k_a, I가 생성 즉시 소비. [I]를 동적 균형(d[I]/dt=0)으로 결정. 중간체는 낮고 일정.
+        <br><br>
+        Pre-eq: k_b ≪ k_a, k_a'. 앞 단계가 빠른 평형 → [I] = K[A][B] = (k_a/k_a')[A][B]. 중간체는 열역학적 평형값.
+      </div>
+    </details>
+
+    <details class="exam-q">
+      <summary>
+        Kinetic control과 thermodynamic control이 서로 다른 생성물을 선호할 수 있는 이유를 설명하라.
+        <span class="q-type c">원리</span>
+      </summary>
+      <div class="exam-ans">
+        <span class="answer-tag concept">원리</span>
+        <br><br>
+        Kinetic: 활성화 에너지가 낮은 경로 우세 → 전이 상태 안정성이 기준.
+        Thermodynamic: 생성물의 ΔG°가 낮은 쪽 우세 → 생성물 안정성이 기준.
+        <br><br>
+        Hammond 포스툴레이트에 따르면 발열 반응의 전이 상태는 반응물과 비슷하므로, 빠른 경로의 생성물이 항상 안정한 것은 아님. 예: 1,2-addition(kinetic) vs 1,4-addition(thermodynamic).
+      </div>
+    </details>
+
+    <h3>17F / 20H — Enzymes</h3>
+
+    <details class="exam-q">
+      <summary>
+        Michaelis-Menten 메커니즘에서 SSA를 적용하여 v = v_max / (1 + K_M/[S]₀)를 유도하라.
+        <span class="q-type d">유도</span>
+      </summary>
+      <div class="exam-ans">
+        <span class="answer-tag deriv">유도</span>
+        <br><br>
+        E+S ⇌ ES → P+E. v = k_b[ES].
+        d[ES]/dt = k_a[E][S] − k_a'[ES] − k_b[ES] ≈ 0 → [ES] = k_a[E][S]/(k_a'+k_b) = [E][S]/K_M
+        <br>
+        [E]₀ = [E]+[ES] 이용 → [ES] = [E]₀[S]/(K_M+[S]) ≈ [E]₀/(1+K_M/[S]₀)
+        <br>
+        v = k_b[ES] = k_b[E]₀/(1+K_M/[S]₀) = v_max/(1+K_M/[S]₀). ∎
+      </div>
+    </details>
+
+    <details class="exam-q">
+      <summary>
+        K_M의 물리적 의미를 설명하고, K_M ≈ 1/K_binding 이 되는 조건을 서술하라.
+        <span class="q-type c">원리</span>
+      </summary>
+      <div class="exam-ans">
+        <span class="answer-tag concept">원리</span>
+        <br><br>
+        K_M: v = v_max/2가 되는 [S]₀. 작을수록 낮은 [S]에서 포화 → affinity 높음.
+        <br><br>
+        K_M = (k_a'+k_b)/k_a. k_b ≪ k_a'이면 K_M ≈ k_a'/k_a = 1/K_eq = 1/K_binding.
+        즉 ES 해리가 생성물 형성보다 훨씬 빠를 때만 K_M이 결합 상수의 역수가 됨.
+      </div>
+    </details>
+
+    <details class="exam-q">
+      <summary>
+        Lineweaver-Burk plot에서 K_M과 v_max를 어떻게 구하는가? 유도 과정 포함.
+        <span class="q-type n">계산</span>
+      </summary>
+      <div class="exam-ans">
+        <span class="answer-tag calc">계산</span>
+        <br><br>
+        v = v_max/(1+K_M/[S]₀)의 역수: 1/v = 1/v_max + (K_M/v_max)(1/[S]₀)
+        <br>
+        1/v vs 1/[S]₀ 직선: 기울기 = K_M/v_max, y절편 = 1/v_max, x절편 = −1/K_M
+        <br>
+        → y절편 역수 = v_max, 기울기/y절편 = K_M.
+      </div>
+    </details>
+
+    <details class="exam-q">
+      <summary>
+        촉매 효율 η = k_cat/K_M의 상한이 k_a인 이유를 유도로 설명하라.
+        <span class="q-type d">유도</span>
+      </summary>
+      <div class="exam-ans">
+        <span class="answer-tag deriv">유도</span>
+        <br><br>
+        η = k_cat/K_M = k_b / [(k_a'+k_b)/k_a] = k_a k_b / (k_a'+k_b)
+        <br>
+        k_b → ∞ 극한: η → k_a k_b / k_b = k_a
+        <br>
+        k_a는 E+S → ES 결합 속도상수 = 확산 제한 속도. 효소가 아무리 빨라도 기질이 도달하는 속도 이상으로는 처리 불가.
+      </div>
+    </details>
+
+    <h3>20G — Photochemical Kinetics</h3>
+
+    <details class="exam-q">
+      <summary>
+        Fluorescence와 phosphorescence의 수명이 다른 이유를 스핀 selection rule과 ISC 메커니즘 관점에서 설명하라.
+        <span class="q-type c">원리</span>
+      </summary>
+      <div class="exam-ans">
+        <span class="answer-tag concept">원리</span>
+        <br><br>
+        Fluorescence: S*→S₀, ΔS=0 (spin-allowed) → 빠른 방출 (k_F 큼, ns 수명).
+        <br><br>
+        Phosphorescence: T*→S₀, ΔS=1 (spin-forbidden). Spin-orbit coupling이 부분적으로 허용하지만 k_P가 매우 작아 T* 수명이 ms~s. SOC ∝ Z⁴이므로 무거운 원소 포함 시 더 빠름(heavy atom effect).
+      </div>
+    </details>
+
+    <details class="exam-q">
+      <summary>
+        φ_{F,0} = k_F / (k_F + k_ISC + k_IC)를 SSA로 유도하고, τ₀ = φ_{F,0}/k_F 관계를 도출하라.
+        <span class="q-type d">유도</span>
+      </summary>
+      <div class="exam-ans">
+        <span class="answer-tag deriv">유도</span>
+        <br><br>
+        d[S*]/dt = I_abs − (k_F+k_ISC+k_IC)[S*] ≈ 0 → I_abs = (k_F+k_ISC+k_IC)[S*]
+        <br>
+        φ_{F,0} = v_F/I_abs = k_F[S*] / (k_F+k_ISC+k_IC)[S*] = k_F/(k_F+k_ISC+k_IC)
+        <br><br>
+        τ₀ = 1/(k_F+k_ISC+k_IC) = φ_{F,0}/k_F. ∴ k_F = φ_{F,0}/τ₀.
+      </div>
+    </details>
+
+    <details class="exam-q">
+      <summary>
+        Stern-Volmer 방정식을 유도하고, φ_{F,0}/φ_F vs [Q] 그래프에서 τ₀와 k_Q를 어떻게 구하는지 설명하라.
+        <span class="q-type d">유도</span>
+      </summary>
+      <div class="exam-ans">
+        <span class="answer-tag deriv">유도</span>
+        <br><br>
+        quenching 포함 SSA: I_abs = (k_F+k_ISC+k_IC+k_Q[Q])[S*]
+        <br>
+        φ_F = k_F/(k_F+k_ISC+k_IC+k_Q[Q])
+        <br>
+        φ_{F,0}/φ_F = (분모with Q)/(분모 without Q) = 1 + k_Q[Q]/(k_F+k_ISC+k_IC) = 1 + τ₀k_Q[Q]
+        <br><br>
+        φ_{F,0}/φ_F vs [Q] 직선: 기울기 = τ₀k_Q, y절편 = 1. τ₀를 별도 측정 → k_Q = 기울기/τ₀.
+      </div>
+    </details>
+
+    <details class="exam-q">
+      <summary>
+        어떤 형광 분자의 φ_{F,0} = 0.60, τ₀ = 8.0 ns이다. k_F와 k_{nr} (= k_ISC + k_IC)를 구하라.
+        <span class="q-type n">계산</span>
+      </summary>
+      <div class="exam-ans">
+        <span class="answer-tag calc">계산</span>
+        <br><br>
+        τ₀ = 1/(k_F + k_nr) = 8.0 × 10⁻⁹ s → k_F + k_nr = 1.25 × 10⁸ s⁻¹
+        <br>
+        φ_{F,0} = k_F/(k_F + k_nr) = 0.60 → k_F = 0.60 × 1.25 × 10⁸ = 7.5 × 10⁷ s⁻¹
+        <br>
+        k_nr = 1.25 × 10⁸ − 7.5 × 10⁷ = 5.0 × 10⁷ s⁻¹
+      </div>
+    </details>
+  </div><!-- /exam -->
+
+</div><!-- /container -->
+
+<script>
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+  document.querySelector('.theme-btn').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+}
+
+function showCh(id) {
+  document.querySelectorAll('.ch-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.ch-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('ch-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function showSec(ch, id) {
+  const parent = document.getElementById('ch-' + ch);
+  parent.querySelectorAll('.sec-panel').forEach(p => p.classList.remove('active'));
+  parent.querySelectorAll('.sec-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(ch + '-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+</script>
+</body>
+</html>

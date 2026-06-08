@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch.19 Continental Alkaline Magmatism</title>
+<style>
+  :root {
+    --blue-dark: #1F4E79;
+    --blue-mid:  #2E75B6;
+    --blue-light:#D6E4F0;
+    --blue-pale: #EBF4FB;
+    --amber:     #FFF3CD;
+    --amber-dark:#856404;
+    --green:     #E2EFDA;
+    --green-dark:#375623;
+    --gray:      #F2F2F2;
+    --gray-dark: #595959;
+    --text:      #212121;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    background: #f5f7fa;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, var(--blue-dark) 0%, #2E75B6 60%, #1a6e96 100%);
+    color: #fff;
+    padding: 36px 32px 28px;
+    border-bottom: 4px solid #1a3a5c;
+  }
+  .hero h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+  .hero p  { font-size: 13px; opacity: 0.85; margin-bottom: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+  }
+
+  /* ── Tab nav ── */
+  .tab-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    background: var(--blue-dark);
+    padding: 0 16px;
+  }
+  .tab-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    padding: 12px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  .tab-btn.active {
+    color: #fff;
+    border-bottom: 3px solid #FFD700;
+    font-weight: 600;
+  }
+
+  /* ── Content wrap ── */
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 28px 24px 60px; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .section > h2 {
+    font-size: 20px;
+    color: var(--blue-dark);
+    border-left: 5px solid var(--blue-mid);
+    padding-left: 12px;
+    margin-bottom: 20px;
+    margin-top: 28px;
+  }
+  .section > h2:first-child { margin-top: 0; }
+  h3 {
+    font-size: 16px;
+    color: var(--blue-dark);
+    margin: 22px 0 10px;
+    padding-bottom: 4px;
+    border-bottom: 1.5px solid var(--blue-light);
+  }
+
+  /* ── Boxes ── */
+  .box-blue, .box-amber, .box-green, .box-gray, .box-pale {
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    line-height: 1.8;
+  }
+  .box-blue  { background: var(--blue-light); border-left: 4px solid var(--blue-mid); }
+  .box-amber { background: var(--amber);      border-left: 4px solid #f0a000; }
+  .box-green { background: var(--green);      border-left: 4px solid #70AD47; }
+  .box-gray  { background: var(--gray);       border-left: 4px solid #aaa;    font-size: 13.5px; color: var(--gray-dark); }
+  .box-pale  { background: var(--blue-pale);  border-left: 4px solid var(--blue-mid); }
+  .box-title { font-weight: 700; margin-bottom: 6px; font-size: 14px; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+  th {
+    background: var(--blue-dark);
+    color: #fff;
+    padding: 9px 12px;
+    text-align: left;
+  }
+  td { padding: 8px 12px; border-bottom: 1px solid #dde3ea; }
+  tr:nth-child(even) td { background: var(--blue-pale); }
+  tr:hover td { background: #d0e8f7; }
+
+  /* ── Badges / mini-labels ── */
+  .badge {
+    display: inline-block;
+    background: var(--blue-mid);
+    color: #fff;
+    border-radius: 4px;
+    padding: 1px 7px;
+    font-size: 12px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .badge-green  { background: #70AD47; }
+  .badge-amber  { background: #f0a000; color: #333; }
+  .badge-gray   { background: #888; }
+  .badge-purple { background: #7030A0; }
+  .badge-red    { background: #C00000; }
+
+  /* ── Lists ── */
+  ul, ol { padding-left: 20px; margin: 8px 0; line-height: 1.9; }
+  li { margin-bottom: 3px; }
+
+  /* ── Exam box ── */
+  .exam-item {
+    background: #fff;
+    border: 1.5px solid var(--green-dark);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+  }
+  .exam-q { font-weight: 700; color: var(--green-dark); margin-bottom: 6px; font-size: 14px; }
+  .exam-a { font-size: 14px; color: #3d5e42; line-height: 1.7; }
+
+  /* ── Flow arrow ── */
+  .flow { 
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px; 
+    margin: 10px 0; font-size: 14px;
+  }
+  .flow-item {
+    background: var(--blue-mid);
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 12px;
+  }
+  .flow-arrow { color: var(--blue-mid); font-size: 18px; font-weight: bold; }
+
+  /* ── Scroll top ── */
+  .top-btn {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--blue-mid); color: #fff; border: none;
+    width: 40px; height: 40px; border-radius: 50%;
+    font-size: 18px; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(31,78,121,.4);
+    z-index: 999;
+  }
+
+  strong { color: #1a3a5c; }
+  em { color: #5a5a5a; }
+  code {
+    background: #eef2f7;
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-family: monospace;
+    font-size: 13px;
+  }
+  hr { border: none; border-top: 1.5px solid var(--blue-light); margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🌋 Ch.19 — Continental Alkaline Magmatism</h1>
+  <p>Winter (2001) An Introduction to Igneous &amp; Metamorphic Petrology · SNU 암석학</p>
+  <div class="tags">
+    <span class="tag">🌍 East African Rift</span>
+    <span class="tag">♦ Carbonatites</span>
+    <span class="tag">🔥 Lamproites</span>
+    <span class="tag">💎 Kimberlites</span>
+    <span class="tag">🪨 Lamprophyres</span>
+    <span class="tag">📊 Isotope Geochemistry</span>
+  </div>
+</div>
+
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('t1',this)">① 개요 &amp; 정의</button>
+  <button class="tab-btn" onclick="showTab('t2',this)">② East African Rift</button>
+  <button class="tab-btn" onclick="showTab('t3',this)">③ Carbonatites</button>
+  <button class="tab-btn" onclick="showTab('t4',this)">④ Lamproites</button>
+  <button class="tab-btn" onclick="showTab('t5',this)">⑤ Lamprophyres</button>
+  <button class="tab-btn" onclick="showTab('t6',this)">⑥ Kimberlites</button>
+  <button class="tab-btn" onclick="showTab('t7',this)">⑦ 기원 &amp; 비교</button>
+  <button class="tab-btn" onclick="showTab('t8',this)">📝 출제예상</button>
+</nav>
+
+<div class="wrap">
+
+<!-- ======================================
+     TAB 1: 개요 & 정의
+====================================== -->
+<div class="section active" id="t1">
+  <h2>① 개요 &amp; 정의</h2>
+
+  <div class="box-amber">
+    ✏ <strong>왜 Continental Alkaline Magmatism이 특별한가?</strong><br>
+    알칼리 암석은 해양저 포함 모든 지구조 환경에서 나타나지만, 이 챕터는 <strong>anorogenic 대륙</strong>에 집중되는
+    매우 다양한 스펙트럼의 마그마를 다룬다. 부피는 작아도 <strong>맨틀 정보, 다이아몬드 운반, 희토류(REE) 자원</strong>
+    등 연구·경제적 가치가 매우 크다.
+  </div>
+
+  <h3>알칼리 암석의 정의</h3>
+  <div class="box-blue">
+    <div class="box-title">두 가지 기준</div>
+    <ul>
+      <li><strong>좁은 의미 (critically undersaturated)</strong>: SiO₂ 결핍 → normative nepheline 또는 acmite 출현</li>
+      <li><strong>Peralkaline</strong>: Al₂O₃도 부족 → 알칼리를 normative feldspar에 수용 불가 → SiO₂ 과포화도 가능</li>
+    </ul>
+    <p>→ 공통점: <strong>알칼리 과잉</strong>이 feldspathoid, sodic pyroxene/amphibole 등 alkali-rich phase를 만든다.</p>
+  </div>
+
+  <h3>주요 암석 분류 요약 (Table 19-1)</h3>
+  <table>
+    <tr><th>암석명</th><th>핵심 특징</th></tr>
+    <tr>
+      <td><span class="badge">Basanite</span></td>
+      <td>feldspathoid 함유 현무암; 주로 nepheline + olivine</td>
+    </tr>
+    <tr>
+      <td><span class="badge">Nephelinite</span></td>
+      <td>nepheline + cpx ± olivine; 장석 거의 없음</td>
+    </tr>
+    <tr>
+      <td><span class="badge">Leucitite</span></td>
+      <td>leucite + cpx ± olivine; 장석 거의 없음</td>
+    </tr>
+    <tr>
+      <td><span class="badge">Phonolite</span></td>
+      <td>felsic alkaline 화산암; alkali feldspar + nepheline (plutonic = nepheline syenite)</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-amber">Lamproite</span></td>
+      <td>peralkaline, volatile-rich, <strong>ultrapotassic</strong>; olivine + phlogopite ± leucite ± K-richterite</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-gray">Lamprophyre</span></td>
+      <td>dark, porphyritic, mafic-ultramafic; biotite/phlogopite + amphibole phenocrysts; dike/sill</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-purple">Kimberlite</span></td>
+      <td>volatile-rich (CO₂), potassic, ultramafic; olivine macrocrysts + garnet/phlogopite/ilmenite</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-green">Carbonatite</span></td>
+      <td>탄산염 광물(calcite/ankerite/dolomite) 주성분; 알칼리암과 공생</td>
+    </tr>
+    <tr>
+      <td><span class="badge">Comendite</span></td>
+      <td>peralkaline rhyolite; (Na₂O+K₂O)/Al₂O₃ 약간 &gt;1</td>
+    </tr>
+    <tr>
+      <td><span class="badge">Pantellerite</span></td>
+      <td>peralkaline rhyolite; (Na₂O+K₂O)/Al₂O₃ = 1.6–1.8; Na-pyroxene/amphibole 함유</td>
+    </tr>
+  </table>
+
+  <div class="box-gray">
+    <div class="box-title">→ 슬라이드 3 참고 (Table 19-1 전체 명명법)</div>
+    멜릴라이트(melilite) 계열: melilitite, olivine melilitite<br>
+    Ijolite / Urtite: 플루토닉 nepheline-pyroxene 암석 (nepheline 함량으로 구분)<br>
+    Shoshonite: K-rich basalt; K-feldspar ± leucite<br>
+    Kimberlite Group I: CO₂-rich, 덜 potassic / Group II (Orangeite): H₂O-rich, mica-rich matrix
+  </div>
+</div>
+
+<!-- ======================================
+     TAB 2: East African Rift
+====================================== -->
+<div class="section" id="t2">
+  <h2>② East African Rift (EAR)</h2>
+
+  <div class="box-amber">
+    ✏ EAR은 <strong>대륙 리프트 환경의 알칼리 마그마티즘 교과서 사례</strong>. Western Branch(Virunga, Toro-Ankole 등)와
+    Eastern Branch(Kenya, Ethiopia)가 서로 다른 지구화학 특성을 보인다.
+  </div>
+
+  <h3>지리 구조 (슬라이드 4)</h3>
+  <div class="box-blue">
+    <div class="box-title">주요 화산 지역</div>
+    <ul>
+      <li><strong>Ethiopian Dome / Afar</strong>: 북부; 아파르 삼중점(Red Sea + Gulf of Aden + EAR 만남)</li>
+      <li><strong>MER (Main Ethiopian Rift)</strong>: 중부 에티오피아</li>
+      <li><strong>NKR, SKR</strong>: North/South Kenya Rift</li>
+      <li><strong>Western Branch</strong>: Virunga, Toro-Ankole, Kivu, Rungwe → 더 <strong>ultra-alkaline</strong></li>
+      <li><strong>Chyulu Hills</strong>: 전형적인 소규모 알칼리 화산군</li>
+    </ul>
+  </div>
+
+  <h3>4개 마그마 계열 (Table 19-2)</h3>
+  <table>
+    <tr>
+      <th>계열</th><th>대표 암석</th><th>SiO₂ (wt%)</th><th>특징</th>
+    </tr>
+    <tr>
+      <td><span class="badge">Series 1</span> Alkaline</td>
+      <td>Alkaline basalt, Phonolite</td>
+      <td>45–55</td>
+      <td>normative ne 없음; transitional 경계에 위치</td>
+    </tr>
+    <tr>
+      <td><span class="badge">Series 2</span> Ultra-alkaline</td>
+      <td>Kenyan nephelinite, Melilitite, Leucitite</td>
+      <td>33–55</td>
+      <td>normative ne 큼(18–39); 낮은 SiO₂, 높은 CaO</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-gray">Series 3</span> Transitional Basalt–Rhyolite</td>
+      <td>Transitional basalt → Trachyte → Comendite/Pantellerite</td>
+      <td>47–72</td>
+      <td>분화 계열 완성; bimodal 분포</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-amber">Series 4</span> Tholeiitic</td>
+      <td>Tholeiitic basalt</td>
+      <td>~51</td>
+      <td>normative hy 존재; 리프트 후기 또는 지각 얇은 곳</td>
+    </tr>
+  </table>
+
+  <div class="box-blue">
+    <div class="box-title">핵심 화학 패턴 (TAS 다이어그램, 슬라이드 6)</div>
+    <ul>
+      <li>Western Rift (WR) &gt; MER/NKR &gt; SKR 순으로 알칼리도 높음</li>
+      <li>Ethiopia 30 Ma 용암: 구분선 아래 — 초기 EAR은 덜 알칼리성</li>
+      <li>Chyulu Hills (흑점): 매우 낮은 알칼리, tholeiitic 경계 근처</li>
+    </ul>
+  </div>
+
+  <h3>동위원소 지구화학 (슬라이드 7, 8)</h3>
+  <div class="box-blue">
+    <div class="box-title">Sr–Nd 다이어그램 (Fig. 19.3)</div>
+    <ul>
+      <li>Afar 플룸, Kenya, Uganda-Kenya 등: <strong>Mantle Array 상부 사분면</strong> (높은 ¹⁴³Nd/¹⁴⁴Nd, 낮은 ⁸⁷Sr/⁸⁶Sr) → HIMU/DMM 성분 혼합</li>
+      <li>Virunga (V), Toro-Ankole (TA): <strong>오른쪽 아래 이동</strong> → EM I 성분 (오래된 SCLM 기여)</li>
+      <li>Xenolith 필드(점선): 해당 지역 리소스페어 맨틀과의 혼합 증거</li>
+    </ul>
+  </div>
+  <div class="box-blue">
+    <div class="box-title">Pb 동위원소 다이어그램 (Fig. 19.4)</div>
+    <ul>
+      <li>대부분 EAR 용암: <strong>DUPAL OIB 필드</strong> 내 분포 (남반구형 오염 맨틀)</li>
+      <li>Virunga (V) · UK · TA: NHRL 위 → DUPAL 이상</li>
+      <li>Toro-Ankole xenolith: 가장 오래된 SCLM 신호</li>
+    </ul>
+  </div>
+
+  <h3>REE 패턴 (Fig. 19.5, 슬라이드 9)</h3>
+  <div class="box-pale">
+    <ul>
+      <li>Virunga <strong>ultra-alkaline</strong>: La 기준 ~1000×chondrite, 급격한 LREE 농집</li>
+      <li>Bukavu alkaline > Bukavu transitional > Bukavu tholeiitic 순으로 전체 REE 농도↓</li>
+      <li><strong>공통점</strong>: 모두 LREE-enriched (우상향 기울기 없음); 더 알칼리성일수록 LREE/HREE 비가 커짐</li>
+      <li>→ 해석: 더 알칼리성 마그마는 더 <strong>깊은 곳에서 더 적은 용융률</strong>로 생성됨</li>
+    </ul>
+  </div>
+
+  <h3>진화 모델 (Fig. 19.9, 슬라이드 12)</h3>
+  <div class="flow">
+    <div class="flow-item">a. Pre-rift<br><small>연약권 상승·감압용융<br>→ 알칼리 마그마 생성</small></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item">b. Rift stage<br><small>대륙 리프팅<br>주로 심부 연약권 기원</small></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item">c. Afar stage<br><small>연약권이 지각 레벨 도달<br>→ 해양지각 형성 전환</small></div>
+  </div>
+  <div class="box-gray">
+    <div class="box-title">→ 슬라이드 12, 13 (Fig. 19.9, Muirhead et al. 2016) 참고</div>
+    시간이 지날수록: 활성 border fault → intra-rift faults → magmatic segments → spreading ridge.
+    마그마 공급이 단층을 대체해가는 "magmatic rifting" 모델.
+  </div>
+</div>
+
+<!-- ======================================
+     TAB 3: Carbonatites
+====================================== -->
+<div class="section" id="t3">
+  <h2>③ Carbonatites</h2>
+
+  <div class="box-amber">
+    ✏ Carbonatite는 <strong>탄산염 광물이 50% 이상</strong>인 화성암. CaO·MgO가 풍부하여 엄밀히는 비알칼리성이지만,
+    알칼리암 복합체와 <strong>공간적·시간적으로 항상 공생</strong>하므로 함께 다룬다. 경제적으로는 <strong>Nb, REE, P 광상</strong>의 주요 모암.
+  </div>
+
+  <h3>분류 (Jones et al. 2013, Fig. 8)</h3>
+  <table>
+    <tr><th>분류명</th><th>세분류</th><th>화학 기준</th></tr>
+    <tr>
+      <td><strong>Calciocarbonatite</strong></td>
+      <td>Sövite (조립), Alvikite (세립)</td>
+      <td>CaO/(CaO+FeO+MgO) &gt; 0.80</td>
+    </tr>
+    <tr>
+      <td><strong>Dolomite carbonatite</strong></td>
+      <td>Beforsite</td>
+      <td>(Ca,Mg)-rich</td>
+    </tr>
+    <tr>
+      <td><strong>Ferrocarbonatite</strong></td>
+      <td>—</td>
+      <td>FeO<sup>T</sup> + MnO &gt; MgO</td>
+    </tr>
+    <tr>
+      <td><strong>Magnesiocarbonatite</strong></td>
+      <td>—</td>
+      <td>MgO &gt; (FeO + MnO)</td>
+    </tr>
+    <tr>
+      <td><strong>Rare earth carbonatite</strong></td>
+      <td>다양한 입도</td>
+      <td>RE₂O₃ &gt; 1 wt%</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-purple">Natrocarbonatite</span></td>
+      <td>Oldoinyo Lengai 용암</td>
+      <td>(Na₂O+K₂O) &gt; (CaO+MgO+FeO)</td>
+    </tr>
+  </table>
+
+  <h3>분포 (슬라이드 15, 16)</h3>
+  <div class="box-blue">
+    <ul>
+      <li>전 세계 500개 이상 분포 (Le Bas 1987 초기 목록 56개 → Woolley &amp; Kjarsgaard 2008에 의해 500+)</li>
+      <li><strong>주로 고대/현대 리프트와 연관</strong>된 대륙 환경</li>
+      <li>아프리카 집중 분포: 동아프리카 리프트 따라 선형 배열; 나이지리아·카메룬 등 서아프리카에도 분포</li>
+      <li>가장 유명한 현재 활동 carbonatite: <strong>Oldoinyo Lengai (탄자니아)</strong> — natrocarbonatite 분출</li>
+    </ul>
+  </div>
+
+  <h3>주원소 조성 (Table 6)</h3>
+  <div class="box-pale">
+    <ul>
+      <li><strong>CO₂ 30–40%</strong>: 탄산염 광물의 직접적 반영</li>
+      <li>SiO₂ 매우 낮음 (0.05–6%); TiO₂, Al₂O₃ 극히 소량</li>
+      <li><strong>Natrocarbonatite (Oldoinyo Lengai)</strong>: Na₂O 34%, K₂O 8% → 세계에서 가장 특이한 용암</li>
+      <li>높은 Sr, Ba, REE, P₂O₅ → 경제광상 형성 잠재성</li>
+    </ul>
+  </div>
+
+  <h3>REE 패턴 (슬라이드 18)</h3>
+  <div class="box-blue">
+    <ul>
+      <li>모든 carbonatite: <strong>강한 LREE 농집</strong> (La 기준 수백~수천×chondrite)</li>
+      <li>Kaiserstuhl, Mt Weld: 극단적 LREE 농집 → REE 광상으로 경제성↑</li>
+      <li>Nachendazwaya: 상대적으로 낮은 REE → 다양성 존재</li>
+    </ul>
+  </div>
+
+  <h3>동위원소 (슬라이드 19)</h3>
+  <div class="box-blue">
+    <div class="box-title">Sr–Nd: EMI → HIMU 트렌드 (Fig., Jones et al. 2013)</div>
+    <ul>
+      <li>대부분의 carbonatite: <strong>EMI와 HIMU 사이</strong> 직선 배열</li>
+      <li>DMM(MORB)에서 멀리 떨어짐 → <strong>오래된 재활용 맨틀 기원</strong></li>
+      <li>Oldoinyo Lengai: ⁸⁷Sr/⁸⁶Sr ~0.7044, ¹⁴³Nd/¹⁴⁴Nd ~0.51261 → HIMU 쪽</li>
+    </ul>
+  </div>
+
+  <h3>기원 이론 (슬라이드 20)</h3>
+  <div class="box-blue">
+    <div class="box-title">세 가지 주요 이론</div>
+    <ol>
+      <li><strong>Fractional crystallization</strong>: 탄산화된 nephelinite 또는 melilitite의 잔류 용융체</li>
+      <li><strong>Liquid immiscibility</strong>: CO₂ 포화된 규산염 마그마에서 분리된 불혼화성 용융체 → 실험적 증거 강력</li>
+      <li><strong>Primary mantle melt</strong>: CO₂ 함유 페리도타이트의 직접 부분 용융</li>
+    </ol>
+  </div>
+  <div class="box-amber">
+    ✏ <strong>Oldoinyo Lengai의 특이성</strong>: 방출되는 natrocarbonatite 용암은 <strong>상온에서 하얗게 굳어 눈처럼 보임</strong>.
+    수분과 CO₂에 의해 빠르게 변질(trona, thermonatrite 생성) → 지표에서 며칠 만에 변색.
+    용암 온도 ~500°C (규산염 마그마보다 훨씬 낮음).
+  </div>
+
+  <h3>Oldoinyo Lengai 대안 모델 (슬라이드 23)</h3>
+  <div class="box-gray">
+    <div class="box-title">→ 슬라이드 23 참고</div>
+    상기 3대 이론 외에도: 변성기저암의 anatexis, trona 퇴적물 혼입, 기존 화산체 탄산염 재동원, co-magmatic fluid에서의 응결 등이 제안됨.
+  </div>
+</div>
+
+<!-- ======================================
+     TAB 4: Lamproites
+====================================== -->
+<div class="section" id="t4">
+  <h2>④ Lamproites</h2>
+
+  <div class="box-amber">
+    ✏ Lamproite는 <strong>맨틀 기원의 ultrapotassic 화산~준화산암</strong>. 부피는 극히 작지만,
+    지구상 일부 층은 <strong>다이아몬드를 운반</strong>하며 맨틀 메타소마티즘의 살아있는 기록이다.
+    (가장 유명한 예: <em>Argyle 다이아몬드 광산, 서호주</em>)
+  </div>
+
+  <h3>정의 &amp; 핵심 화학 특성</h3>
+  <div class="box-blue">
+    <ul>
+      <li><strong>낮은</strong>: CaO, Al₂O₃, Na₂O</li>
+      <li><strong>높은</strong>: K₂O, K₂O/Al₂O₃ (&gt;1 → <em>ultrapotassic</em>), MgO</li>
+      <li>incompatible 원소 극단적 농집: Ba, Sr, Zr, Hf 등 (→ Table 19-8에서 lamproite Ba ~9831 ppm)</li>
+      <li>Volatile-rich (H₂O, F, Cl 등)</li>
+    </ul>
+  </div>
+
+  <h3>광물 조합</h3>
+  <div class="box-blue">
+    <div class="box-title">주요 페노크리스트 조합</div>
+    olivine + <strong>phlogopite</strong> ± leucite ± <strong>K-richterite</strong> ± cpx ± sanidine
+    <br><br>
+    → phlogopite (K-Mg 운모)와 K-richterite (K 각섬석)의 존재가 <strong>lamproite의 명함</strong>
+  </div>
+
+  <h3>명명법 (Table 19-6, 슬라이드 25)</h3>
+  <table>
+    <tr><th>구 명칭</th><th>IUGS 권장 명칭</th></tr>
+    <tr><td>wyomingite</td><td>diopside-leucite-phlogopite lamproite</td></tr>
+    <tr><td>orendite</td><td>diopside-sanidine-phlogopite lamproite</td></tr>
+    <tr><td>madupite</td><td>diopside madupidic lamproite</td></tr>
+    <tr><td>cedricite</td><td>diopside-leucite lamproite</td></tr>
+    <tr><td>mamilite</td><td>leucite-richterite lamproite</td></tr>
+    <tr><td>fitzroyite</td><td>leucite-phlogopite lamproite</td></tr>
+    <tr><td>verite</td><td>hyalo-olivine-diopside-phlogopite lamproite</td></tr>
+    <tr><td>fortunite</td><td>hyalo-enstatite-phlogopite lamproite</td></tr>
+    <tr><td>cancalite</td><td>enstatite-sanidine-phlogopite lamproite</td></tr>
+  </table>
+  <div class="box-gray">
+    Kimberlite: <strong>Archaean craton 한정</strong>인 반면, Lamproite는 Archaean~Mesozoic 지형 모두에 분포<br>
+    연령: Proterozoic~Pleistocene (최연소: 56,000±5,000 yr)<br>
+    화산 형태: diatreme 또는 cinder cone/cone edifice
+  </div>
+
+  <h3>REE 패턴 (Fig. 19.17, 슬라이드 24)</h3>
+  <div class="box-pale">
+    <ul>
+      <li>La 기준 <strong>100–2000×chondrite</strong>의 광범위한 범위</li>
+      <li>OIB보다 전반적으로 <strong>높은 LREE</strong>; HREE는 OIB와 교차</li>
+      <li>MORB보다 훨씬 높음 (MORB ~8–15×chondrite 수준)</li>
+      <li>→ 오래된 메타소마티즘된 SCLM 기원임을 지시</li>
+    </ul>
+  </div>
+
+  <h3>동위원소 (Fig. 19.18a, 슬라이드 26)</h3>
+  <div class="box-blue">
+    <div class="box-title">Sr–Nd: Mantle Array 아래 EM I 영역 집중</div>
+    <ul>
+      <li>모든 lamproite: <strong>CHUR 아래</strong> (εNd 음수, -4 ~ -28)</li>
+      <li>⁸⁷Sr/⁸⁶Sr: 0.705 ~ 0.722 → MORB보다 훨씬 높음</li>
+      <li>W. Australia Leucite Lamproite: 가장 극단적 (Sr 높음, Nd 낮음) → 오래된 크라톤 SCLM</li>
+      <li>Group 2 Kimberlite (Orangeite)와 유사한 위치 → 동일 소스?</li>
+    </ul>
+  </div>
+  <div class="box-blue">
+    <div class="box-title">Pb 동위원소 (Fig. 19.18b): Growth Curve 아래 분포</div>
+    <ul>
+      <li>Sisimiut, Smoky Butte, Prarie Creek: Geochron 아래 → 오래된 U-감소 소스 (고대 SCLM)</li>
+      <li>Spanish lamproite: MORB/OIB 필드와 가까움 → 섭입대 연관 소스 가능성</li>
+    </ul>
+  </div>
+
+  <h3>지구조 환경 &amp; 기원</h3>
+  <div class="box-blue">
+    <ul>
+      <li>주로 <strong>안정 대륙 내부(intraplate)</strong>; 고기 크라톤 주변 테레인에서 흔함</li>
+      <li>기원: 오래된 메타소마티즘된 <strong>SCLM(Sub-Continental Lithospheric Mantle)</strong>의 소규모 부분 용융</li>
+      <li>metasomatizing fluid: phlogopite + K-richterite 불안정화 → 용융 시 K, Ba, Sr, Zr 방출</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ======================================
+     TAB 5: Lamprophyres
+====================================== -->
+<div class="section" id="t5">
+  <h2>⑤ Lamprophyres</h2>
+
+  <div class="box-amber">
+    ✏ Lamprophyre = <em>"bright" + "to mix"</em> (그리스어). 어두운 기질에 밝은 페노크리스트가 섞인 모양.
+    소규모 dike/sill/stock 형태로 산출되며, 지질 모든 시대에 걸쳐 분포.
+    Archaean 예: 금 광상과 공생하여 경제지질적으로도 중요.
+  </div>
+
+  <h3>일반 특성</h3>
+  <div class="box-blue">
+    <ul>
+      <li>Uncommon, <strong>소규모</strong> ultrapotassic 화성암</li>
+      <li>주로 dike, lopolith, laccolith, stock 형태</li>
+      <li>알칼리성, SiO₂ 불포화, <strong>높은 MgO(&gt;고)</strong>, K₂O &gt;3%, 높은 Na₂O</li>
+      <li>높은 Ni, Cr → 원시적(primitive) 마그마</li>
+      <li>페노크리스트: biotite/phlogopite 및/또는 amphibole; 기질은 더 세립</li>
+    </ul>
+  </div>
+
+  <h3>명명법 (Table 19-7, 슬라이드 28)</h3>
+  <div class="box-blue">
+    <div class="box-title">분류 기준: ① 밝은 광물(feldspar vs. feldspathoid), ② 우세 고철광물</div>
+  </div>
+  <table>
+    <tr>
+      <th>밝은 광물</th><th>우세 mafic 광물</th><th>암석명</th>
+    </tr>
+    <tr>
+      <td>or &gt; pl (+ 없음)</td>
+      <td>biotite + diopsidic augite (±olivine)</td>
+      <td><strong>minette</strong></td>
+    </tr>
+    <tr>
+      <td>pl &gt; or (+ 없음)</td>
+      <td>biotite + diopsidic augite (±olivine)</td>
+      <td><strong>kersantite</strong></td>
+    </tr>
+    <tr>
+      <td>or &gt; pl (+ 없음)</td>
+      <td>hornblende + diopsidic augite (±olivine)</td>
+      <td><strong>vogesite</strong></td>
+    </tr>
+    <tr>
+      <td>pl &gt; or (+ 없음)</td>
+      <td>hornblende + diopsidic augite (±olivine)</td>
+      <td><strong>spessartite</strong></td>
+    </tr>
+    <tr>
+      <td>or &gt; pl; feld &gt; foid</td>
+      <td>Na-Ti-amphib., Ti-augite, olivine, biotite</td>
+      <td><strong>sannaite</strong></td>
+    </tr>
+    <tr>
+      <td>pl &gt; or; feld &gt; foid</td>
+      <td>Na-Ti-amphib., Ti-augite, olivine, biotite</td>
+      <td><strong>camptonite</strong></td>
+    </tr>
+    <tr>
+      <td>glass or foid</td>
+      <td>Na-Ti-amphib., Ti-augite, olivine, biotite</td>
+      <td><strong>monchiquite</strong></td>
+    </tr>
+    <tr>
+      <td>none</td>
+      <td>melilite, biotite, ±Ti-augite, ±olivine ±calcite</td>
+      <td><strong>polzenite / alnöite</strong></td>
+    </tr>
+  </table>
+  <div class="box-gray">
+    분류 축: Calc-alkaline (minette, kersantite, vogesite, spessartite) | Alkaline (sannaite, camptonite, monchiquite) | Melilitic (polzenite, alnöite)
+  </div>
+</div>
+
+<!-- ======================================
+     TAB 6: Kimberlites
+====================================== -->
+<div class="section" id="t6">
+  <h2>⑥ Kimberlites</h2>
+
+  <div class="box-amber">
+    ✏ Kimberlite는 지구에서 <strong>다이아몬드를 지표로 가져오는 유일한 주요 매체</strong>.
+    초기 지구 맨틀(~150–200 km 심도)에서 유래하며, 빠른 상승으로 크라톤 뿌리의 다이아몬드를 포획해 온다.
+    "남아프리카 킴벌리에서 명명"; 'blue ground'가 유명.
+  </div>
+
+  <h3>그룹 분류</h3>
+  <table>
+    <tr><th></th><th>Group I Kimberlite</th><th>Group II Kimberlite (Orangeite)</th></tr>
+    <tr>
+      <td><strong>주 휘발성분</strong></td>
+      <td>CO₂-rich</td>
+      <td>H₂O-rich</td>
+    </tr>
+    <tr>
+      <td><strong>K₂O</strong></td>
+      <td>낮음 (0.4–2.1%)</td>
+      <td>높음 (0.5–6.7%)</td>
+    </tr>
+    <tr>
+      <td><strong>기질</strong></td>
+      <td>carbonate (calcite) dominant</td>
+      <td>mica (phlogopite) + calcite + diopside + apatite</td>
+    </tr>
+    <tr>
+      <td><strong>동위원소</strong></td>
+      <td>DMM~HIMU 사이; εNd 약간 양수</td>
+      <td>EM I에 가까움; εNd 음수</td>
+    </tr>
+    <tr>
+      <td><strong>분포</strong></td>
+      <td>남아프리카 등 전 세계 크라톤</td>
+      <td>주로 남아프리카 Kaapvaal Craton</td>
+    </tr>
+  </table>
+
+  <h3>광물 조합 &amp; 텍스처</h3>
+  <div class="box-blue">
+    <div class="box-title">Macrocryst + Fine-grained matrix + Xenocryst/Xenolith</div>
+    <ul>
+      <li><strong>Macrocrysts</strong>: olivine (주), ilmenite, garnet (G10 = diamond indicator), diopside, phlogopite, enstatite, chromite</li>
+      <li><strong>Fine matrix</strong>: serpentine(alteration of olivine) + carbonates + phlogopite</li>
+      <li><strong>Xenoliths</strong>: 깊은 맨틀 페리도타이트(garnet lherzolite, eclogite) → 다이아몬드 포함 가능</li>
+    </ul>
+  </div>
+
+  <h3>화산 구조 (Fig. 19.19, 슬라이드 29)</h3>
+  <div class="flow">
+    <div class="flow-item">Root zone</div>
+    <div class="flow-arrow">↑</div>
+    <div class="flow-item">Precursor dikes<br>→ Sill complex</div>
+    <div class="flow-arrow">↑</div>
+    <div class="flow-item">Diatreme facies<br>(폭발적 분출)</div>
+    <div class="flow-arrow">↑</div>
+    <div class="flow-item">Crater facies<br>+ Tuff ring</div>
+  </div>
+  <div class="box-gray">
+    <div class="box-title">→ 슬라이드 29 (Fig. 19.19) 참고</div>
+    Diatreme: 가스 폭발로 형성된 파이프 구조; 사면에서 지표까지 급격한 상승 (~10–30 km/h 추정).
+    Diatreme related dikes + "Blow" structures가 주변에 발달.
+  </div>
+
+  <h3>지구화학 비교 (Table 19-8, 슬라이드 30)</h3>
+  <table>
+    <tr><th>성분</th><th>Kimberlite</th><th>Orangeite</th><th>Lamproite*</th></tr>
+    <tr><td>SiO₂ (%)</td><td>33.0</td><td>35.0</td><td>45.5</td></tr>
+    <tr><td>MgO (%)</td><td><strong>34.0</strong></td><td>27</td><td>11.2</td></tr>
+    <tr><td>K₂O (%)</td><td>0.8</td><td>3.0</td><td><strong>7.8</strong></td></tr>
+    <tr><td>Ba (ppm)</td><td>885</td><td>3164</td><td><strong>9831</strong></td></tr>
+    <tr><td>Sr (ppm)</td><td>847</td><td>1263</td><td><strong>3860</strong></td></tr>
+    <tr><td>Ni (ppm)</td><td><strong>965</strong></td><td><strong>1227</strong></td><td>152</td></tr>
+    <tr><td>Cr (ppm)</td><td><strong>893</strong></td><td><strong>1722</strong></td><td>430</td></tr>
+    <tr><td>Nb (ppm)</td><td>171</td><td>120</td><td>99</td></tr>
+    <tr><td>LOI (%)</td><td>10.9</td><td>11.7</td><td>3.5</td></tr>
+  </table>
+  <div class="box-pale">
+    *Leucite Hills madupidic lamproite. 
+    Kimberlite/Orangeite: 높은 MgO, Ni, Cr → 원시적 맨틀 물질 반영. Lamproite: 높은 K₂O, Ba, Sr → SCLM 메타소마티즘 반영.
+  </div>
+
+  <h3>REE &amp; Spider 패턴 (Fig. 19.20, 슬라이드 31–32)</h3>
+  <div class="box-blue">
+    <ul>
+      <li><strong>REE</strong>: Kimberlite ≈ Orangeite ≈ Lamproite — 모두 La에서 ~100–2000×chondrite; 급격히 LREE 농집</li>
+      <li>HREE에서 세 그룹 교차; OIB보다 모두 높음; N-MORB보다 훨씬 높음</li>
+      <li><strong>Spider diagram</strong>: Nb, Ta 고점; K 고점 (lamproite에서 특히 두드러짐); Zr·Hf 이상</li>
+    </ul>
+  </div>
+
+  <h3>동위원소 (슬라이드 26)</h3>
+  <div class="box-blue">
+    <ul>
+      <li><strong>Group 1 Kimberlite</strong>: Mantle Array 근처; MORB보다 약간 낮은 εNd → 덜 오염된 맨틀</li>
+      <li><strong>Group 2 (Orangeite)</strong>: 높은 ⁸⁷Sr/⁸⁶Sr, 낮은 εNd → EM I 방향; 고대 SCLM 오염 강함</li>
+    </ul>
+  </div>
+
+  <h3>다이아몬드와의 관계 (Fig. 19.21, 슬라이드 33)</h3>
+  <div class="box-blue">
+    <div class="box-title">Graphite–Diamond 전이선과 크라톤 지온</div>
+    <ul>
+      <li>크라톤의 낮은 지온 → graphite-diamond 전이선이 리소스페어 내부에 위치</li>
+      <li>다이아몬드: 크라톤 뿌리의 peridotite &amp; eclogite 깊은 곳(~150–200 km)에 형성</li>
+      <li>Kimberlite 마그마의 빠른 상승 → 다이아몬드 포획하여 지표 운반</li>
+      <li>Orangeite(K)와 일부 Lamproite(L)도 다이아몬드 스캐빈저로 기능</li>
+      <li>Rift 지역의 Nephelinite(N), Melilitite(M): 더 얕은 연약권 기원 → 다이아몬드 함유 가능성 낮음</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ======================================
+     TAB 7: 기원 & 비교
+====================================== -->
+<div class="section" id="t7">
+  <h2>⑦ 기원 &amp; 비교</h2>
+
+  <h3>알칼리 마그마 생성의 일반 원리 (Fig. 19.14, 슬라이드 34)</h3>
+  <div class="box-blue">
+    <div class="box-title">압력 vs. 용융률 관계 (Green 1970 모델)</div>
+    <ul>
+      <li><strong>낮은 압력 + 높은 용융률</strong> → Tholeiite, Qz Tholeiite</li>
+      <li><strong>낮은 압력 + 중간 용융률</strong> → Alkaline olivine basalt, Hawaiite</li>
+      <li><strong>중간 압력(1–2 GPa) + 낮은 용융률</strong> → Olivine basanite, Olivine-rich basanite</li>
+      <li><strong>높은 압력(2–3 GPa) + 매우 낮은 용융률</strong> → Olivine nephelinite, Olivine melilitite</li>
+      <li><strong>매우 높은 압력(&gt;3 GPa) + 극소량 용융</strong> → Olivine leucitite, 그리고 <strong>Kimberlites</strong></li>
+    </ul>
+    <p style="margin-top:8px;">→ 핵심 원리: <strong>알칼리도 ∝ 깊이 ∝ 1/용융률</strong></p>
+  </div>
+
+  <div class="flow">
+    <div class="flow-item" style="background:#888;">Tholeiite<br><small>얕고 많이</small></div>
+    <div class="flow-arrow">←더 깊이, 더 조금→</div>
+    <div class="flow-item" style="background:#2E75B6;">Alkaline basalt<br><small></small></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item" style="background:#5a3e9e;">Nephelinite·Melilitite<br><small>깊고 조금</small></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item" style="background:#7030A0;">Kimberlite<br><small>극심부 극소량</small></div>
+  </div>
+
+  <h3>SiO₂–NaAlSiO₄–KAlSiO₄ 상도표 (Fig. 19.7, 슬라이드 10)</h3>
+  <div class="box-blue">
+    <ul>
+      <li>Ab-Or 조인이 <strong>열 장벽(thermal barrier)</strong>으로 기능: SiO₂ undersaturated ↔ oversaturated 구분</li>
+      <li>M<sub>u</sub>: SiO₂ 불포화 열최솟값 (nepheline + feldspar + leucite 공정) → 알칼리 용암의 집중 영역</li>
+      <li>M<sub>s</sub>: SiO₂ 과포화 열최솟값 (trachyte/rhyolite 계열)</li>
+      <li>압력↑ → 알바이트쪽으로 열 장벽 이동; Leucite 안정 필드 축소 (Fig. 19.8)</li>
+    </ul>
+  </div>
+
+  <h3>Lamproite vs. Kimberlite vs. Carbonatite 비교</h3>
+  <table>
+    <tr>
+      <th>항목</th>
+      <th>Kimberlite (Gr.I)</th>
+      <th>Orangeite (Gr.II)</th>
+      <th>Lamproite</th>
+      <th>Carbonatite</th>
+    </tr>
+    <tr>
+      <td>SiO₂</td>
+      <td>~33%</td>
+      <td>~35%</td>
+      <td>~45%</td>
+      <td>&lt;10%</td>
+    </tr>
+    <tr>
+      <td>K₂O</td>
+      <td>낮음 (~0.8)</td>
+      <td>중간 (~3)</td>
+      <td><strong>높음 (~8)</strong></td>
+      <td>매우 낮음</td>
+    </tr>
+    <tr>
+      <td>MgO</td>
+      <td><strong>~34%</strong></td>
+      <td>~27%</td>
+      <td>~11%</td>
+      <td>&lt;20%</td>
+    </tr>
+    <tr>
+      <td>CO₂</td>
+      <td>높음</td>
+      <td>낮음</td>
+      <td>낮음</td>
+      <td><strong>~30–40%</strong></td>
+    </tr>
+    <tr>
+      <td>소스</td>
+      <td>연약권 + SCLM</td>
+      <td>오래된 SCLM</td>
+      <td>메타소마티즘 SCLM</td>
+      <td>연약권 ± SCLM</td>
+    </tr>
+    <tr>
+      <td>εNd</td>
+      <td>약간 양수</td>
+      <td>음수 (EM I)</td>
+      <td><strong>강한 음수 (-8~-28)</strong></td>
+      <td>EMI~HIMU 사이</td>
+    </tr>
+    <tr>
+      <td>다이아몬드</td>
+      <td>★★★</td>
+      <td>★★</td>
+      <td>★ (일부)</td>
+      <td>없음</td>
+    </tr>
+    <tr>
+      <td>지구조 환경</td>
+      <td>Archaean craton</td>
+      <td>Kaapvaal craton</td>
+      <td>다양한 craton/mobile belt</td>
+      <td>리프트 + 크라톤 내부</td>
+    </tr>
+    <tr>
+      <td>주 광물</td>
+      <td>ol + cpx + phlog + garnet</td>
+      <td>phlog + calcite + diopside</td>
+      <td>ol + phlog ± leucite ± K-richterite</td>
+      <td>calcite/dolomite + apatite</td>
+    </tr>
+  </table>
+
+  <h3>심도-온도 관계 (슬라이드 35)</h3>
+  <div class="box-pale">
+    <ul>
+      <li><strong>MORB</strong>: 얕은 연약권 (30–60 km), 높은 T</li>
+      <li><strong>Alkaline olivine basalt · OI Tholeiite</strong>: 40–60 km</li>
+      <li><strong>Olivine basanite · Nephelinite · Melilitite</strong>: 75–110 km</li>
+      <li><strong>Carbonatites</strong>: ~80–100 km (연약권과 SCLM 경계)</li>
+      <li><strong>Kimberlites</strong>: &gt;150 km (phlogopite lherzolite 안정 영역 하부)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ======================================
+     TAB 8: 출제예상
+====================================== -->
+<div class="section" id="t8">
+  <h2>📝 출제 예상 문제</h2>
+
+  <div class="box-amber" style="margin-bottom:18px;">
+    ✏ 암석학 시험 출제 패턴 기반: <strong>개념 설명형</strong>, <strong>비교·분류형</strong>, <strong>다이어그램 해석형</strong>으로 구성.
+  </div>
+
+  <h3>🔵 개념 설명 / 원리형</h3>
+
+  <div class="exam-item">
+    <div class="exam-q">Q1. Alkaline rocks를 정의하고, critically undersaturated와 peralkaline의 차이를 설명하시오.</div>
+    <div class="exam-a">
+      <strong>답변 방향:</strong><br>
+      • Alkaline: feldspar만으로 알칼리 수용 불가 → feldspathoid, sodic pyroxene/amphibole 출현<br>
+      • Critically undersaturated: SiO₂ 결핍 → normative <strong>nepheline 또는 acmite</strong> 출현<br>
+      • Peralkaline: Al₂O₃ 결핍 → (Na₂O+K₂O) &gt; Al₂O₃ 몰 비율; SiO₂ 과·불포화 모두 가능<br>
+      → 두 개념은 독립적: SiO₂ 관계 vs. Al₂O₃ 관계
+    </div>
+  </div>
+
+  <div class="exam-item">
+    <div class="exam-q">Q2. Kimberlite가 다이아몬드를 운반할 수 있는 이유를 지온선과 광물 안정성을 이용해 설명하시오.</div>
+    <div class="exam-a">
+      <strong>답변 방향:</strong><br>
+      • Archean craton: 오래되고 두꺼운 리소스페어 → <strong>낮은 지온</strong> → graphite-diamond 전이선이 리소스페어 내부를 통과<br>
+      • 다이아몬드: ~150–200 km 깊이 craton root의 peridotite/eclogite 내에서 안정<br>
+      • Kimberlite 마그마: 이 심도에서 생성 → 빠른 상승(diatreme) → 고온 변환 전에 다이아몬드 포획<br>
+      • Nephelinite/Melilitite: 더 얕은 연약권 기원 → 다이아몬드 안정 영역 통과 안 함
+    </div>
+  </div>
+
+  <div class="exam-item">
+    <div class="exam-q">Q3. East African Rift의 magmatic evolution 3단계(pre-rift → rift → Afar)를 설명하시오.</div>
+    <div class="exam-a">
+      <strong>답변 방향:</strong><br>
+      a. <strong>Pre-rift</strong>: 연약권 다이어피어 상승 → 감압용융 → 알칼리 마그마; SCLM도 일부 용융; 역향 decollement 발달<br>
+      b. <strong>Rift stage</strong>: 대륙 리프팅 시작 → 주로 깊은 연약권 기원 알칼리 마그마 분출; 고온 연약권 상승이 지각 anatexis 유발<br>
+      c. <strong>Afar stage</strong>: 연약권이 지각 레벨까지 상승 → 해양지각 형성 전환 단계
+    </div>
+  </div>
+
+  <div class="exam-item">
+    <div class="exam-q">Q4. 알칼리 마그마에서 alkali 함량이 높아질수록(tholeiite→alkali basalt→nephelinite) 공통적으로 어떤 변화가 일어나는가?</div>
+    <div class="exam-a">
+      <strong>답변 방향:</strong><br>
+      • 생성 <strong>깊이 증가</strong>, <strong>용융률 감소</strong><br>
+      • REE 패턴: LREE 농집 강화, La/Yb 비율↑<br>
+      • 잔류상에 garnet 더 많이 포함 → HREE 결핍<br>
+      • 근거: Green (1970) pyrolite 용융 실험 (Fig. 19.14)
+    </div>
+  </div>
+
+  <h3>🟡 비교·분류형</h3>
+
+  <div class="exam-item">
+    <div class="exam-q">Q5. Kimberlite Group I과 Group II (Orangeite)의 차이점을 지구화학적으로 비교하시오.</div>
+    <div class="exam-a">
+      <strong>답변 방향:</strong><br>
+      <table style="font-size:13px;">
+        <tr><th></th><th>Group I</th><th>Group II</th></tr>
+        <tr><td>주 휘발성</td><td>CO₂</td><td>H₂O</td></tr>
+        <tr><td>K₂O</td><td>낮음</td><td>높음</td></tr>
+        <tr><td>기질</td><td>carbonatitic</td><td>micaceous</td></tr>
+        <tr><td>εNd</td><td>약 양수 (DMM 근처)</td><td>음수 (EM I 방향)</td></tr>
+        <tr><td>소스</td><td>연약권 + 약간의 SCLM</td><td>고대 EM I 형 SCLM</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="exam-item">
+    <div class="exam-q">Q6. Lamproite를 Kimberlite와 구별하는 핵심 광물학적·지화학적 특성은?</div>
+    <div class="exam-a">
+      <strong>답변 방향:</strong><br>
+      • 광물: Lamproite는 <strong>K-richterite + phlogopite</strong> 필수; Kimberlite는 garnet + olivine macrocrysts<br>
+      • 지구조: Lamproite는 다양한 지형 가능; Kimberlite는 Archaean craton 한정<br>
+      • 화학: Lamproite K₂O↑↑, Ba↑↑; Kimberlite MgO↑↑, Ni↑↑<br>
+      • 동위원소: Lamproite εNd 강한 음수; Kimberlite Gr.I은 약 양수
+    </div>
+  </div>
+
+  <div class="exam-item">
+    <div class="exam-q">Q7. Carbonatite의 기원에 관한 세 가지 주요 이론을 설명하고 각각의 근거를 서술하시오.</div>
+    <div class="exam-a">
+      <strong>답변 방향:</strong><br>
+      1. <strong>Fractional crystallization</strong>: carbonated nephelinite/melilitite 분별결정화 잔류용융 → 같은 복합체 내 공간적 연관성<br>
+      2. <strong>Liquid immiscibility</strong>: CO₂ 포화 규산염 마그마에서 분리 → 실험 증거 강함; 두 종류 용융체 공존 확인<br>
+      3. <strong>Primary mantle melt</strong>: CO₂ 함유 peridotite 직접 부분용융 → Sr-Nd-Pb 동위원소 독립 진화 지시<br>
+      → 현재: 복합적 기원 지지가 유력
+    </div>
+  </div>
+
+  <h3>🟢 다이어그램 해석형</h3>
+
+  <div class="exam-item">
+    <div class="exam-q">Q8. EAR의 Sr–Nd 동위원소 다이어그램에서 Virunga/Toro-Ankole가 Kenya/Afar와 다른 위치에 있는 이유를 설명하시오.</div>
+    <div class="exam-a">
+      <strong>답변 방향:</strong><br>
+      • Kenya / Afar: Mantle Array 상부 → DMM+HIMU 혼합 → 연약권 기원 우세<br>
+      • Virunga / TA: 높은 ⁸⁷Sr/⁸⁶Sr, 낮은 εNd → <strong>EM I 성분 증가</strong><br>
+      • 해석: Western Branch는 두꺼운 고대 SCLM 하부에 위치 → 마그마가 상승 시 오래된 SCLM 혼입 또는 SCLM 자체 부분 용융<br>
+      • Xenolith 필드: 실제 해당 지역 SCLM과 일치 → 혼합 증거
+    </div>
+  </div>
+
+  <div class="exam-item">
+    <div class="exam-q">Q9. Chondrite-normalized REE 다이어그램에서 lamproite가 OIB보다 LREE가 더 높고 HREE는 비슷하거나 낮게 나타나는 이유는?</div>
+    <div class="exam-a">
+      <strong>답변 방향:</strong><br>
+      • LREE 극농집: 오래된 SCLM 메타소마티즘 → 유체/용융이 LREE 농집시킴; 소규모 용융(낮은 용융률)로 LREE 우선 추출<br>
+      • HREE 낮음: 잔류상에 <strong>garnet</strong> 존재 → HREE를 garnet이 보유(D<sub>garnet</sub>↑) → 마그마로 이동 어려움<br>
+      → OIB도 garnet 잔류 영향 있지만, lamproite의 더 깊은 기원·더 낮은 용융률이 더 극단적 LREE/HREE 분리를 만듦
+    </div>
+  </div>
+
+  <div class="exam-item">
+    <div class="exam-q">Q10. Fig. 19.8에서 P(H₂O) 증가 시 leucite 안정 필드가 줄어드는 이유와 이것의 암석학적 의미는?</div>
+    <div class="exam-a">
+      <strong>답변 방향:</strong><br>
+      • P<sub>H₂O</sub> 증가 → Leucite-liquid 평형선이 Ab-Or 조인을 넘어감 → peritectic에서 <strong>eutectic</strong> 거동으로 전환<br>
+      • Leucite 안정 필드 수축 → leucite 함유 lamproite 형성은 <strong>낮은 H₂O 조건</strong> 필요<br>
+      • 의미: leucite-bearing lamproite는 대체로 낮은 P<sub>H₂O</sub>(dry 조건)에서 형성; 수분이 많으면 leucite 대신 K-feldspar 나타남
+    </div>
+  </div>
+
+</div>
+<!-- end wrap -->
+</div>
+
+<button class="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  function showTab(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+</script>
+</body>
+</html>
